@@ -1,22 +1,75 @@
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+/**
+ * https://leetcode.com/problems/two-sum/
+ */
 class TwoSum {
 
     @Test
     fun test() {
-        run {
-            val given = intArrayOf(2, 7, 11, 15)
-            val givenTarget = 9
-            val result = solution(given, givenTarget)
-            val expected = intArrayOf(1, 2)
-            assertEquals(expected.sort(), result.sort(), "Unexpected output")
+        data class Input(
+            val input: IntArray,
+            val target: Int,
+            val result: IntArray,
+        )
+
+        val solutions: List<Pair<String, (IntArray, Int) -> IntArray>> = listOf(
+            "solution1" to ::solution1, "solution2" to ::solution2, "solution3" to ::solution3
+        )
+
+        val cases = listOf(
+            Input(intArrayOf(2, 7, 11, 15), 9, intArrayOf(0, 1)),
+            Input(intArrayOf(3, 2, 4), 6, intArrayOf(1, 2)),
+            Input(intArrayOf(3, 3), 6, intArrayOf(0, 1))
+        )
+
+
+        cases.forEach { case ->
+            val expected = case.result.toList().sorted()
+            solutions.forEach { (name, fn) ->
+                val actual = fn(case.input, case.target).toList().sorted()
+                assertEquals(expected, actual, "Unexpected case($case) solution($name) result")
+
+            }
         }
     }
 
-    private fun solution(sums: IntArray, target: Int): IntArray {
-        val list = sums.toList()
+    private fun solution1(nums: IntArray, target: Int): IntArray {
+        val list = nums.toList()
+        list.indices.forEach { first ->
+            val a = list[first]
+            list.indices.forEach { second ->
+                val b = list[second]
+                if (first == second) return@forEach
+                if (a + b == target) return listOf(first, second).toIntArray()
+            }
+        }
+        return intArrayOf(-1, -1)
+    }
 
-        return emptyList<Int>().toIntArray()
+    private fun solution2(nums: IntArray, target: Int): IntArray {
+        val list = nums.toList()
+        val map = list.mapIndexed { index, i -> i to index }.toMap()
+        list.forEachIndexed { indexB, value ->
+            map[target - value]?.let { indexA ->
+                if (indexA == indexB) return@forEachIndexed
+                return intArrayOf(indexA, indexB)
+            }
+        }
+        return intArrayOf(-1, -1)
+    }
+
+    private fun solution3(nums: IntArray, target: Int): IntArray {
+        val map = mutableMapOf<Int, Int>()
+        nums.mapIndexed { index, i -> map[i] = index }
+
+        nums.forEachIndexed { indexB, value ->
+            map[target - value]?.let { indexA ->
+                if (indexA == indexB) return@forEachIndexed
+                return intArrayOf(indexA, indexB)
+            }
+        }
+        return intArrayOf(-1, -1)
     }
 }
