@@ -15,7 +15,10 @@ class TwoSum {
         )
 
         val solutions: List<Pair<String, (IntArray, Int) -> IntArray>> = listOf(
-            "solution1" to ::solution1, "solution2" to ::solution2, "solution3" to ::solution3
+            "solution1" to ::solution1,
+            "solution2" to ::solution2,
+            "solution3" to ::solution3,
+            "solutionAi" to ::solutionAi
         )
 
         val cases = listOf(
@@ -39,9 +42,9 @@ class TwoSum {
         val list = nums.toList()
         list.indices.forEach { first ->
             val a = list[first]
-            list.indices.forEach { second ->
+            list.indices.forEach inner@ { second ->
                 val b = list[second]
-                if (first == second) return@forEach
+                if (first == second) return@inner
                 if (a + b == target) return listOf(first, second).toIntArray()
             }
         }
@@ -69,6 +72,17 @@ class TwoSum {
                 if (indexA == indexB) return@forEachIndexed
                 return intArrayOf(indexA, indexB)
             }
+        }
+        return intArrayOf(-1, -1)
+    }
+
+    private fun solutionAi(nums: IntArray, target: Int): IntArray {
+        val map = mutableMapOf<Int, Int>()
+
+        nums.forEachIndexed { indexB, value ->
+            val complement = target - value
+            map[complement]?.let { indexA -> if (indexA != indexB) return intArrayOf(indexA, indexB) }
+            map[value] = indexB
         }
         return intArrayOf(-1, -1)
     }
