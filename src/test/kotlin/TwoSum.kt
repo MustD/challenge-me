@@ -2,7 +2,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * https://leetcode.com/problems/two-sum/
+ * https://leetcode.com/problems/two-sum/description/
  */
 class TwoSum {
 
