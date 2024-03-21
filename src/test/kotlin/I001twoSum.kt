@@ -4,7 +4,7 @@ import kotlin.test.assertEquals
 /**
  * https://leetcode.com/problems/two-sum/description/
  */
-class TwoSum {
+class I001twoSum {
 
     @Test
     fun test() {
