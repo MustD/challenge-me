@@ -24,7 +24,7 @@ class I002addTwoNumbers {
 
     @Test
     fun test() {
-        data class Input(
+        data class Case(
             val l1: List<Int>,
             val l2: List<Int>,
             val result: List<Int>
@@ -36,9 +36,9 @@ class I002addTwoNumbers {
         )
 
         val cases = listOf(
-            Input(listOf(2, 4, 3), listOf(5, 6, 4), listOf(7, 0, 8)),
-            Input(listOf(0), listOf(0), listOf(0)),
-            Input(listOf(9, 9, 9, 9, 9, 9, 9), listOf(9, 9, 9, 9), listOf(8, 9, 9, 9, 0, 0, 0, 1)),
+            Case(listOf(2, 4, 3), listOf(5, 6, 4), listOf(7, 0, 8)),
+            Case(listOf(0), listOf(0), listOf(0)),
+            Case(listOf(9, 9, 9, 9, 9, 9, 9), listOf(9, 9, 9, 9), listOf(8, 9, 9, 9, 0, 0, 0, 1)),
         )
 
         cases.forEach { case ->
@@ -70,7 +70,7 @@ class I002addTwoNumbers {
         return addNumbers(l1, l2)
     }
 
-    fun solutionAi(l1: ListNode?, l2: ListNode?): ListNode? {
+    private fun solutionAi(l1: ListNode?, l2: ListNode?): ListNode? {
         val dummyHead = ListNode(0)
         var p = l1
         var q = l2

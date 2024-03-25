@@ -8,7 +8,7 @@ class I001twoSum {
 
     @Test
     fun test() {
-        data class Input(
+        data class Case(
             val input: IntArray,
             val target: Int,
             val result: IntArray,
@@ -22,9 +22,9 @@ class I001twoSum {
         )
 
         val cases = listOf(
-            Input(intArrayOf(2, 7, 11, 15), 9, intArrayOf(0, 1)),
-            Input(intArrayOf(3, 2, 4), 6, intArrayOf(1, 2)),
-            Input(intArrayOf(3, 3), 6, intArrayOf(0, 1))
+            Case(intArrayOf(2, 7, 11, 15), 9, intArrayOf(0, 1)),
+            Case(intArrayOf(3, 2, 4), 6, intArrayOf(1, 2)),
+            Case(intArrayOf(3, 3), 6, intArrayOf(0, 1))
         )
 
 
