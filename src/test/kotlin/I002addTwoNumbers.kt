@@ -41,8 +41,10 @@ class I002addTwoNumbers {
             ::solutionAi.name to ::solutionAi,
         )
 
-        override fun Case.check(solution: (ListNode?, ListNode?) -> ListNode?): Boolean {
-            return solution(l1.toListNode(), l2.toListNode()).toList() == output
+        override fun Case.check(solution: (ListNode?, ListNode?) -> ListNode?): Pair<Boolean, Any> {
+            val result = solution(l1.toListNode(), l2.toListNode()).toList()
+            val isCorrect = result == output
+            return isCorrect to result
         }
 
         @Test

@@ -23,8 +23,10 @@ class I009palindromeNumber {
             ::solutionAi.name to ::solutionAi,
         )
 
-        override fun Case.check(solution: (Int) -> Boolean): Boolean {
-            return solution(input) == output
+        override fun Case.check(solution: (Int) -> Boolean): Pair<Boolean, Any> {
+            val result = solution(input)
+            val isCorrect = result == output
+            return isCorrect to result
         }
 
         @Test

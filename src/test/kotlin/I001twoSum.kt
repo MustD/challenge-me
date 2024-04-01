@@ -29,8 +29,10 @@ class I001twoSum {
             ::solutionAi.name to ::solutionAi
         )
 
-        override fun Case.check(solution: (IntArray, Int) -> IntArray): Boolean {
-            return solution(input, target).toList().sorted() == output.toList().sorted()
+        override fun Case.check(solution: (IntArray, Int) -> IntArray): Pair<Boolean, Any> {
+            val result = solution(input, target)
+            val isCorrect =  result.toList().sorted() == output.toList().sorted()
+            return isCorrect to result
         }
 
         @Test
