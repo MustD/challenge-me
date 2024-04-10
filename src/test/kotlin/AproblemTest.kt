@@ -14,7 +14,7 @@ interface AproblemTest<Case, Solution : Function<Any?>> {
         cases.forEach { case ->
             solutions.forEach { (name, solution) ->
                 val (isCorrect, result) = case.check(solution)
-                assertTrue(isCorrect, "Unexpected case($case) solution(${name}) result($result)")
+                assertTrue(isCorrect, "Unexpected solution(${name}) result($result) for case($case) ")
 
             }
         }
