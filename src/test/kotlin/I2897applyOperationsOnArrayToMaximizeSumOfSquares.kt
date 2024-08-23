@@ -6,26 +6,28 @@ import kotlin.test.Test
  */
 class I2897applyOperationsOnArrayToMaximizeSumOfSquares {
     data class Case(
-        val nums: List<Int>,
-        val k: Int,
         val output: Int,
+        val k: Int,
+        val nums: List<Int>,
     )
 
     @Nested
     inner class Solution : AproblemTest<Case, (List<Int>, Int) -> Int> {
         override val cases: List<Case> = listOf(
-            Case(listOf(2, 6, 5, 8), 2, 261),
-            Case(listOf(4, 5, 4, 7), 3, 90),
-            Case(listOf(96, 66, 60, 58, 32, 17, 63, 21, 30, 44, 15, 8, 98, 93), 2, 32258),
-            Case(listOf(25, 52, 75, 65), 4, 24051),
-            Case(data5, 163, 683004067),
+            Case(90, 3, listOf(4, 5, 4, 7)),
+            Case(261, 2, listOf(2, 6, 5, 8)),
+            Case(32258, 2, listOf(96, 66, 60, 58, 32, 17, 63, 21, 30, 44, 15, 8, 98, 93)),
+            Case(24051, 4, listOf(25, 52, 75, 65)),
+            Case(683004067, 163, data5),
 
             )
 
         override val solutions: List<Pair<String, (List<Int>, Int) -> Int>> = listOf(
-            "solution 1" to ::solution1,
-            "solution 2" to ::solution2,
+            "I" to ::solution1,
+            "II" to ::solution2,
             "III" to ::solution3,
+            "IV" to ::solution4,
+            "imported" to ::imported,
         )
 
         override fun Case.check(solution: (List<Int>, Int) -> Int): Pair<Boolean, Any> {
@@ -114,6 +116,59 @@ class I2897applyOperationsOnArrayToMaximizeSumOfSquares {
 
             return (result.calculation() % 1000000007).toInt()
         }
+
+        fun solution4(nums: List<Int>, k: Int): Int {
+            fun MutableList<Long>.operation(i: Int, j: Int): MutableList<Long> {
+                if (i == j) return this
+                val iVal = get(i)
+                val jVal = get(j)
+                set(i, iVal and jVal)
+                set(j, iVal or jVal)
+                return this
+            }
+
+            fun List<Long>.calculation() = take(k).sum()
+
+            var result: MutableList<Long> = nums.map { it.toLong() }.toMutableList()
+
+            repeat(k) { idx ->
+                for (i in idx + 1..result.lastIndex) {
+                    result = result.operation(i, idx)
+                }
+                result[idx] = result[idx] * result[idx]
+            }
+
+            return (result.calculation() % 1000000007).toInt()
+        }
+
+        fun imported(nums: List<Int>, k: Int): Int {
+            nums.print()
+            val bitCount = IntArray(32)
+            for (n in nums) {
+                for (bitNum in 0..31) {
+                    bitCount[bitNum] += if (((n and (1 shl bitNum)) > 0)) 1 else 0
+                }
+            }
+
+            val arr = IntArray(k)
+            for (bitNum in 0..31) {
+                var j = 0
+                while (j < k && bitCount[bitNum] > 0) {
+                    arr[j] = arr[j] or (1 shl bitNum)
+                    j++
+                    bitCount[bitNum]--
+                }
+            }
+
+            var result: Long = 0
+            val MOD = 1000000007
+            for (i in 0 until k) {
+                val square = (arr[i].toLong() * arr[i]) % MOD
+                result = (result + square) % MOD
+            }
+            return result.toInt()
+        }
+
     }
 
 }
