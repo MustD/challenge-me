@@ -4,7 +4,7 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/palindrome-number/
  */
-class I009palindromeNumber {
+class I0009palindromeNumber {
     data class Case(
         val input: Int,
         val output: Boolean,

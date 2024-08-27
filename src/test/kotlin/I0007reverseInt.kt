@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
-class I007reverseInt {
+class I0007reverseInt {
 
     data class Case(
         val input: Int,

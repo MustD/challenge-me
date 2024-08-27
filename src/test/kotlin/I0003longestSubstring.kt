@@ -6,7 +6,7 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
  */
-class I003longestSubstring {
+class I0003longestSubstring {
     data class Case(
         val input: String,
         val output: Int,

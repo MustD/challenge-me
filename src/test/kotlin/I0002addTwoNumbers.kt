@@ -4,7 +4,7 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/add-two-numbers/description/
  */
-class I002addTwoNumbers {
+class I0002addTwoNumbers {
     data class Case(
         val l1: List<Int>,
         val l2: List<Int>,

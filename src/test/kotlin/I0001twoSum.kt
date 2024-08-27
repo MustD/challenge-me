@@ -5,7 +5,7 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/two-sum/description/
  */
-class I001twoSum {
+class I0001twoSum {
     @Suppress("ArrayInDataClass")
     data class Case(
         val input: IntArray,

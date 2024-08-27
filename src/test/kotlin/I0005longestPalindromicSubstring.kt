@@ -3,7 +3,7 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTimedValue
 
-class I005longestPalindromicSubstring {
+class I0005longestPalindromicSubstring {
     data class Case(
         val input: String,
         val output: List<String>,

@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class I006zigzagConversion {
+class I0006zigzagConversion {
     data class Case(
         val string: String,
         val numRows: Int,

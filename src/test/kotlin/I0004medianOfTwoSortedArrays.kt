@@ -4,7 +4,7 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/median-of-two-sorted-arrays/description/?source=submission-ac
  */
-class I004medianOfTwoSortedArrays {
+class I0004medianOfTwoSortedArrays {
 
     @Suppress("ArrayInDataClass")
     data class Case(
