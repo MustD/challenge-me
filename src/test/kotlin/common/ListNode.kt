@@ -7,6 +7,12 @@ data class ListNode(
     override fun toString(): String {
         return "$`val`" + (next?.let { ", $it" } ?: "")
     }
+
+    fun deepCopy(): ListNode {
+        val copiedNode = ListNode(`val`)
+        copiedNode.next = next?.deepCopy()
+        return copiedNode
+    }
 }
 
 fun String.toListNode() = this.replace("[", "").replace("]", "").split(",").map {

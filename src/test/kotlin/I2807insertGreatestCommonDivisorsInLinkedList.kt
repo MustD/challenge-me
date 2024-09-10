@@ -26,10 +26,11 @@ class I2807insertGreatestCommonDivisorsInLinkedList {
         )
         override val solutions: List<Pair<String, (ListNode?) -> ListNode?>> = listOf(
             ::solutionDP.name to ::solutionDP,
+            ::solution1.name to ::solution1,
         )
 
         override fun Case.check(solution: (ListNode?) -> ListNode?): Pair<Boolean, Any> {
-            val result = solution(input?.copy())
+            val result = solution(input?.deepCopy())
             return (result == output) to result as Any
         }
 
@@ -60,6 +61,34 @@ class I2807insertGreatestCommonDivisorsInLinkedList {
                     divisor--
                 }
                 node.insertAfter(divisor)
+                node = next
+            }
+            return head
+        }
+
+        fun solution1(head: ListNode?): ListNode? {
+            fun ListNode.insertAfter(value: Int): ListNode {
+                val new = ListNode(value).also { it.next = next }
+                next = new
+                return this
+            }
+
+            fun findGCD(a: Int, b: Int): Int {
+                var num1 = a
+                var num2 = b
+                while (num2 != 0) {
+                    val temp = num2
+                    num2 = num1 % num2
+                    num1 = temp
+                }
+                return num1
+            }
+
+            var node = head
+            while (node != null) {
+                val next = node.next
+                if (next == null) break
+                node.insertAfter(findGCD(node.`val`, next.`val`))
                 node = next
             }
             return head
