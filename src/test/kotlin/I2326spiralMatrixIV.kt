@@ -1,3 +1,4 @@
+import common.ListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -5,9 +6,6 @@ import kotlin.test.Test
  * https://leetcode.com/problems/spiral-matrix-iv
  */
 class I2326spiralMatrixIV {
-    class ListNode(var `val`: Int) {
-        var next: ListNode? = null
-    }
 
     data class Case(
         val m: Int,

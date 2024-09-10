@@ -1,3 +1,4 @@
+import common.ListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,11 +10,6 @@ class I0002addTwoNumbers {
         val l1: List<Int>,
         val l2: List<Int>,
         val output: List<Int>
-    )
-
-    class ListNode(
-        var `val`: Int,
-        var next: ListNode? = null
     )
 
     private fun List<Int>.toListNode(): ListNode? = this.fold(null) { acc: ListNode?, i: Int -> ListNode(i, acc) }
