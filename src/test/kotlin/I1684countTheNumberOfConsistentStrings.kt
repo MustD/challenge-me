@@ -17,9 +17,9 @@ class I1684countTheNumberOfConsistentStrings {
     @Nested
     inner class Solution : AproblemTest<Case, (String, Array<String>) -> Int> {
         override val cases: List<Case> = listOf(
-//            parseCase("ab", """["ad","bd","aaab","baa","badab"]""", 2),
-//            parseCase("abc", """["a","b","c","ab","ac","bc","abc"]""", 7),
-//            parseCase("cad", """["cc","acd","b","ba","bac","bad","ac","d"]""", 4),
+            parseCase("ab", """["ad","bd","aaab","baa","badab"]""", 2),
+            parseCase("abc", """["a","b","c","ab","ac","bc","abc"]""", 7),
+            parseCase("cad", """["cc","acd","b","ba","bac","bad","ac","d"]""", 4),
             parseCase(
                 "fstqyienx", """["n","eeitfns","eqqqsfs","i","feniqis","lhoa","yqyitei","sqtn","kug","z","neqqis"]""", 8
             )
