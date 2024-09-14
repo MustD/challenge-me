@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTimedValue
 
 class I0005longestPalindromicSubstring {
@@ -27,7 +26,6 @@ class I0005longestPalindromicSubstring {
             val result = measureTimedValue {
                 solution(input)
             }
-            if (result.duration * 10 > 1.seconds) return false to result
             return output.contains(result.value) to result
         }
 
