@@ -1,4 +1,4 @@
-import common.IntArrayUtils.toIntArray
+import common.ArrayUtils.toIntArray
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
