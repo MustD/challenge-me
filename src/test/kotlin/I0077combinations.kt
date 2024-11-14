@@ -1,6 +1,5 @@
 import common.ArrayUtils.toListOfIntLists
 import org.junit.jupiter.api.Nested
-import kotlin.math.pow
 import kotlin.test.Test
 
 class I0077combinations {
@@ -33,13 +32,22 @@ class I0077combinations {
         @Test
         fun test() = check()
 
+        //too long
         fun solution1(n: Int, k: Int): List<List<Int>> {
-            val total = (n.toDouble().pow(k.toDouble()) - k).toInt() //6
+            fun cartesianProduct(lists: List<List<Int>>): List<List<Int>> {
+                if (lists.isEmpty()) return emptyList()
+                return lists.fold(listOf(listOf())) { acc, list ->
+                    acc.flatMap { accList ->
+                        list.mapNotNull { element ->
+                            if (accList.contains(element)) null else (accList + element).sorted()
+                        }
+                    }
+                }
+            }
+
+//            val total = (n.toDouble().pow(k.toDouble()) - k).toInt() //6
             val all = (1..k).map { (1..n).toList() }
-            TODO()
-
-
-            return all
+            return cartesianProduct(all).distinct()
         }
     }
 }
