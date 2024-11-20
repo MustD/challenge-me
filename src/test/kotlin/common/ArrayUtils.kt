@@ -2,7 +2,10 @@ package common
 
 object ArrayUtils {
 
-    private fun String.arraySplit() = this.replace("[", "").replace("]", "").split(",")
+    fun String.arraySplit() = replace("\"", "").replace("[", "").replace("]", "").split(",")
+    fun String.array2arraySplit() = run {
+        replace("\"", "").replace("[[", "").replace("]]", "").split("],[").map { it.split(",") }
+    }
 
     fun String.toIntArray() = arraySplit().map { it.toInt() }.toIntArray()
     fun String.toDoubleArray() = arraySplit().map { it.toDouble() }.toDoubleArray()
@@ -11,7 +14,5 @@ object ArrayUtils {
      * Replace string like [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
      * into List<List<Int>>
      */
-    fun String.toListOfIntLists() =
-        replace("[[", "").replace("]]", "").split("],[")
-            .map { it.split(",").map { int -> int.toInt() } }
+    fun String.toListOfIntLists() = array2arraySplit().map { it.map { int -> int.toInt() } }
 }
