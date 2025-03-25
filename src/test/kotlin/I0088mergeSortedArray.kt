@@ -2,7 +2,7 @@ import common.ArrayUtils.toIntArray
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
-private typealias Fn = (IntArray, Int, IntArray, Int) -> IntArray
+private typealias I0088 = (IntArray, Int, IntArray, Int) -> IntArray
 
 class I0088mergeSortedArray {
 
@@ -21,16 +21,16 @@ class I0088mergeSortedArray {
 
 
     @Nested
-    inner class Solution : AproblemTest<Case, Fn> {
+    inner class Solution : AproblemTest<Case, I0088> {
         override val cases: List<Case> = listOf(
             prepareCase("[1,2,3,0,0,0]", 3, "[2,5,6]", 3, "[1,2,2,3,5,6]"),
         )
-        override val solutions: List<Pair<String, Fn>> = listOf(
+        override val solutions: List<Pair<String, I0088>> = listOf(
             ::solution1.name to ::solution1,
             ::solution2.name to ::solution2,
         )
 
-        override fun Case.check(solution: Fn): Pair<Boolean, Any> {
+        override fun Case.check(solution: I0088): Pair<Boolean, Any> {
             val result = solution(nums1.copyOf(), m, nums2.copyOf(), n)
             return (result.toList() == output.toList()) to result
         }
