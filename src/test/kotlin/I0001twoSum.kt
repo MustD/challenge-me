@@ -5,6 +5,7 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/two-sum/description/
  */
+typealias I0001 = (IntArray, Int) -> IntArray
 class I0001twoSum {
     @Suppress("ArrayInDataClass")
     data class Case(
@@ -14,7 +15,7 @@ class I0001twoSum {
     )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (IntArray, Int) -> IntArray> {
+    inner class Solution : AproblemTest<Case, I0001> {
 
         override val cases: List<Case> = listOf(
             Case(intArrayOf(2, 7, 11, 15), 9, intArrayOf(0, 1)),
@@ -22,14 +23,14 @@ class I0001twoSum {
             Case(intArrayOf(3, 3), 6, intArrayOf(0, 1))
         )
 
-        override val solutions: List<Pair<String, (IntArray, Int) -> IntArray>> = listOf(
+        override val solutions = listOf(
             ::solution1.name to ::solution1,
             ::solution2.name to ::solution2,
             ::solution3.name to ::solution3,
             ::solutionAi.name to ::solutionAi
         )
 
-        override fun Case.check(solution: (IntArray, Int) -> IntArray): Pair<Boolean, Any> {
+        override fun Case.check(solution: I0001): Pair<Boolean, Any> {
             val result = solution(input, target)
             val isCorrect =  result.toList().sorted() == output.toList().sorted()
             return isCorrect to result
