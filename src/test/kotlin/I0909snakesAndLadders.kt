@@ -34,20 +34,25 @@ class I0909snakesAndLadders {
                 ),
                 1
             ),
-            //dfs killer case
-            /*Case(
+            Case(
                 arrayOf(
                     intArrayOf(1, 1, -1),
                     intArrayOf(1, 1, 1),
                     intArrayOf(-1, 1, 1)
-                ), 4
-            )*/
+                ), -1
+            ),
+            Case(
+                arrayOf(
+                    intArrayOf(-1, -1, -1),
+                    intArrayOf(-1, 9, 8),
+                    intArrayOf(-1, 8, 9)
+                ), 1
+            )
         )
 
         override val solutions = listOf(
-            ::solutionDebug.name to ::solutionDebug,
-            ::solution1.name to ::solution1,
-//            ::solutionCommunity.name to ::solutionCommunity,  //not working
+            ::solutionDFS.name to ::solutionDFS, //too long
+            ::solutionBFS.name to ::solutionBFS,
         )
 
         override fun Case.check(solution: I0909): Pair<Boolean, Any> {
@@ -60,40 +65,7 @@ class I0909snakesAndLadders {
         @Test
         fun test() = check()
 
-        private fun solutionDebug(board: Array<IntArray>): Int {
-            val arr = board.toList().reversed()
-                .flatMapIndexed { idx, it ->
-                    if (idx % 2 == 0) it.toList() else it.reversed()
-                }
-
-            val dice = (1..6).toList()
-            println((0..arr.lastIndex).map { "$it".padStart(3) })
-            println(arr.map { "$it".padStart(3) })
-
-            var min = arr.size * arr.size // max steps
-            var log: List<Int> = emptyList()
-
-            fun roll(num: Int = 0, from: Int = 0, rolls: List<Int> = emptyList()) {
-                if (num >= min) return // exit if length more than known min
-                if (from > arr.lastIndex) return //exit on out of board
-
-                val place = if (-1 == arr[from]) from else arr[from] - 1
-                if (place == arr.lastIndex) {
-                    min = minOf(min, num)
-                    log = rolls
-                    return //exit when we reach end
-                }
-                dice.onEach {
-                    roll(num + 1, place + it, rolls.plus(it))
-                }
-            }
-            roll()
-
-            println(log)
-            return min
-        }
-
-        private fun solution1(board: Array<IntArray>): Int {
+        private fun solutionDFS(board: Array<IntArray>): Int {
             val arr = board.toList().reversed()
                 .flatMapIndexed { idx, it ->
                     if (idx % 2 == 0) it.toList() else it.reversed()
@@ -102,52 +74,55 @@ class I0909snakesAndLadders {
             val dice = (1..6).toList()
 
             var min = arr.size * arr.size // max steps
+            var solved = false
 
-            fun roll(num: Int = 0, from: Int = 0) {
+            fun roll(num: Int = 0, from: Int = 0, visited: Set<Int> = emptySet()) {
                 if (num >= min) return // exit if length more than known min
                 if (from > arr.lastIndex) return //exit on out of board
 
                 val place = if (-1 == arr[from]) from else arr[from] - 1
+                if (visited.contains(place)) return  //exit if we have already been there
                 if (place == arr.lastIndex) {
                     min = minOf(min, num)
+                    solved = true
                     return //exit when we reach end
                 }
                 dice.onEach {
-                    roll(num + 1, place + it)
+                    roll(num + 1, place + it, visited.plus(place))
                 }
             }
             roll()
 
-            return min
+            return if (solved) min else -1
         }
 
-        fun solutionCommunity(board: Array<IntArray>): Int {
-            fun col(pos: Int): Int {
-                return if (((pos / board.size) % 2) == 0)
-                    (pos % board.size)
-                else
-                    (board.lastIndex - (pos % board.size))
-            }
+        private fun solutionBFS(board: Array<IntArray>): Int {
+            val arr = board.toList().reversed()
+                .flatMapIndexed { idx, it ->
+                    if (idx % 2 == 0) it.toList() else it.reversed()
+                }
+            val dice = (1..6).toList()
 
-            val last = board.size * board.size
-            var steps = 0
-            val visited = mutableSetOf<Int>()
-            with(ArrayDeque<Int>().apply { add(1) }) {
-                while (isNotEmpty() && steps <= last) {
-                    repeat(size) {
-                        var curr = removeFirst()
-                        val jump = board[board.lastIndex - (curr - 1) / board.size][col(curr - 1)]
-                        if (jump != -1) curr = jump
-                        if (curr == last) return steps
-                        for (i in 1..6)
-                            if (visited.add(curr + i) && curr + i <= last) add(curr + i)
-                    }
-                    steps++
+
+            val queue = ArrayDeque<Pair<Int, Int>>()
+            queue.addLast(0 to 0) //adding start position
+
+            val toVisit = mutableSetOf<Int>()
+            while (queue.isNotEmpty()) {
+                val (start, throws) = queue.removeFirst()
+
+                val place = if (-1 == arr[start]) start else arr[start] - 1 //snake or ladder
+                if (place == arr.lastIndex) return throws //exit on final step
+
+                dice.onEach { roll ->
+                    val target = place + roll
+                    if (!toVisit.add(target)) return@onEach // If already visited, skip
+                    if (target > arr.lastIndex) return@onEach //out of range
+                    queue.addLast(target to throws + 1)
                 }
             }
+
             return -1
         }
-
-
     }
 }
