@@ -4,6 +4,8 @@ object ArrayUtils {
 
     fun String.arraySplit() = replace("\"", "").replace("[", "").replace("]", "").split(",")
     fun String.array2arraySplit() = run {
+        if (this.isEmpty()) return@run emptyList<List<String>>()
+        if (this == "[]") return@run listOf<List<String>>()
         replace("\"", "").replace("[[", "").replace("]]", "").split("],[").map { it.split(",") }
     }
 
