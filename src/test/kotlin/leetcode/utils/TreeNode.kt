@@ -3,7 +3,26 @@ package leetcode.utils
 data class TreeNode(var `val`: Int) {
     var left: TreeNode? = null
     var right: TreeNode? = null
+
+    override fun toString(): String {
+        val result = mutableListOf<Int?>()
+        val queue = ArrayDeque<TreeNode?>()
+        queue.add(this)
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            if (node == null) {
+                result.add(null)
+            } else {
+                result.add(node.`val`)
+                queue.add(node.left)
+                queue.add(node.right)
+            }
+        }
+        return result.dropLastWhile { it == null }.joinToString { it.toString() }
+    }
+
 }
+
 
 fun printTree(root: TreeNode?, prefix: String = "") {
     if (root == null) {
