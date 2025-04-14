@@ -23,7 +23,15 @@ data class TreeNode(var `val`: Int) {
 
 }
 
+fun TreeNode.deepCopy(): TreeNode {
+    return TreeNode(`val`).also {
+        it.left = left?.deepCopy()
+        it.right = right?.deepCopy()
+    }
+}
 
+
+@Suppress("unused")
 fun printTree(root: TreeNode?, prefix: String = "") {
     if (root == null) {
         println("$prefix null")
