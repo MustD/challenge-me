@@ -28,6 +28,7 @@ class I0045jumpGameII {
         )
         override val solutions: List<Pair<String, I0045>> = listOf(
             ::solution1.name to ::solution1,
+            ::solutionEditorial.name to ::solutionEditorial,
         )
 
         override fun Case.check(solution: I0045): Pair<Boolean, Any> {
@@ -59,6 +60,29 @@ class I0045jumpGameII {
             }
             return 0
         }
+
+        fun solutionEditorial(nums: IntArray): Int {
+
+            // The starting range of the first jump is [0, 0]
+            var answer = 0
+            var curEnd = 0
+            var curFar = 0
+
+            for (i in 0 .. nums.lastIndex - 1 ) {
+                // Update the farthest reachable index of this jump.
+                curFar = maxOf(curFar, i + nums[i])
+
+                // If we finish the starting range of this jump,
+                // Move on to the starting range of the next jump.
+                if (i == curEnd) {
+                    answer++
+                    curEnd = curFar
+                }
+            }
+
+            return answer
+        }
+
 
     }
 }
