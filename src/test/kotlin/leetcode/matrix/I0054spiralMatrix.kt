@@ -25,8 +25,8 @@ class I0054spiralMatrix {
     inner class Solution : AproblemTest<Case, I0054> {
 
         override val cases: List<Case> = listOf(
-//            prepareCase("[[1,2,3],[4,5,6],[7,8,9]]", "[1,2,3,6,9,8,7,4,5]"),
-//            prepareCase("[[1,2,3,4],[5,6,7,8],[9,10,11,12]]", "[1,2,3,4,8,12,11,10,9,5,6,7]"),
+            prepareCase("[[1,2,3],[4,5,6],[7,8,9]]", "[1,2,3,6,9,8,7,4,5]"),
+            prepareCase("[[1,2,3,4],[5,6,7,8],[9,10,11,12]]", "[1,2,3,4,8,12,11,10,9,5,6,7]"),
             prepareCase("[[3],[2]]", "[3,2]")
         )
 
