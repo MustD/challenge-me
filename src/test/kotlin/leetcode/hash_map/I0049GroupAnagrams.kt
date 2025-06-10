@@ -6,7 +6,7 @@ import leetcode.utils.ArrayUtils.arraySplit
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
-typealias T = (Array<String>) -> List<List<String>>
+typealias I0049 = (Array<String>) -> List<List<String>>
 
 class I0049GroupAnagrams {
     data class Case(
@@ -20,18 +20,18 @@ class I0049GroupAnagrams {
 
 
     @Nested
-    inner class Solution : AproblemTest<Case, T> {
+    inner class Solution : AproblemTest<Case, I0049> {
 
         override val cases: List<Case> = listOf(
             prepareCase("""["eat","tea","tan","ate","nat","bat"]""", """[["bat"],["nat","tan"],["ate","eat","tea"]]"""),
             prepareCase("""[""]""", """[[""]]"""),
             prepareCase("""["a"]""", """[["a"]]"""),
         )
-        override val solutions: List<Pair<String, T>> = listOf(
+        override val solutions: List<Pair<String, I0049>> = listOf(
             ::solution1.name to ::solution1,
         )
 
-        override fun Case.check(solution: T): Pair<Boolean, Any> {
+        override fun Case.check(solution: I0049): Pair<Boolean, Any> {
             val result = solution(strs.toTypedArray())
             val sortedA = { a: List<List<String>> -> a.map { it.sorted() }.sortedBy { it.size } }
             val isCorrect = sortedA(result) == sortedA(output)
