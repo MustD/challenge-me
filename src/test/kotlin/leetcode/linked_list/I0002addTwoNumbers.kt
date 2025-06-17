@@ -12,7 +12,7 @@ class I0002addTwoNumbers {
     data class Case(
         val l1: List<Int>,
         val l2: List<Int>,
-        val output: List<Int>
+        val output: List<Int>,
     )
 
     private fun List<Int>.toListNode(): ListNode? = this.fold(null) { acc: ListNode?, i: Int -> ListNode(i, acc) }

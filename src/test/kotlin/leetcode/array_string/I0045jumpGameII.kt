@@ -68,7 +68,7 @@ class I0045jumpGameII {
             var curEnd = 0
             var curFar = 0
 
-            for (i in 0 .. nums.lastIndex - 1 ) {
+            for (i in 0..nums.lastIndex - 1) {
                 // Update the farthest reachable index of this jump.
                 curFar = maxOf(curFar, i + nums[i])
 

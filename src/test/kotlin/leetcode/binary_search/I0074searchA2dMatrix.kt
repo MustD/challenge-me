@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0074 = (Array<IntArray>, Int) -> Boolean
+
 //https://leetcode.com/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-interview-150
 class I0074searchA2dMatrix {
     @Suppress("ArrayInDataClass")

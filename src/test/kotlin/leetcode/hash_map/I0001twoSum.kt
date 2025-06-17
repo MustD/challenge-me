@@ -3,6 +3,7 @@ package leetcode.hash_map
 import leetcode.AproblemTest
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
+
 /**
  * https://leetcode.com/problems/two-sum/description/
  */
@@ -34,7 +35,7 @@ class I0001twoSum {
 
         override fun Case.check(solution: I0001): Pair<Boolean, Any> {
             val result = solution(input, target)
-            val isCorrect =  result.toList().sorted() == output.toList().sorted()
+            val isCorrect = result.toList().sorted() == output.toList().sorted()
             return isCorrect to result
         }
 

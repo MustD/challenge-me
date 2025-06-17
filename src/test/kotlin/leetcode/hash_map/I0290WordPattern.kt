@@ -46,7 +46,7 @@ class I0290WordPattern {
                         return false
                     }
                 } else {
-                    if(used.contains(words[i])) return false
+                    if (used.contains(words[i])) return false
                     map[pattern[i]] = words[i]
                     used.add(words[i])
                 }

@@ -36,8 +36,8 @@ class I0006zigzagConversion {
         fun test() = check()
 
         fun solution1(s: String, numRows: Int): String {
-            if(numRows == 1) return s
-            if(s.length <= numRows) return s
+            if (numRows == 1) return s
+            if (s.length <= numRows) return s
             val field = (0..s.length).map { MutableList<Char?>(numRows) { null } }
             var current = 0 to 0
             var vector = 0 to 0
@@ -49,7 +49,7 @@ class I0006zigzagConversion {
                 }
                 current = (current.first + vector.first) to (current.second + vector.second)
             }
-            return (0..< numRows).flatMap { y -> field.mapNotNull { it[y] } }.joinToString("")
+            return (0..<numRows).flatMap { y -> field.mapNotNull { it[y] } }.joinToString("")
         }
 
         fun solutionAI(s: String, numRows: Int): String {

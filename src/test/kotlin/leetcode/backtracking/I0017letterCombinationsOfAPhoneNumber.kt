@@ -51,7 +51,7 @@ class I0017letterCombinationsOfAPhoneNumber {
                 result: MutableList<String>,
                 charIdx: Int,
                 temp: MutableList<Char> = mutableListOf<Char>(),
-                digits: List<Char>
+                digits: List<Char>,
             ) {
                 if (temp.size == digits.size) {
                     result.add(temp.joinToString(""))

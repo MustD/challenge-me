@@ -21,7 +21,11 @@ class I0030SubstringWithConcatenationOfAllWords {
             Case("barfoothefoobarman", listOf("foo", "bar"), listOf(0, 9)),
             Case("wordgoodgoodgoodbestword", listOf("word", "good", "best", "word"), listOf()),
             Case("barfoofoobarthefoobarman", listOf("bar", "foo", "the"), listOf(6, 9, 12)),
-            Case( "lingmindraboofooowingdingbarrwingmonkeypoundcake", listOf("fooo", "barr", "wing", "ding", "wing"), listOf(13) ),
+            Case(
+                "lingmindraboofooowingdingbarrwingmonkeypoundcake",
+                listOf("fooo", "barr", "wing", "ding", "wing"),
+                listOf(13)
+            ),
             Case("wordgoodgoodgoodbestword", listOf("word", "good", "best", "good"), listOf(8)),
             Case("aaaaaaaaaaaaaa", listOf("aa", "aa"), listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
         )

@@ -3,7 +3,6 @@ package leetcode.array_string
 import leetcode.AproblemTest
 import leetcode.utils.ArrayUtils.toIntArray
 import org.junit.jupiter.api.Nested
-import kotlin.math.cos
 import kotlin.test.Test
 
 private typealias I0134 = (IntArray, IntArray) -> Int

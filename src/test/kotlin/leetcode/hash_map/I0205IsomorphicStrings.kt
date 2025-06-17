@@ -44,7 +44,7 @@ class I0205IsomorphicStrings {
                 if (mapping.containsKey(s[i])) {
                     if (mapping[s[i]] != t[i]) return false
                 } else {
-                    if(used.contains(t[i])) return false
+                    if (used.contains(t[i])) return false
                     mapping[s[i]] = t[i]
                     used.add(t[i])
                 }

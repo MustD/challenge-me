@@ -40,8 +40,8 @@ class I0026removeDuplicatesFromSortedArray {
         fun test() = check()
 
         fun solution1(nums: IntArray): Int {
-            var insertIdx  = 1
-            for (i in 1 .. nums.lastIndex) {
+            var insertIdx = 1
+            for (i in 1..nums.lastIndex) {
                 if (nums[i] != nums[i - 1]) {
                     nums[insertIdx] = nums[i]
                     insertIdx++

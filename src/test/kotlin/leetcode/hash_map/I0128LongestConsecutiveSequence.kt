@@ -43,7 +43,7 @@ class I0128LongestConsecutiveSequence {
             val set = nums.toSet()
             var result = 0
             for (i in set) {
-                if(set.contains(i-1)) continue
+                if (set.contains(i - 1)) continue
                 var current = i
                 var streak = 0
                 while (set.contains(current)) {
