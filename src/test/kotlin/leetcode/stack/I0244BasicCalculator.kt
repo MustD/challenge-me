@@ -20,9 +20,9 @@ class I0244BasicCalculator {
     inner class Solution : AproblemTest<Case, I0244> {
 
         override val cases: List<Case> = listOf(
-//            Case("1 + 1", 2),
-//            Case(" 2-1 + 2 ", 3),
-//            Case("(1+(4+5+2)-3)+(6+8)", 23),
+            Case("1 + 1", 2),
+            Case(" 2-1 + 2 ", 3),
+            Case("(1+(4+5+2)-3)+(6+8)", 23),
             Case("123 + 123", 246),
         )
 
