@@ -3,6 +3,7 @@ package leetcode
 import kotlin.test.assertTrue
 
 
+@Deprecated("Use ProblemTest instead")
 interface AproblemTest<Case, Solution : Function<Any?>> {
     val cases: List<Case>
     val solutions: List<Pair<String, Solution>>
