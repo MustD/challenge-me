@@ -19,12 +19,26 @@ class I0190reverseBits {
         )
 
         @Test
-        fun test() = check(::solution1)
+        fun test() = check(::solution1, ::solution2)
 
         fun solution1(n: Int): Int {
             val str = n.toString(2).padStart(32, '0')
             val reversed = str.reversed()
             return reversed.toInt(2)
+        }
+
+        fun solution2(n: Int): Int {
+            var orig = n
+            var result = 0
+            var power = 31
+
+            while (orig != 0) {
+                result += (orig and 1) shl power
+                orig = orig ushr 1
+                power -= 1
+            }
+
+            return result
         }
 
     }
