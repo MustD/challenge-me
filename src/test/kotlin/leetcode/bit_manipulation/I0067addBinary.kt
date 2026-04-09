@@ -1,4 +1,4 @@
-package leetcode.bit
+package leetcode.bit_manipulation
 
 import leetcode.AproblemTest
 import org.junit.jupiter.api.Nested
