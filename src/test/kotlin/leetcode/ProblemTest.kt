@@ -18,6 +18,14 @@ interface ProblemTest<F : Function<Any?>> {
     }
 }
 
+fun render(value: Any?): String = when (value) {
+    is Array<*> -> value.contentDeepToString()
+    is IntArray -> value.contentToString()
+    is DoubleArray -> value.contentToString()
+    is CharArray -> value.contentToString()
+    else -> value.toString()
+}
+
 data class TestInput(val values: Array<out Any?>)
 
 fun args(vararg values: Any?) = TestInput(values)
@@ -40,7 +48,7 @@ inline fun <reified F : Function<Any?>> testCases(
             val converted = rawArgs.mapIndexed { i, arg -> TypeConverters.convert(arg, argTypes[i]) }
             val result = TypeConverters.callFunction(this as Function<Any?>, converted)
             if (TypeConverters.equal(result, expected, returnType)) null
-            else "expected: $expected, got: $result"
+            else "expected: $expected, got: ${render(result)}"
         }
         case
     }
