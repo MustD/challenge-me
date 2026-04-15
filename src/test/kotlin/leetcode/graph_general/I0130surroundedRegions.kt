@@ -31,21 +31,21 @@ class I0130surroundedRegions {
 
             fun isOutOfBounds(y: Int, x: Int): Boolean = y !in 0..yMax || x !in 0..xMax
             fun markRegionAsNotSurrounded(y: Int, x: Int) {
-                val stack = ArrayDeque<Pair<Int, Int>>()
+                val queue = ArrayDeque<Pair<Int, Int>>()
 
-                stack.addLast(y to x)
-                while (stack.isNotEmpty()) {
-                    val (y, x) = stack.removeFirst()
+                queue.addLast(y to x)
+                while (queue.isNotEmpty()) {
+                    val (y, x) = queue.removeFirst()
                     when {
                         isOutOfBounds(y, x) -> Unit
                         board[y][x] == 'X' -> Unit
                         board[y][x] == 'S' -> Unit
                         else -> {
                             board[y][x] = 'S'
-                            stack.addLast(y - 1 to x)
-                            stack.addLast(y + 1 to x)
-                            stack.addLast(y to x - 1)
-                            stack.addLast(y to x + 1)
+                            queue.addLast(y - 1 to x)
+                            queue.addLast(y + 1 to x)
+                            queue.addLast(y to x - 1)
+                            queue.addLast(y to x + 1)
                         }
 
                     }
