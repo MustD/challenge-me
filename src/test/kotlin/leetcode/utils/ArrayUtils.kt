@@ -69,4 +69,6 @@ object ArrayUtils {
      * into List<List<Int>>
      */
     fun String.toListOfIntLists() = array2arraySplit().map { it.map { int -> int.toInt() } }
+
+    fun String.toCharArray2D() = array2arraySplit().map { row -> row.map { it.trim()[0] }.toCharArray() }.toTypedArray()
 }
