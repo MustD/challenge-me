@@ -44,23 +44,24 @@ fun printTree(root: TreeNode?, prefix: String = "") {
 }
 
 fun String.toTreeNode(): TreeNode? {
-    val array = this.replace("[", "").replace("]", "").split(",").map { it.toIntOrNull() }
+    val array = this.replace("[", "").replace("]", "").split(",").map { it.trim().toIntOrNull() }
     if (array.mapNotNull { it }.isEmpty()) return null
 
-    fun buildTree(list: List<Int?>, index: Int): TreeNode? {
-        if (index > list.lastIndex) return null
+    val root = array[0]?.let { TreeNode(it) } ?: return null
+    val queue = ArrayDeque<TreeNode>()
+    queue.add(root)
+    var i = 1
 
-        val value = list[index]
-        val node = if (value != null) {
-            TreeNode(value)
-        } else {
-            return null
+    while (queue.isNotEmpty() && i <= array.lastIndex) {
+        val node = queue.removeFirst()
+
+        if (i <= array.lastIndex) {
+            array[i++]?.let { node.left = TreeNode(it).also(queue::add) }
         }
-        node.left = buildTree(list, 2 * index + 1)
-        node.right = buildTree(list, 2 * index + 2)
-
-        return node
+        if (i <= array.lastIndex) {
+            array[i++]?.let { node.right = TreeNode(it).also(queue::add) }
+        }
     }
 
-    return buildTree(array, 0)
+    return root
 }

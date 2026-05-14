@@ -81,13 +81,24 @@ class TypeConvertersTest {
     // ── TreeNode ─────────────────────────────────────────────────────────────
 
     @Test
-    fun `convert string to TreeNode`() {
+    fun `convert 1,2,3 to TreeNode`() {
         val result = TypeConverters.convert("[1,2,3]", typeOf<TreeNode>()) as TreeNode?
         assertNotNull(result)
         assertEquals(1, result.`val`)
         assertEquals(2, result.left?.`val`)
         assertEquals(3, result.right?.`val`)
     }
+
+    @Test
+    fun `convert 1,null,2,3 to TreeNode`() {
+        val result = TypeConverters.convert("[1,null,2,3]", typeOf<TreeNode>()) as TreeNode?
+        assertNotNull(result)
+        assertEquals(1, result.`val`)
+        assertEquals(null, result.left)
+        assertEquals(2, result.right?.`val`)
+        assertEquals(3, result.right?.left?.`val`)
+    }
+
 
     @Test
     fun `equal TreeNode - string expected`() =
