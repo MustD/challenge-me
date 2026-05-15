@@ -1,56 +1,66 @@
 package leetcode.binary_search_tree
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.math.abs
 import kotlin.test.Test
 
+typealias I0530 = (TreeNode?) -> Int
+
 class I0530minimumAbsoluteDifferenceInBst {
 
-    data class Case(
-        val input: TreeNode?,
-        val output: Int,
-    )
-
-    fun prepareCase(s: String, out: Int) = Case(s.toTreeNode(), out)
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, (TreeNode?) -> Int> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[4,2,6,1,3]", 1),
-            prepareCase("[1,0,48,null,null,12,49]", 1),
-            prepareCase("[1,null,5,null,null,3]", 2),
-            prepareCase("[236,104,701,null,227,null,911]", 9)
-        )
-        override val solutions: List<Pair<String, (TreeNode?) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionCommunity.name to ::solutionCommunity,
-        )
+    inner class Solution : ProblemTest<I0530> {
 
-        override fun Case.check(solution: (TreeNode?) -> Int): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result == output) to result
-        }
+        override val cases = testCases<I0530>(
+            "[4,2,6,1,3]" expects 1,
+            "[1,0,48,null,null,12,49]" expects 1,
+            "[236,104,701,null,227,null,911]" expects 9
+        )
 
         @Test
-        fun test() = check()
+        fun test() = check(
+            ::solutionNotOptimal,
+            ::getMinimumDifference,
+            ::getMinimumDifferenceCommunity
+        )
 
-        fun solution1(root: TreeNode?): Int {
-            fun dfs(node: TreeNode?, path: List<Int>): Int {
-                if (node == null) return Int.MAX_VALUE
+        fun solutionNotOptimal(root: TreeNode?): Int {
+            if (root == null) return Int.MAX_VALUE
+
+            fun dfs(node: TreeNode = root, path: List<Int> = emptyList()): Int {
                 return minOf(
-                    a = dfs(node.left, path.plus(node.`val`)),
-                    b = dfs(node.right, path.plus(node.`val`)),
+                    a = node.left?.let { dfs(it, path.plus(node.`val`)) } ?: Int.MAX_VALUE,
+                    b = node.right?.let { dfs(it, path.plus(node.`val`)) } ?: Int.MAX_VALUE,
                     c = if (path.isNotEmpty()) path.minOf { abs(node.`val` - it) } else Int.MAX_VALUE,
                 )
             }
-            return dfs(root, emptyList())
+            return dfs()
         }
 
-        fun solutionCommunity(root: TreeNode?): Int {
+        fun getMinimumDifference(root: TreeNode?): Int {
+            var min = Int.MAX_VALUE
+            if (root == null) return min
+
+            var prev: TreeNode? = null
+            fun dfs(node: TreeNode = root) {
+                node.left?.let { dfs(it) }
+
+                prev?.let { min = minOf(abs(it.`val` - node.`val`), min) }
+                prev = node
+
+                node.right?.let { dfs(it) }
+            }
+
+            dfs()
+
+            return min
+        }
+
+        fun getMinimumDifferenceCommunity(root: TreeNode?): Int {
             var prev: TreeNode? = null
             var diff = Int.MAX_VALUE
 
@@ -68,5 +78,7 @@ class I0530minimumAbsoluteDifferenceInBst {
 
             return diff
         }
+
+
     }
 }
