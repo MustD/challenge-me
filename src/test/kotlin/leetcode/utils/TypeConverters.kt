@@ -62,6 +62,11 @@ object TypeConverters {
         register(String::class, Handler({ it }))
         register(TreeNode::class, Handler({ it.toTreeNode() }))
         register(
+            Node::class, Handler(
+                fromString = { it.toNode() },
+                equals = { a, b -> a?.toString() == b?.toString() }
+            ))
+        register(
             ListNode::class, Handler(
             fromString = { it.toListNode() },
             equals = { a, b -> a?.toString() == b?.toString() }
