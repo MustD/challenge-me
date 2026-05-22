@@ -3,6 +3,7 @@ package leetcode.utils
 import leetcode.utils.ArrayUtils.toCharArray2D
 import leetcode.utils.ArrayUtils.toDoubleArray
 import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.utils.ArrayUtils.toListOfStringLists
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -81,6 +82,10 @@ object TypeConverters {
             fromString = { it.toDoubleArray() },
             equals = { a, b -> (a as? DoubleArray)?.toList() == (b as? DoubleArray)?.toList() }
         ))
+        register(
+            typeOf<List<List<String>>>(), Handler(
+                fromString = { it.toListOfStringLists() }
+            ))
         register(
             typeOf<Array<CharArray>>(), Handler(
                 fromString = { it.toCharArray2D() },
