@@ -73,4 +73,7 @@ object ArrayUtils {
     fun String.toListOfStringLists() = array2arraySplit()
 
     fun String.toCharArray2D() = array2arraySplit().map { row -> row.map { it.trim()[0] }.toCharArray() }.toTypedArray()
+
+    fun String.toIntArray2D() =
+        array2arraySplit().map { row -> row.map { it.trim().toInt() }.toIntArray() }.toTypedArray()
 }
