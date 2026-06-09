@@ -65,6 +65,17 @@ object ArrayUtils {
     fun String.toDoubleArray() = arraySplit().map { it.toDouble() }.toDoubleArray()
 
     /**
+     * Converts a string representation of an array-like structure into an array of strings.
+     *
+     * This function leverages `arraySplit()` to parse the input string into individual elements,
+     * trims surrounding whitespace from each element, and returns them as an `Array<String>`.
+     *
+     * @receiver A string representing an array-like structure, e.g., `["a", "b", "c"]`.
+     * @return An `Array<String>` containing the parsed, trimmed elements.
+     */
+    fun String.toStringArray() = arraySplit().map { it.trim() }.toTypedArray()
+
+    /**
      * Replace string like [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
      * into List<List<Int>>
      */

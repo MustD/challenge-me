@@ -5,6 +5,7 @@ import leetcode.utils.ArrayUtils.toDoubleArray
 import leetcode.utils.ArrayUtils.toIntArray
 import leetcode.utils.ArrayUtils.toIntArray2D
 import leetcode.utils.ArrayUtils.toListOfStringLists
+import leetcode.utils.ArrayUtils.toStringArray
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -83,6 +84,13 @@ object TypeConverters {
             fromString = { it.toDoubleArray() },
             equals = { a, b -> (a as? DoubleArray)?.toList() == (b as? DoubleArray)?.toList() }
         ))
+        register(
+            typeOf<Array<String>>(), Handler(
+                fromString = { it.toStringArray() },
+                equals = { a, b ->
+                    (a as? Array<*>)?.toList() == (b as? Array<*>)?.toList()
+                }
+            ))
         register(
             typeOf<List<List<String>>>(), Handler(
                 fromString = { it.toListOfStringLists() }
