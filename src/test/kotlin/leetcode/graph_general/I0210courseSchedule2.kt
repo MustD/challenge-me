@@ -16,7 +16,7 @@ class I0210courseSchedule2 {
 
         override val cases = testCases<I0210>(
             args(2, "[[1,0]]") expects "[0,1]",
-            args(4, "[[1,0],[2,0],[3,1],[3,2]]") expects "[0,2,1,3]",
+            args(4, "[[1,0],[2,0],[3,1],[3,2]]") expects "[0,1,2,3]",
             args(1, "[]") expects "[0]",
         )
 

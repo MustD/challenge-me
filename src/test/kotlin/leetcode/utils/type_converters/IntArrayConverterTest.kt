@@ -15,6 +15,12 @@ class IntArrayConverterTest {
     }
 
     @Test
+    fun `convert empty array to empty IntArray`() {
+        val result = TypeConverters.convert("[]", typeOf<IntArray>()) as IntArray
+        assertEquals(emptyList<Int>(), result.toList())
+    }
+
+    @Test
     fun `equal IntArray - string expected`() =
         assertTrue(TypeConverters.equal(intArrayOf(1, 2, 3), "[1,2,3]", typeOf<IntArray>()))
 

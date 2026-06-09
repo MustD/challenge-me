@@ -68,6 +68,8 @@ class I0433minimumGeneticMutation {
         fun test() = check(::minMutation, ::minMutationRef)
 
         fun minMutation(startGene: String, endGene: String, bank: Array<String>): Int {
+            if (bank.isEmpty()) return if (startGene == endGene) 0 else -1
+
             fun String.isMutableTo(other: String): Boolean {
                 var diff = 0
                 forEachIndexed { index, ch ->

@@ -15,6 +15,12 @@ class DoubleArrayConverterTest {
     }
 
     @Test
+    fun `convert empty array to empty DoubleArray`() {
+        val result = TypeConverters.convert("[]", typeOf<DoubleArray>()) as DoubleArray
+        assertEquals(emptyList<Double>(), result.toList())
+    }
+
+    @Test
     fun `equal DoubleArray - string expected`() =
         assertTrue(TypeConverters.equal(doubleArrayOf(1.0, 2.5, 3.0), "[1.0,2.5,3.0]", typeOf<DoubleArray>()))
 

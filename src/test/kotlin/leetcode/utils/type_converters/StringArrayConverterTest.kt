@@ -15,6 +15,12 @@ class StringArrayConverterTest {
     }
 
     @Test
+    fun `convert empty array to empty Array of String`() {
+        val result = TypeConverters.convert("[]", typeOf<Array<String>>()) as Array<*>
+        assertEquals(emptyList<String>(), result.toList())
+    }
+
+    @Test
     fun `equal Array of String - string expected`() =
         assertTrue(TypeConverters.equal(arrayOf("a", "b", "c"), """["a", "b", "c"]""", typeOf<Array<String>>()))
 

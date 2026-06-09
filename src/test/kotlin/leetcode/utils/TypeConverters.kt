@@ -71,19 +71,19 @@ object TypeConverters {
             ))
         register(
             ListNode::class, Handler(
-            fromString = { it.toListNode() },
-            equals = { a, b -> a?.toString() == b?.toString() }
-        ))
+                fromString = { it.toListNode() },
+                equals = { a, b -> a?.toString() == b?.toString() }
+            ))
         register(
             IntArray::class, Handler(
-            fromString = { it.toIntArray() },
-            equals = { a, b -> (a as? IntArray)?.toList() == (b as? IntArray)?.toList() }
-        ))
+                fromString = { it.toIntArray() },
+                equals = { a, b -> (a as? IntArray)?.toList() == (b as? IntArray)?.toList() }
+            ))
         register(
             DoubleArray::class, Handler(
-            fromString = { it.toDoubleArray() },
-            equals = { a, b -> (a as? DoubleArray)?.toList() == (b as? DoubleArray)?.toList() }
-        ))
+                fromString = { it.toDoubleArray() },
+                equals = { a, b -> (a as? DoubleArray)?.toList() == (b as? DoubleArray)?.toList() }
+            ))
         register(
             typeOf<Array<String>>(), Handler(
                 fromString = { it.toStringArray() },
@@ -91,6 +91,12 @@ object TypeConverters {
                     (a as? Array<*>)?.toList() == (b as? Array<*>)?.toList()
                 }
             ))
+        register(
+            typeOf<List<String>>(), Handler(
+                fromString = { it.toStringArray().toList() },
+            )
+        )
+
         register(
             typeOf<List<List<String>>>(), Handler(
                 fromString = { it.toListOfStringLists() }

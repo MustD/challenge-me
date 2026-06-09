@@ -11,10 +11,18 @@ object ArrayUtils {
      * This function removes double quotes, square brackets, and then splits the string using commas as delimiters.
      * It is commonly used to parse stringified array representations into individual elements.
      *
+     * Edge cases:
+     * - An empty array representation ("[]") yields an empty list. This is checked before quotes
+     *   are stripped so it stays distinct from an array holding a single empty string ("[\"\"]"),
+     *   which correctly yields a list containing one empty string.
+     *
      * @receiver String representing an array-like structure, e.g., "[1,2,3]" or "\"[a,b,c]\"".
      * @return A list of strings representing the parsed elements from the input string.
      */
-    fun String.arraySplit() = replace("\"", "").replace("[", "").replace("]", "").split(",")
+    fun String.arraySplit(): List<String> {
+        if (trim() == "[]") return emptyList()
+        return replace("\"", "").replace("[", "").replace("]", "").split(",")
+    }
 
     /**
      * Converts a string representation of a 2D array-like structure into a nested list of strings.
