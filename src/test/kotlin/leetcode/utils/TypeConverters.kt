@@ -96,6 +96,11 @@ object TypeConverters {
                 fromString = { it.toStringArray().toList() },
             )
         )
+        register(
+            typeOf<List<Int>>(), Handler(
+                fromString = { it.toIntArray().toList() },
+            )
+        )
 
         register(
             typeOf<List<List<String>>>(), Handler(
