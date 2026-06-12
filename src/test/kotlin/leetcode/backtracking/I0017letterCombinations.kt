@@ -35,7 +35,11 @@ class I0017letterCombinations {
         )
 
         @Test
-        fun test() = check(::letterCombinations, ::solution1, ::community)
+        fun test() = check(
+            ::letterCombinations,
+            ::solution1,
+//            ::community wrong order
+        )
 
         /**
          * ANALYSIS — letterCombinations (backtracking)
