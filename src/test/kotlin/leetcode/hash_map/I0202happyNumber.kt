@@ -1,43 +1,46 @@
 package leetcode.hash_map
 
-import leetcode.AproblemTest
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0202 = (Int) -> Boolean
 
-class I0202HappyNumber {
-    data class Case(
-        val n: Int,
-        val output: Boolean,
-    )
+
+class I0202happyNumber {
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0202> {
+    inner class Solution : leetcode.ProblemTest<I0202> {
 
-        override val cases: List<Case> = listOf(
-            Case(19, true),
-            Case(2, false),
+        override val cases = _root_ide_package_.leetcode.testCases<I0202>(
+            19 expects true,
+            2 expects false,
         )
-        override val solutions: List<Pair<String, I0202>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0202): Pair<Boolean, Any> {
-            val result = solution(n)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::isHappy)
 
-        private fun solution1(n: Int): Boolean {
+        fun solution1(n: Int): Boolean {
+
+            val index = mutableSetOf<Int>()
+            var result = n
+
+            while (result != 1) {
+                val nums = result.toString().map { it.toString().toInt() }
+                result = nums.sumOf { it * it }
+
+                if (index.add(result).not()) return false
+            }
+            return true
+        }
+
+        fun isHappy(n: Int): Boolean {
             val memoSquare = mutableMapOf<Int, Int>()
 
             fun splitNumber(n: Int): List<Int> {
                 if (n == 0) return listOf(0)
                 val digits = mutableListOf<Int>()
-                var temp = kotlin.math.abs(n) // Handle the negative numbers not necessary but whatever
+                var temp = kotlin.math.abs(n) // Handle negative numbers
                 while (temp > 0) {
                     digits.add(temp % 10)
                     temp /= 10
@@ -58,7 +61,5 @@ class I0202HappyNumber {
             }
             return sum == 1 || sum == 7
         }
-
-
     }
 }
