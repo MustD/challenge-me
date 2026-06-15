@@ -1,6 +1,7 @@
 package leetcode.backtracking
 
 import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -21,7 +22,7 @@ class I0052totalNQueens {
     @Nested
     inner class Solution : leetcode.ProblemTest<I0052> {
 
-        override val cases = _root_ide_package_.leetcode.testCases<I0052>(
+        override val cases = testCases<I0052>(
             4 expects 2,
             1 expects 1,
         )
