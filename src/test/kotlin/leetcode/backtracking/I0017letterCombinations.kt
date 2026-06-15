@@ -1,6 +1,8 @@
 package leetcode.backtracking
 
+import leetcode.ProblemTest
 import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -22,13 +24,13 @@ typealias I0017 = (String) -> List<String>
 class I0017letterCombinations {
 
     @Nested
-    inner class Solution : leetcode.ProblemTest<I0017> {
+    inner class Solution : ProblemTest<I0017> {
 
         // NOTE: LeetCode allows ANY order. The harness compares List<String> order-sensitively,
         // so the expected values below use the canonical 'digits-major, mapping-order' sequence
         // that a straightforward backtracking solution produces. If your output is correct but in
         // a different order, sort both sides (or reorder your traversal) to match.
-        override val cases = _root_ide_package_.leetcode.testCases<I0017>(
+        override val cases = testCases<I0017>(
             "23" expects """["ad","ae","af","bd","be","bf","cd","ce","cf"]""",
             "" expects "[]",
             "2" expects """["a","b","c"]""",

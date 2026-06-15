@@ -1,4 +1,5 @@
 ---
+context: fork
 name: leetcode-help
 description: Get unstuck on a LeetCode problem in this repo. Provides educational materials (intuition, pattern, complexity, pitfalls) and a verified reference solution, written directly into the problem's task file as comments + an extra solution function. Invoke as /leetcode-help <problem-number> (e.g. /leetcode-help 323) when stuck or spending too long.
 ---

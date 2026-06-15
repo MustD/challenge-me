@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.3.20"
+    kotlin("jvm") version "2.4.0"
 }
 
 group = "org.example"
@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.3")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:2.3.20")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:2.4.0")
 }
 
 tasks.test {

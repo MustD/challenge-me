@@ -1,6 +1,8 @@
 package leetcode.hash_map
 
+import leetcode.ProblemTest
 import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -10,9 +12,9 @@ typealias I0202 = (Int) -> Boolean
 class I0202happyNumber {
 
     @Nested
-    inner class Solution : leetcode.ProblemTest<I0202> {
+    inner class Solution : ProblemTest<I0202> {
 
-        override val cases = _root_ide_package_.leetcode.testCases<I0202>(
+        override val cases = testCases<I0202>(
             19 expects true,
             2 expects false,
         )
