@@ -15,8 +15,12 @@ data class ListNode(
     }
 }
 
-fun String.toListNode() = this.replace("[", "").replace("]", "").split(",").map {
-    it.toInt()
-}.reversed().fold<Int, ListNode?>(null) { r, t ->
-    ListNode(t).apply { next = r }
-}
+fun String.toListNode(): ListNode? = this.replace("[", "").replace("]", "")
+    .split(",")
+    .map { it.trim() }
+    .filter { it.isNotEmpty() } // handle empty list "[]" -> null
+    .map { it.toInt() }
+    .reversed()
+    .fold<Int, ListNode?>(null) { r, t ->
+        ListNode(t).apply { next = r }
+    }

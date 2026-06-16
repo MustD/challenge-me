@@ -33,7 +33,11 @@ object TypeConverters {
         if (value !is String) return value  // already typed (e.g. Int literal)
         ktypeHandlers[targetType]?.let { return it.fromString(value) }
         val klass = targetType.classifier as? KClass<*> ?: return value
-        return handlers[klass]?.fromString?.invoke(value) ?: value
+        // Use the handler if one exists, even when fromString returns null
+        // (e.g. "[]" -> null ListNode); only fall back to the raw value when
+        // there is no registered handler for this type.
+        val handler = handlers[klass] ?: return value
+        return handler.fromString(value)
     }
 
     fun equal(result: Any?, expected: Any?, returnType: KType): Boolean {
@@ -42,10 +46,11 @@ object TypeConverters {
             return handler.equals?.invoke(result, normalizedExpected) ?: (result == normalizedExpected)
         }
         val klass = returnType.classifier as? KClass<*>
-        val normalizedExpected = if (expected is String && klass != String::class)
-            handlers[klass]?.fromString?.invoke(expected) ?: expected
+        val handler = handlers[klass]
+        val normalizedExpected = if (expected is String && klass != String::class && handler != null)
+            handler.fromString(expected) // may legitimately be null (e.g. "[]" -> null)
         else expected
-        return handlers[klass]?.equals?.invoke(result, normalizedExpected)
+        return handler?.equals?.invoke(result, normalizedExpected)
             ?: (result == normalizedExpected)
     }
 
