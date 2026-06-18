@@ -1,5 +1,9 @@
-package leetcode
+package leetcode.heap
 
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import java.util.*
 import kotlin.test.Test
@@ -43,6 +47,47 @@ class I2462totalCost {
         @Test
         fun test() = check(::totalCost, ::referenceSolution)
 
+        /**
+         * Pattern: TWO MIN-HEAPS with a converging two-pointer frontier (`minP` walks up from the
+         * front, `maxP` walks down from the back). This is the standard — and asymptotically optimal
+         * — approach for this problem.
+         *
+         * Complexity
+         * ----------
+         * Time  O((k + candidates) · log candidates) — seeding does up to O(candidates) pushes, then
+         *       each of the k sessions does one poll plus at most one add. Neither heap ever exceeds
+         *       `candidates` elements, so every heap op is O(log candidates).
+         * Space O(candidates) — the two heaps; no recursion, so no extra stack term.
+         *
+         * The single most important correctness insight: the tie-break hinges on the STRICT `>` at
+         * line 64. Because the two windows can never overlap, every element in `leftH` has a smaller
+         * original index than anything in `rightH`. So when the two heap tops are equal, `>` is
+         * false, you fall to the `else` branch and draw from the left heap — which is exactly
+         * "smallest original index wins", the tie-break the problem demands. Switching that `>` to
+         * `>=` would silently break the tie-break rule (you'd start preferring the higher-index
+         * worker on ties).
+         *
+         * Why `Long`: the worst case is ~10^5 workers each costing up to 10^5, i.e. a sum near 1e10,
+         * which overflows a 32-bit `Int`. Accumulating into `result: Long` is the right call.
+         *
+         * Implementation notes specific to your version:
+         * - `meet = { minP > maxP }` (strict) is correct: the un-pooled middle is the *inclusive*
+         *   range [minP, maxP], so the windows have only fully met once minP passes maxP.
+         * - The seeding loops read-then-advance (`costs[minP++]`) and the refill branches advance
+         *   *after* adding (`costs[maxP]; maxP--`), so the same middle element is never both pooled
+         *   and skipped — the off-by-one that bit earlier drafts is gone here.
+         * - The `?: Int.MAX_VALUE` sentinels let an empty side lose every comparison gracefully once
+         *   the middle is exhausted, instead of NPE-ing on a null `peek()`.
+         *
+         * Parallelism doesn't help: the algorithm is inherently sequential — each hire mutates the
+         * frontier the next hire reads from, so there's a true data dependency across the k sessions.
+         * The work per session is already O(log candidates); there's nothing to fan out.
+         *
+         * Real-world framing: this is "online / streaming top-k from both ends of a shrinking pool",
+         * the same shape as load-balancers picking the cheapest of a head/tail candidate set, or
+         * distributed schedulers repeatedly committing the lowest-cost task from bounded front/back
+         * windows of a queue.
+         */
         fun totalCost(costs: IntArray, k: Int, candidates: Int): Long {
             var result = 0L
             var minP = 0
@@ -118,8 +163,8 @@ class I2462totalCost {
          */
         fun referenceSolution(costs: IntArray, k: Int, candidates: Int): Long {
             val n = costs.size
-            val left = java.util.PriorityQueue<Int>()
-            val right = java.util.PriorityQueue<Int>()
+            val left = PriorityQueue<Int>()
+            val right = PriorityQueue<Int>()
 
             var lo = 0
             var hi = n - 1
