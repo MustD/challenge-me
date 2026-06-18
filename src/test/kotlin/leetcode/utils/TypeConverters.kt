@@ -81,6 +81,11 @@ object TypeConverters {
                 equals = { a, b -> a?.toString() == b?.toString() }
             ))
         register(
+            QuadNode::class, Handler(
+                fromString = { it.toQuadNode() },
+                equals = { a, b -> a?.toString() == b?.toString() }
+            ))
+        register(
             IntArray::class, Handler(
                 fromString = { it.toIntArray() },
                 equals = { a, b -> (a as? IntArray)?.toList() == (b as? IntArray)?.toList() }
