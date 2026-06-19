@@ -1,15 +1,50 @@
 package leetcode.utils
 
+import leetcode.utils.ArrayUtils.stripStructuralWhitespace
+
+
 /**
  * A utility object that provides helper functions to manipulate and transform arrays or list-like string representations.
  */
 object ArrayUtils {
 
     /**
+     * Removes structural whitespace — spaces, tabs and line breaks — that sits *outside* of
+     * double-quoted segments, so that multiline / indented LeetCode literals parse identically
+     * to their single-line equivalents.
+     *
+     * Whitespace *inside* `"..."` is preserved, because string elements may legitimately contain
+     * spaces (e.g. `["a b", "c"]`). Only the whitespace between structural tokens (brackets,
+     * commas, unquoted values) is dropped.
+     *
+     * Example: a `"""..."""` matrix literal split across several indented lines collapses back to
+     * a single logical line, letting the `],[` / `[[` / `]]` markers match again.
+     */
+    fun String.stripStructuralWhitespace(): String {
+        val sb = StringBuilder(length)
+        var inQuotes = false
+        for (c in this) {
+            when {
+                c == '"' -> {
+                    inQuotes = !inQuotes; sb.append(c)
+                }
+
+                inQuotes -> sb.append(c)
+                c.isWhitespace() -> Unit // drop structural whitespace
+                else -> sb.append(c)
+            }
+        }
+        return sb.toString()
+    }
+
+    /**
      * Splits the string representation of an array-like structure into a list of strings.
      *
      * This function removes double quotes, square brackets, and then splits the string using commas as delimiters.
      * It is commonly used to parse stringified array representations into individual elements.
+     *
+     * Whitespace, tabs and line breaks between tokens are tolerated — they are stripped via
+     * [stripStructuralWhitespace] before parsing (whitespace inside quoted elements is kept).
      *
      * Edge cases:
      * - An empty array representation ("[]") yields an empty list. This is checked before quotes
@@ -20,8 +55,9 @@ object ArrayUtils {
      * @return A list of strings representing the parsed elements from the input string.
      */
     fun String.arraySplit(): List<String> {
-        if (trim() == "[]") return emptyList()
-        return replace("\"", "").replace("[", "").replace("]", "").split(",")
+        val cleaned = stripStructuralWhitespace()
+        if (cleaned == "[]") return emptyList()
+        return cleaned.replace("\"", "").replace("[", "").replace("]", "").split(",")
     }
 
     /**
@@ -39,9 +75,10 @@ object ArrayUtils {
      * @return A nested list of strings representing the parsed elements from the 2D array.
      */
     fun String.array2arraySplit() = run {
-        if (this.isEmpty()) return@run emptyList<List<String>>()
-        if (this == "[]") return@run listOf<List<String>>()
-        replace("\"", "").replace("[[", "").replace("]]", "").split("],[").map { it.split(",") }
+        val cleaned = stripStructuralWhitespace()
+        if (cleaned.isEmpty()) return@run emptyList<List<String>>()
+        if (cleaned == "[]") return@run listOf<List<String>>()
+        cleaned.replace("\"", "").replace("[[", "").replace("]]", "").split("],[").map { it.split(",") }
     }
 
     /**

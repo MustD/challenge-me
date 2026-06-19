@@ -1,6 +1,8 @@
 # File to note improvements to leetcode framework.
 
-1. Multiline string inputs like matrix. Worth cleaning/removing /n and whitespaces before parsing.
+1. ~~Multiline string inputs like matrix. Worth cleaning/removing /n and whitespaces before parsing.~~
+   **DONE** — `arraySplit()` / `array2arraySplit()` now run `stripStructuralWhitespace()` first, dropping
+   spaces/tabs/line breaks outside quotes. Both forms below parse identically. See `WhitespaceToleranceTest`.
 
 ```kotlin
  "[[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]," +

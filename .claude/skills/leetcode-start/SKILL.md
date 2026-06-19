@@ -1,7 +1,7 @@
 ---
 context: fork
 name: leetcode-start
-description: Scaffold a new, ready-to-solve LeetCode problem file in this repo. Looks up the problem statement, infers the function signature, writes test cases from the official examples, and leaves the solution body as a stub for the user to fill in. Invoke as /leetcode-start <problem-number> (e.g. /leetcode-start 3333). Creates the file in the root leetcode/ dir; it can be moved into a themed category later.
+description: Scaffold a new, ready-to-solve LeetCode problem file in this repo. Looks up the problem statement, infers the function signature, writes test cases from the official examples, and leaves the solution body as a stub for the user to fill in. Invoke as /leetcode-start problem-number (e.g. /leetcode-start 3333). Creates the file in the root leetcode/ dir; it can be moved into a themed category later.
 ---
 
 # leetcode-start

@@ -90,6 +90,17 @@ Key mechanics to understand before editing:
   through untouched.
 - **Conversion happens fresh on every run**, inside the case lambda, so mutable inputs like `IntArray` are not
   shared/mutated across multiple solutions.
+- **Whitespace, tabs and line breaks between tokens are tolerated** — structural whitespace outside quotes is stripped
+  before parsing, so a large matrix can be written as a readable multiline `"""…"""` literal instead of one long line:
+
+  ```kotlin
+  args("""
+      [[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],
+       [1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]
+  """) expects "..."
+  ```
+
+  Whitespace *inside* quoted elements is preserved (e.g. `["a b", "c"]`).
 - **`check(vararg solutions)` runs every solution against every case** — this is how multiple approaches to the same
   problem are validated together. A failure reports `solution[i] case[j] failed`.
 - **Equality is type-aware.** `TypeConverters` registers custom `equals` for array/list/linked-list/tree types (e.g.
@@ -108,8 +119,10 @@ Key mechanics to understand before editing:
 
 ### Supporting a new input/output type
 
-If a problem needs a type the harness doesn't yet handle, register it in the `init {}` block of `TypeConverters` with a
-`Handler(fromString = ..., equals = ...)`. Use `register(KClass)` for plain classes and `register(typeOf<...>())` for
-generic types (e.g. `List<List<Int>>`, `Array<IntArray>`) since erasure makes the `KClass` ambiguous. Custom
-data-structure types and their parsers live in `src/test/kotlin/leetcode/utils/` (`ListNode`, `TreeNode`, `Node`,
-`ArrayUtils`). The converters themselves are tested under `utils/type_converters/`.
+If a problem needs a type the harness doesn't yet handle, register it in the `init {}` block of `TypeConverters`. In
+short: `register(KClass)` for plain classes, `register(typeOf<...>())` for generic types (erasure makes the `KClass`
+ambiguous); supply a custom `equals` for arrays and node types; add a test under `utils/type_converters/`.
+
+**See `src/test/kotlin/leetcode/utils/CLAUDE.md` for the full type-converter rules** — the two registries, the
+`Handler` contract, per-type equality, the step-by-step recipe, and gotchas. Keep that file and this section in sync
+when the conversion layer changes.

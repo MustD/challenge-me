@@ -26,10 +26,10 @@ fun render(value: Any?): String = when (value) {
     else -> value.toString()
 }
 
-data class TestInput(val values: Array<out Any?>)
+data class TestInput(val values: List<Any?>)
 
-fun args(vararg values: Any?) = TestInput(values)
-infix fun Any?.expects(expected: Any?) = TestInput(arrayOf(this)) to expected
+fun args(vararg values: Any?) = TestInput(values.toList())
+infix fun Any?.expects(expected: Any?) = TestInput(listOf(this)) to expected
 infix fun TestInput.expects(expected: Any?) = this to expected
 
 inline fun <reified F : Function<Any?>> testCases(

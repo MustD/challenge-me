@@ -1,7 +1,7 @@
 ---
 context: fork
 name: leetcode-validate
-description: Validate and analyze a solution the user has already written for a LeetCode problem in this repo. Runs the problem's tests, then analyzes the user's actual implementation — time/space complexity, correctness notes, alternative approaches, whether a multithreaded/parallel approach applies, and real-world experience — and writes the analysis as a KDoc comment above their solution function. Invoke as /leetcode-validate <problem-number> (e.g. /leetcode-validate 3333).
+description: Validate and analyze a solution the user has already written for a LeetCode problem in this repo. Runs the problem's tests, then analyzes the user's actual implementation — time/space complexity, correctness notes, alternative approaches, whether a multithreaded/parallel approach applies, and real-world experience — and writes the analysis as a KDoc comment above their solution function. Invoke as /leetcode-validate problem-number (e.g. /leetcode-validate 3333).
 ---
 
 # leetcode-validate
