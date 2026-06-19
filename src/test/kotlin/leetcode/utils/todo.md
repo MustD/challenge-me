@@ -26,7 +26,11 @@
    ```kotlin
    "[1,2,3]" expectsAnyOrder "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]"
    ```
-3. Current test failure message is not very helpful. Consider adding more information about the failure.
+3. ~~Current test failure message is not very helpful. Consider adding more information about the failure.~~
+   **DONE** — `check()` no longer wraps the result in `assertNull`, which produced the misleading
+   `expected: <null> but was: <…>` framing below. Failures now read as
+   `solution[1] case[3]: expected: X, got: Y (input: …)` — the originating input args are appended to each
+   case message so you no longer have to count case indices to find what failed. See `CheckReportTest`.
 
 ```terminaloutput
 solution[1] case[1] failed
@@ -54,7 +58,11 @@ org.opentest4j.AssertionFailedError: solution[1] case[1] failed ==> expected: <n
    has a matching test. Filled the three gaps: `QuadNodeConverterTest` (was registered but untested),
    `ListOfIntConverterTest` (`List<Int>`), and `ListOfStringConverterTest` (`List<String>`). Each follows the
    standard shape — normal convert, empty `"[]"`, string-expected equality, typed-expected equality.
-5. Run all cases and functions, provide report for all cases and attempts at the same time
+5. ~~Run all cases and functions, provide report for all cases and attempts at the same time~~
+   **DONE** — `check()` no longer fails fast on the first mismatch. It runs every solution×case, collects
+   all failures, and throws once with a `N/total checks failed:` summary listing each. A solution that
+   *throws* is captured as `threw <Exception>: <msg>` instead of aborting the run, so one broken approach
+   never hides the others. Tests: `CheckReportTest`.
 6. ~~Parser can't represent an empty *inner* list: `"[[],[1]]"` parses the `[]` as `[""]`, so `toListOfIntLists()`
    throws
    `NumberFormatException` on `"".toInt()`.~~
@@ -83,3 +91,4 @@ org.opentest4j.AssertionFailedError: solution[1] case[1] failed ==> expected: <n
    Accommodate LeetCode `null` in tree serializations (`[1,null,2]`). Validate against the full existing
    `type_converters/` suite (especially `WhitespaceToleranceTest`, `ListOfIntListsConverterTest`,
    `ListOfStringListsConverterTest`) — behavior must be identical, plus the new edge cases above.
+8. clear println from leetcode issue functions.
