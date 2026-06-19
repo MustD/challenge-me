@@ -51,9 +51,6 @@ class I0076minimumWindowSubstring {
             add(s[high])
 
             while (low <= high) {
-                print("l:$low, h:$high | ")
-                print("$usageMap | ")
-
                 if (isValid()) {
                     result = when {
                         result == "" -> s.substring(low, high + 1)
@@ -67,7 +64,6 @@ class I0076minimumWindowSubstring {
                     if (high > s.lastIndex) break
                     add(s[high])
                 }
-                println(result)
             }
 
             return result

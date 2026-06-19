@@ -12,7 +12,6 @@ this file is the detail for editing the converters.
 - Data-structure types and their parsers: `ListNode.kt`, `TreeNode.kt`, `Node.kt`, `QuadNode.kt`. Each exposes a
   `String.toX()` parser and a `toString()` used for equality.
 - `type_converters/` — one test file per registered type. **Every converter must have a matching test here.**
-- `todo.md` — known framework gaps / wishlist. Read it before proposing harness improvements.
 
 ## How conversion works (read before editing)
 

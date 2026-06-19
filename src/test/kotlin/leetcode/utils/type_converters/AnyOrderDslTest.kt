@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * End-to-end check of the `expectsAnyOrder` DSL (todo.md item 2) through the full
+ * End-to-end check of the `expectsAnyOrder` DSL through the full
  * `testCases` → `check` path, not just [leetcode.utils.TypeConverters.equal] in isolation.
  */
 class AnyOrderDslTest {

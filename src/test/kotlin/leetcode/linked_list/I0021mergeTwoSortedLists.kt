@@ -31,7 +31,6 @@ class I0021mergeTwoSortedLists {
             var l2Cursor = list2
             var resultCursor = head
             while (true) {
-                println(head.toString())
                 if (l1Cursor == null) {
                     resultCursor.next = l2Cursor
                     break

@@ -15,8 +15,7 @@ class I0049GroupAnagrams {
 
         // Note: the `[""]` -> `[[""]]` case is omitted. The parser strips quotes before the
         // empty-row check, so `[[""]]` collapses to `[[]]` (empty inner list), which can't
-        // represent a group holding a single empty string. (This case was already failing on
-        // the old harness for the same reason.) See utils/todo.md.
+        // represent a group holding a single empty string.
         override val cases = testCases<I0049>(
             """["eat","tea","tan","ate","nat","bat"]""" expectsAnyOrder """[["bat"],["nat","tan"],["ate","eat","tea"]]""",
             """["a"]""" expectsAnyOrder """[["a"]]""",

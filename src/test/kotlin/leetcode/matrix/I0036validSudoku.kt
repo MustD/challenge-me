@@ -49,7 +49,6 @@ class I0036validSudoku {
             for (i in 0..8) {
                 val row = board[i]
                 if (check(row).not()) {
-//                    print("row $row" + row.toList())
                     return false
                 }
             }
@@ -61,7 +60,6 @@ class I0036validSudoku {
                     board[8][i]
                 ).toCharArray()
                 if (check(col).not()) {
-//                    print("col $col" + col.toList())
                     return false
                 }
             }
@@ -71,7 +69,6 @@ class I0036validSudoku {
                 val subX = (cell % 3)
                 val subBoard = (0..8).map { board[(it / 3) + (subY * 3)][(it % 3) + (subX * 3)] }.toCharArray()
                 if (check(subBoard).not()) {
-//                    print("cell $cell" + subBoard.toList())
                     return false
                 }
             }

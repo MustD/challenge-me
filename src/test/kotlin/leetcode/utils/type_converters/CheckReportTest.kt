@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 /**
- * Covers `check()`'s aggregated reporting (todo.md items 3 & 5): every solution×case is run,
+ * Covers `check()`'s aggregated reporting: every solution×case is run,
  * all failures surface in a single throw, and a throwing solution is captured rather than
  * aborting the run.
  */

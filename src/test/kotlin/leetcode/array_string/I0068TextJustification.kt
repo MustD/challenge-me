@@ -72,10 +72,6 @@ class I0068TextJustification {
                 }
             }
 
-            lines.map {
-                val str = it.joinToString("")
-                println("$str : ${str.length}")
-            }
             return lines.map { it.joinToString("") }
         }
 

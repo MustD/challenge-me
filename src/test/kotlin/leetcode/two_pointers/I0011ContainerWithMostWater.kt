@@ -27,7 +27,6 @@ class I0011ContainerWithMostWater {
             var right = height.lastIndex
             var max = 0
             while (left < right) {
-                println("leftI: $left, rightI: $right")
                 val leftH = height[left]
                 val rightH = height[right]
 
@@ -35,7 +34,6 @@ class I0011ContainerWithMostWater {
                 val ySize = minOf(leftH, rightH)
                 val area = xSize * ySize
 
-                println("height[left]: ${height[left]}, height[right]: ${height[right]}, area: $area")
                 max = maxOf(area, max)
                 if (leftH > rightH) {
                     right--

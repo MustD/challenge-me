@@ -115,8 +115,7 @@ Key mechanics to understand before editing:
   ```
 
   Backed by `TypeConverters.canonicalize` (recursively sorts arrays/lists by string form). If a problem needs the
-  *inner* order preserved, use plain `expects`. (Note: the parser can't represent an empty *inner* list — `[[],[1]]`
-  — see `todo.md`.)
+  *inner* order preserved, use plain `expects`.
 
 ### Adding a new problem
 

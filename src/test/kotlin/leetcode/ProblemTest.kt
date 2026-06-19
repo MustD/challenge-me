@@ -8,10 +8,10 @@ interface ProblemTest<F : Function<Any?>> {
     val cases: List<F.() -> String?>
 
     /**
-     * Runs every [solutions] against every case and reports **all** failures at once
-     * (todo.md items 3 & 5) — it does not stop at the first mismatch. A solution that
-     * throws is recorded as a failure rather than aborting the whole run, so one broken
-     * approach never hides the results of the others.
+     * Runs every [solutions] against every case and reports **all** failures at once —
+     * it does not stop at the first mismatch. A solution that throws is recorded as a
+     * failure rather than aborting the whole run, so one broken approach never hides the
+     * results of the others.
      */
     fun check(vararg solutions: F) {
         require(cases.isNotEmpty()) { "Cases must not be empty" }
@@ -50,7 +50,7 @@ data class TestInput(val values: List<Any?>)
  * infix functions; [testCases] unwraps it and asks [TypeConverters.equal] for a multiset
  * (order-independent) comparison instead of the default positional one.
  *
- * See `expectsAnyOrder` and todo.md item 2.
+ * See `expectsAnyOrder`.
  */
 data class AnyOrder(val expected: Any?)
 

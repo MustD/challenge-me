@@ -25,7 +25,6 @@ class I0452MinimumNumberOfArrowsToBurstBalloons {
 
         //wrong
         fun solution1(points: Array<IntArray>): Int {
-            println("--------------------")
             points.sortBy { it[1] }
             val result = mutableListOf<IntRange>()
 
@@ -37,13 +36,10 @@ class I0452MinimumNumberOfArrowsToBurstBalloons {
 
             points.forEach { interval ->
                 val range = interval[0]..interval[1]
-                println("result: $result")
-                println("interval: $range")
 
                 var notFound = true
                 for ((idx, section) in result.withIndex()) {
                     if (isIntersects(range, section)) {
-                        println("given $range intersects with $section")
                         result[idx] = maxOf(range.first, section.first)..minOf(range.last, section.last)
                         notFound = false
                         break

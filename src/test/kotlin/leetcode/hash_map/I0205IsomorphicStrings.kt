@@ -27,9 +27,7 @@ class I0205IsomorphicStrings {
         private fun solution1(s: String, t: String): Boolean {
             val mapping = mutableMapOf<Char, Char>()
             val used = mutableSetOf<Char>()
-            println("============")
             for (i in s.indices) {
-                println(mapping)
                 if (mapping.containsKey(s[i])) {
                     if (mapping[s[i]] != t[i]) return false
                 } else {

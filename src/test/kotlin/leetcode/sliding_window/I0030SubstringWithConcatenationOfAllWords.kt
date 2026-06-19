@@ -57,9 +57,6 @@ class I0030SubstringWithConcatenationOfAllWords {
                 var windowSize = 0
                 clearM()
                 for (i in j..(s.length - wSize) step wSize) {
-                    print("$i of ${s.length}, ")
-                    print(map)
-                    println(" word: ${getWordAt(i)}")
                     if (wordIn(getWordAt(i)).not()) {
                         windowSize = 0
                         clearM()
@@ -74,12 +71,10 @@ class I0030SubstringWithConcatenationOfAllWords {
                     }
 
                     if (windowSize == wCount && isValid()) {
-                        println("valid at $i, map: $map")
                         result.add(i - (wSize * (wCount - 1)))
                     }
                 }
             }
-            println("------------- ${result.distinct().sorted()}")
             return result.distinct().sorted()
         }
 

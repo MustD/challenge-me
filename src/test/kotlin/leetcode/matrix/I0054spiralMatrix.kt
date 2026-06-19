@@ -43,14 +43,9 @@ class I0054spiralMatrix {
             fun Bounds.reduceRight() = right--
 
 
-            matrix.forEach {
-                println(it.toList())
-            }
-
             var direction = if (matrix[0].size > 1) 'r' else 'd'
             repeat((1..(matrix.size * matrix[0].size)).count()) {
                 result.add(coords.get())
-                println("r: $result d: $direction")
                 when (direction) {
                     'r' -> {
                         coords.moveRight()

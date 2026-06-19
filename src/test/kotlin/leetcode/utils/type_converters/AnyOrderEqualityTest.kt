@@ -7,7 +7,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Covers todo.md item 2: order-insensitive comparison (the `expectsAnyOrder` DSL).
+ * Order-insensitive comparison (the `expectsAnyOrder` DSL).
  *
  * [TypeConverters.equal] with `anyOrder = true` compares collections as multisets at every
  * nesting level, so a correct solution that emits results in a different order than the literal

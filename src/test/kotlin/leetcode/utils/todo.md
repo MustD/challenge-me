@@ -91,4 +91,8 @@ org.opentest4j.AssertionFailedError: solution[1] case[1] failed ==> expected: <n
    Accommodate LeetCode `null` in tree serializations (`[1,null,2]`). Validate against the full existing
    `type_converters/` suite (especially `WhitespaceToleranceTest`, `ListOfIntListsConverterTest`,
    `ListOfStringListsConverterTest`) — behavior must be identical, plus the new edge cases above.
-8. clear println from leetcode issue functions.
+8. ~~clear println from leetcode issue functions.~~
+   **DONE** — removed the stray debug `println`/`print` calls (and a `List<Int>.print()` helper) left inside
+   solution functions across the suite: `I0011`, `I0021`, `I0030`, `I0036` (commented-out),
+   `I0054`, `I0068`, `I0076`, `I00153sum`, `I0205`, `I0452`, `I2897`. The intentional `printTree` debug
+   utility in `utils/TreeNode.kt` (`@Suppress("unused")`) was left in place.

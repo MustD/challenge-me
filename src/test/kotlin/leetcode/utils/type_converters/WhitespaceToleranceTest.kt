@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * Covers todo.md item 1: string-to-array conversion must tolerate spaces, tabs and line breaks
+ * String-to-array conversion must tolerate spaces, tabs and line breaks
  * between tokens, so multiline `"""..."""` literals parse identically to single-line ones.
  * Whitespace *inside* quoted elements must still be preserved.
  */

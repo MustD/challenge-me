@@ -31,7 +31,6 @@ class I00153sum {
                     var lo = i + 1
                     var hi = nums.lastIndex
                     while (lo < hi) {
-                        println("i: $i, lo: $lo, hi: $hi")
                         val sum = nums[i] + nums[lo] + nums[hi]
                         if (sum < 0) {
                             lo++

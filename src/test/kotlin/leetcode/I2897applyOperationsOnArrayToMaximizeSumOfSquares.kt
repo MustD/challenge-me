@@ -23,13 +23,6 @@ class I2897applyOperationsOnArrayToMaximizeSumOfSquares {
         @Test
         fun test() = check(::solution1, ::solution2, ::solution3, ::solution4, ::imported)
 
-        private fun List<Int>.print(): List<Int> {
-            println("--- list $this ---")
-            forEach { println(it.toString(2)) }
-            println("------------------")
-            return this
-        }
-
         //too long
         fun solution1(nums: List<Int>, k: Int): Int {
             fun List<Int>.operation(i: Int, j: Int): List<Int> = mapIndexed { idx, value ->
@@ -126,7 +119,6 @@ class I2897applyOperationsOnArrayToMaximizeSumOfSquares {
         }
 
         fun imported(nums: List<Int>, k: Int): Int {
-            nums.print()
             val bitCount = IntArray(32)
             for (n in nums) {
                 for (bitNum in 0..31) {
