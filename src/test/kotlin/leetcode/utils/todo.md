@@ -49,7 +49,11 @@ org.opentest4j.AssertionFailedError: solution[1] case[1] failed ==> expected: <n
 	at leetcode.divide_conquer.I0427constructQuadTree$Solution.test(I0427constructQuadTree.kt:60)
 ```
 
-4. Validate type converted covered with tests.
+4. ~~Validate type converters covered with tests.~~
+   **DONE** — audited the `TypeConverters` registry against `type_converters/`; every registered handler now
+   has a matching test. Filled the three gaps: `QuadNodeConverterTest` (was registered but untested),
+   `ListOfIntConverterTest` (`List<Int>`), and `ListOfStringConverterTest` (`List<String>`). Each follows the
+   standard shape — normal convert, empty `"[]"`, string-expected equality, typed-expected equality.
 5. Run all cases and functions, provide report for all cases and attempts at the same time
 6. ~~Parser can't represent an empty *inner* list: `"[[],[1]]"` parses the `[]` as `[""]`, so `toListOfIntLists()`
    throws
