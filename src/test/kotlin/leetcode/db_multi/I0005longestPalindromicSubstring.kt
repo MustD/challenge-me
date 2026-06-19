@@ -1,39 +1,34 @@
 package leetcode.db_multi
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
-import kotlin.time.measureTimedValue
+
+// LeetCode accepts ANY longest palindromic substring (e.g. "babad" -> "bab" or "aba"), so the
+// original AproblemTest used `output.contains(result)` against a list of valid answers. The
+// ProblemTest harness compares against a single expected value, so each expected below is pinned
+// to the *deterministic* output `solution1` actually emits. If you add a solution that emits a
+// different (still valid) palindrome of the same length, update the expected or special-case it.
+typealias I0005 = (String) -> String
 
 class I0005longestPalindromicSubstring {
-    data class Case(
-        val input: String,
-        val output: List<String>,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (String) -> String> {
-        override val cases: List<Case> = listOf(
-            Case("babad", listOf("bab", "aba")),
-            Case("cbbd", listOf("bb")),
-            Case("bb", listOf("bb")),
-            Case("abibkejokjfi", listOf("bib")),
-            Case("abb", listOf("bb")),
-            Case(longString, listOf("cxrxc"))
-        )
-        override val solutions: List<Pair<String, (String) -> String>> = listOf(
-            ::solution1.name to ::solution1
-        )
+    inner class Solution : ProblemTest<I0005> {
 
-        override fun Case.check(solution: (String) -> String): Pair<Boolean, Any> {
-            val result = measureTimedValue {
-                solution(input)
-            }
-            return output.contains(result.value) to result
-        }
+        override val cases = testCases<I0005>(
+            "babad" expects "bab",
+            "cbbd" expects "bb",
+            "bb" expects "bb",
+            "abibkejokjfi" expects "bib",
+            "abb" expects "bb",
+            longString expects "cxrxc",
+        )
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(s: String): String {
             if (s.isEmpty()) return ""

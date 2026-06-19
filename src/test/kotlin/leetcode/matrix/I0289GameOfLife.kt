@@ -1,49 +1,32 @@
 package leetcode.matrix
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
-typealias I0289 = (Array<IntArray>) -> Unit
+// LeetCode's signature is `(Array<IntArray>) -> Unit`: the solution advances `board` one
+// generation in place and returns nothing. The ProblemTest harness asserts on the *return value*,
+// so we return the (mutated) input board instead of Unit to make the next state checkable. To
+// match LeetCode exactly, drop the `: Array<IntArray>` return type and the trailing `return board`.
+typealias I0289 = (Array<IntArray>) -> Array<IntArray>
 
 class I0289GameOfLife {
-    data class Case(
-        val matrix: List<List<Int>>,
-        val output: List<List<Int>>,
-    )
-
-    fun prepareCase(matrix: String, output: String): Case {
-        return Case(
-            matrix.toListOfIntLists(),
-            output.toListOfIntLists(),
-        )
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0289> {
+    inner class Solution : ProblemTest<I0289> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[[0,1,0],[0,0,1],[1,1,1],[0,0,0]]", "[[0,0,0],[1,0,1],[0,1,1],[0,1,0]]"),
-            prepareCase("[[1,1],[1,0]]", "[[1,1],[1,1]]"),
+        override val cases = testCases<I0289>(
+            args("[[0,1,0],[0,0,1],[1,1,1],[0,0,0]]") expects "[[0,0,0],[1,0,1],[0,1,1],[0,1,0]]",
+            args("[[1,1],[1,0]]") expects "[[1,1],[1,1]]",
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0289): Pair<Boolean, Any> {
-            val input = matrix.map { it.toIntArray() }.toTypedArray()
-            solution(input)
-            val result = input.map { it.toList() }.toList()
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
-        private fun solution1(board: Array<IntArray>): Unit {
+        private fun solution1(board: Array<IntArray>): Array<IntArray> {
             val state = mutableMapOf<Pair<Int, Int>, Int>()
             fun isLife(y: Int, x: Int): Boolean {
                 val current = board[y][x]
@@ -73,6 +56,7 @@ class I0289GameOfLife {
                     board[y][x] = state.getOrDefault(y to x, 0)
                 }
             }
+            return board
         }
     }
 }

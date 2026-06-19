@@ -1,49 +1,29 @@
 package leetcode
 
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+
+// LeetCode accepts ANY array of `n` dice whose values, combined with `rolls`, produce the target
+// `mean` (there can be many valid answers). The original AproblemTest mirrored this with a fallback
+// that accepted any result with the correct mean. The ProblemTest harness compares against a single
+// expected value, so each expected below is pinned to the *deterministic* output `solution1` emits.
+// Notably case 2 ([1,5,6],3,4) emits [1,2,3,3] — the old test's literal [2,3,2,2] is also valid and
+// only passed via that mean fallback. The third case is genuinely impossible, so [] is the answer.
+typealias I2028 = (IntArray, Int, Int) -> IntArray
 
 class I2028findMissingObservations {
-    data class Case(
-        val rolls: IntArray,
-        val mean: Int,
-        val n: Int,
-        val output: IntArray,
-    )
-
-    val parseCase = { rolls: String, mean: Int, n: Int, output: String ->
-        val fromString = { str: String ->
-            if (str == "[]") {
-                intArrayOf()
-            } else {
-                str.replace("[", "").replace("]", "").split(",").map { it.toInt() }.toIntArray()
-            }
-        }
-        Case(fromString(rolls), mean, n, fromString(output))
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, (IntArray, Int, Int) -> IntArray> {
+    inner class Solution : ProblemTest<I2028> {
 
-        override val cases: List<Case> = listOf(
-            parseCase("[3,2,4,3]", 4, 2, "[6,6]"),
-            parseCase("[1,5,6]", 3, 4, "[2,3,2,2]"),
-            parseCase("[1,2,3,4]", 6, 4, "[]"),
+        override val cases = testCases<I2028>(
+            args("[3,2,4,3]", 4, 2) expects "[6,6]",
+            args("[1,5,6]", 3, 4) expects "[1,2,3,3]",
+            args("[1,2,3,4]", 6, 4) expects "[]",
         )
-
-        override val solutions: List<Pair<String, (IntArray, Int, Int) -> IntArray>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: (IntArray, Int, Int) -> IntArray): Pair<Boolean, Any> {
-            val result = solution(rolls, mean, n)
-            if (output.toList().sorted() == result.toList().sorted()) return true to result.toList()
-            if (((result + rolls).sum() / (rolls.size + n)) == mean) return true to result.toList()
-            return false to result.toList()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(rolls: IntArray, mean: Int, n: Int): IntArray {
             val array = IntArray(n) { mean }

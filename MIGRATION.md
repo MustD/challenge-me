@@ -74,7 +74,7 @@ the solution's emitted order; a failure flags it as actually belonging in subset
 
 ## Out of scope (this pass)
 
-- Deleting `AproblemTest.kt` (still needed by the deferred files).
+- ~~Deleting `AproblemTest.kt` (still needed by the deferred files).~~ **Done** — see "Final pass" below.
 - Any framework extension for the deferred subsets.
 - Touching the 35 already-migrated files.
 
@@ -103,3 +103,23 @@ failing on the old harness for the same reason. Documented inline in the file.
 
 Subset B (`expectsAnyOrder`): `I0001`, `I0049`, `I0015`, `I0077` migrated as planned; also
 applied to `I0228 summaryRanges` whose old `check` sorted both sides.
+
+## Final pass — all 7 remaining files migrated; `AproblemTest` deleted
+
+The last 7 files were migrated and `AproblemTest.kt` was removed (it had no remaining
+dependents). `./gradlew build` is green.
+
+- **Void / in-place** (`I0048 RotateImage`, `I0073 SetMatrixZeroes`, `I0289 GameOfLife`,
+  `I0189 rotateArray`): the `typealias` return type was changed from `Unit` to the **input
+  type** (`Array<IntArray>` / `IntArray`) and each solution now `return`s the mutated input, so
+  the harness can assert on it. The LeetCode divergence (real signature returns `Unit`) is noted
+  in a comment at the top of each file.
+- **Multiple-valid-answers** (`I0005 longestPalindromicSubstring`, `I2028 findMissingObservations`):
+  the harness compares one expected value, so each `expects` is **pinned to the deterministic
+  output the current solution emits** (verified by a green run), with a comment that LeetCode
+  accepts any valid answer. Notably `I2028` case `[1,5,6],3,4` emits `[1,2,3,3]`; the old literal
+  `[2,3,2,2]` only ever passed via the mean-fallback.
+- **Cyclic input** (`I0141 LinkedListCycle`): kept off the shared harness and given a small
+  **self-contained** test — `Case(nums, pos, expected)` plus a `build()` that assembles the cycle
+  by hand. Because the cyclic `ListNode` is never stored in or printed from a `Case`, the
+  `toString()` infinite loop that forced the old `@Disabled` is gone, and the test now **runs**.

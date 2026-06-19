@@ -1,49 +1,32 @@
 package leetcode.matrix
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
-typealias I0073 = (Array<IntArray>) -> Unit
+// LeetCode's signature is `(Array<IntArray>) -> Unit`: the solution zeroes out rows/cols in
+// `matrix` in place and returns nothing. The ProblemTest harness asserts on the *return value*,
+// so we return the (mutated) input matrix instead of Unit to make the result checkable. To match
+// LeetCode exactly, drop the `: Array<IntArray>` return type and the trailing `return matrix`.
+typealias I0073 = (Array<IntArray>) -> Array<IntArray>
 
 class I0073SetMatrixZeroes {
-    data class Case(
-        val matrix: List<List<Int>>,
-        val output: List<List<Int>>,
-    )
-
-    fun prepareCase(matrix: String, output: String): Case {
-        return Case(
-            matrix.toListOfIntLists(),
-            output.toListOfIntLists(),
-        )
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0073> {
+    inner class Solution : ProblemTest<I0073> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[[1,1,1],[1,0,1],[1,1,1]]", "[[1,0,1],[0,0,0],[1,0,1]]"),
-            prepareCase("[[0,1,2,0],[3,4,5,2],[1,3,1,5]]", "[[0,0,0,0],[0,4,5,0],[0,3,1,0]]"),
+        override val cases = testCases<I0073>(
+            args("[[1,1,1],[1,0,1],[1,1,1]]") expects "[[1,0,1],[0,0,0],[1,0,1]]",
+            args("[[0,1,2,0],[3,4,5,2],[1,3,1,5]]") expects "[[0,0,0,0],[0,4,5,0],[0,3,1,0]]",
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0073): Pair<Boolean, Any> {
-            val input = matrix.map { it.toIntArray() }.toTypedArray()
-            solution(input)
-            val result = input.map { it.toList() }.toList()
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
-        private fun solution1(matrix: Array<IntArray>): Unit {
+        private fun solution1(matrix: Array<IntArray>): Array<IntArray> {
             val zRows = mutableSetOf<Int>()
             val zCols = mutableSetOf<Int>()
             for (y in matrix.indices) {
@@ -61,6 +44,7 @@ class I0073SetMatrixZeroes {
                     }
                 }
             }
+            return matrix
         }
     }
 }
