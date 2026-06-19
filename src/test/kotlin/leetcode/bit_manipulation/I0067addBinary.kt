@@ -1,6 +1,9 @@
 package leetcode.bit_manipulation
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,32 +11,16 @@ typealias I0067 = (String, String) -> String
 
 class I0067addBinary {
 
-    data class Case(
-        val a: String,
-        val b: String,
-        val output: String,
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0067> {
+    inner class Solution : ProblemTest<I0067> {
 
-        override val cases: List<Case> = listOf(
-            Case("11", "1", "100"),
-            Case("1010", "1011", "10101"),
+        override val cases = testCases<I0067>(
+            args("11", "1") expects "100",
+            args("1010", "1011") expects "10101",
         )
-
-        override val solutions: List<Pair<String, I0067>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0067): Pair<Boolean, Any> {
-            val result = solution(a, b)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(a: String, b: String): String {
             val n = a.length

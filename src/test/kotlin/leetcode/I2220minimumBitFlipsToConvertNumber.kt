@@ -3,31 +3,19 @@ package leetcode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I2220 = (Int, Int) -> Int
+
 class I2220minimumBitFlipsToConvertNumber {
 
-    data class Case(
-        val start: Int,
-        val goal: Int,
-        val output: Int,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, (Int, Int) -> Int> {
-        override val cases: List<Case> = listOf(
-            Case(10, 7, 3),
-            Case(3, 4, 3),
+    inner class Solution : ProblemTest<I2220> {
+        override val cases = testCases<I2220>(
+            args(10, 7) expects 3,
+            args(3, 4) expects 3,
         )
-        override val solutions: List<Pair<String, (Int, Int) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: (Int, Int) -> Int): Pair<Boolean, Any> {
-            val result = solution(start, goal)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(start: Int, goal: Int): Int {
             var counter = 0

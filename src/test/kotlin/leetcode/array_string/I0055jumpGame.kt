@@ -1,7 +1,8 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,35 +10,16 @@ private typealias I0055 = (IntArray) -> Boolean
 
 class I0055jumpGame {
 
-    data class Case(
-        val nums: List<Int>,
-        val output: Boolean,
-    )
-
-    val prepareCase = { n1: String, r: Boolean ->
-        Case(n1.toIntArray().toList(), r)
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0055> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[2,3,1,1,4]", true),
-            prepareCase("[3,2,1,0,4]", false),
-            prepareCase("[2,0]", true)
+    inner class Solution : ProblemTest<I0055> {
+        override val cases = testCases<I0055>(
+            "[2,3,1,1,4]" expects true,
+            "[3,2,1,0,4]" expects false,
+            "[2,0]" expects true,
         )
-        override val solutions: List<Pair<String, I0055>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0055): Pair<Boolean, Any> {
-            val result = solution(nums.toIntArray())
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
         /**
          * TLE

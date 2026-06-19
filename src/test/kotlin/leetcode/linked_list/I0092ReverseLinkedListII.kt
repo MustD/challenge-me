@@ -1,45 +1,27 @@
 package leetcode.linked_list
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.ListNode
-import leetcode.utils.toListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0092 = (ListNode?, Int, Int) -> ListNode?
 
 class I0092ReverseLinkedListII {
-    data class Case(
-        val head: ListNode?,
-        val left: Int,
-        val right: Int,
-        val output: ListNode?,
-    )
-
-    val prepareCase = { head: String, left: Int, right: Int, out: String ->
-        Case(head.toListNode(), left, right, out.toListNode())
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0092> {
+    inner class Solution : ProblemTest<I0092> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,2,3,4,5]", 2, 4, "[1,4,3,2,5]"),
-            prepareCase("[5]", 1, 1, "[5]"),
+        override val cases = testCases<I0092>(
+            args("[1,2,3,4,5]", 2, 4) expects "[1,4,3,2,5]",
+            args("[5]", 1, 1) expects "[5]",
         )
-
-        override val solutions: List<Pair<String, I0092>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0092): Pair<Boolean, Any> {
-            val result = solution(head, left, right)
-            val isCorrect = result.toString() == output.toString()
-            return isCorrect to result.toString()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(head: ListNode?, left: Int, right: Int): ListNode? {
             if (head == null) return null

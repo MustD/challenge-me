@@ -1,38 +1,27 @@
 package leetcode.hash_map
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0383 = (String, String) -> Boolean
+
 class I0383ransomNote {
-    data class Case(
-        val ransomNote: String,
-        val magazine: String,
-        val output: Boolean,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (String, String) -> Boolean> {
+    inner class Solution : ProblemTest<I0383> {
 
-        override val cases: List<Case> = listOf(
-            Case("a", "b", false),
-            Case("aa", "ab", false),
-            Case("aa", "aab", true),
+        override val cases = testCases<I0383>(
+            args("a", "b") expects false,
+            args("aa", "ab") expects false,
+            args("aa", "aab") expects true,
         )
-        override val solutions: List<Pair<String, (String, String) -> Boolean>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-            ::solutionCommunity.name to ::solutionCommunity,
-        )
-
-        override fun Case.check(solution: (String, String) -> Boolean): Pair<Boolean, Any> {
-            val result = solution(ransomNote, magazine)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2, ::solutionCommunity)
 
         private fun solution1(ransomNote: String, magazine: String): Boolean {
             if (ransomNote.length > magazine.length) return false

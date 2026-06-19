@@ -1,32 +1,19 @@
 package leetcode.matrix
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0036 = (Array<CharArray>) -> Boolean
+
 class I0036validSudoku {
 
-    data class Case(
-        val input: Array<CharArray>,
-        val output: Boolean,
-    )
-
-    val parseCase = { s: String, r: Boolean ->
-        val a = s.replace("[[", "[").replace("]]", "]").split(",[")
-            .map {
-                it.replace("[", "").replace("]", "").replace("\"", "").trim()
-            }.map {
-                it.split(",").map { it.trim().first() }.toCharArray()
-            }.toTypedArray()
-
-        Case(a, r)
-    }
-
     @Nested
-    inner class Solution : AproblemTest<Case, (Array<CharArray>) -> Boolean> {
-        override val cases: List<Case> = listOf(
-            parseCase(
-                """
+    inner class Solution : ProblemTest<I0036> {
+        override val cases = testCases<I0036>(
+            """
                 [["5","3",".",".","7",".",".",".","."]
                 ,["6",".",".","1","9","5",".",".","."]
                 ,[".","9","8",".",".",".",".","6","."]
@@ -36,10 +23,8 @@ class I0036validSudoku {
                 ,[".","6",".",".",".",".","2","8","."]
                 ,[".",".",".","4","1","9",".",".","5"]
                 ,[".",".",".",".","8",".",".","7","9"]]
-            """.trimIndent(), true
-            ),
-            parseCase(
-                """
+            """ expects true,
+            """
                 [["8","3",".",".","7",".",".",".","."]
                 ,["6",".",".","1","9","5",".",".","."]
                 ,[".","9","8",".",".",".",".","6","."]
@@ -49,22 +34,11 @@ class I0036validSudoku {
                 ,[".","6",".",".",".",".","2","8","."]
                 ,[".",".",".","4","1","9",".",".","5"]
                 ,[".",".",".",".","8",".",".","7","9"]]
-            """.trimIndent(), false
-            ),
+            """ expects false,
         )
-        override val solutions: List<Pair<String, (Array<CharArray>) -> Boolean>> = listOf(
-            ::solution1.name to ::solution1,
-            ::community.name to ::community,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: (Array<CharArray>) -> Boolean): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::community, ::solution2)
 
         fun solution1(board: Array<CharArray>): Boolean {
             val check = { arr: CharArray ->

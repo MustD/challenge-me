@@ -1,41 +1,26 @@
 package leetcode.binary_tree_bfs
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toDoubleArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0637 = (TreeNode?) -> DoubleArray
+
 class I0637averageOfLevelsInBinaryTree {
 
-    data class Case(
-        val input: TreeNode?,
-        val output: DoubleArray,
-    )
-
-    fun prepareCase(s: String, out: String) = Case(s.toTreeNode(), out.toDoubleArray())
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, (TreeNode?) -> DoubleArray> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[3,9,20,null,null,15,7]", "[3.0,14.5,11.00000]"),
-            prepareCase("[3,9,20,15,7]", "[3.0,14.5,11.0]"),
-            prepareCase("[3,1,5,0,2,4,6]", "3.0,3.0,3.0]"),
+    inner class Solution : ProblemTest<I0637> {
+        override val cases = testCases<I0637>(
+            "[3,9,20,null,null,15,7]" expects "[3.0,14.5,11.00000]",
+            "[3,9,20,15,7]" expects "[3.0,14.5,11.0]",
+            "[3,1,5,0,2,4,6]" expects "3.0,3.0,3.0]",
         )
-        override val solutions: List<Pair<String, (TreeNode?) -> DoubleArray>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: (TreeNode?) -> DoubleArray): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result.toList() == output.toList()) to result.toList()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         fun solution1(root: TreeNode?): DoubleArray {
             if (root == null) return doubleArrayOf()

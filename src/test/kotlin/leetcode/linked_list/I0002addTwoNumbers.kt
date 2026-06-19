@@ -1,53 +1,31 @@
 package leetcode.linked_list
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.ListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
+
+typealias I0002 = (ListNode?, ListNode?) -> ListNode?
 
 /**
  * https://leetcode.com/problems/add-two-numbers/description/
  */
 class I0002addTwoNumbers {
-    data class Case(
-        val l1: List<Int>,
-        val l2: List<Int>,
-        val output: List<Int>,
-    )
-
-    private fun List<Int>.toListNode(): ListNode? = this.fold(null) { acc: ListNode?, i: Int -> ListNode(i, acc) }
-    private fun ListNode?.toList(): List<Int> {
-        val acc = mutableListOf<Int>()
-        val input = this ?: return acc
-        var curr = input
-        while (true) {
-            acc.add(curr.`val`)
-            curr = curr.next ?: return acc
-        }
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, (ListNode?, ListNode?) -> ListNode?> {
+    inner class Solution : ProblemTest<I0002> {
 
-        override val cases: List<Case> = listOf(
-            Case(listOf(2, 4, 3), listOf(5, 6, 4), listOf(7, 0, 8)),
-            Case(listOf(0), listOf(0), listOf(0)),
-            Case(listOf(9, 9, 9, 9, 9, 9, 9), listOf(9, 9, 9, 9), listOf(8, 9, 9, 9, 0, 0, 0, 1)),
+        override val cases = testCases<I0002>(
+            args("[2,4,3]", "[5,6,4]") expects "[7,0,8]",
+            args("[0]", "[0]") expects "[0]",
+            args("[9,9,9,9,9,9,9]", "[9,9,9,9]") expects "[8,9,9,9,0,0,0,1]",
         )
-
-        override val solutions: List<Pair<String, (ListNode?, ListNode?) -> ListNode?>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionAi.name to ::solutionAi,
-        )
-
-        override fun Case.check(solution: (ListNode?, ListNode?) -> ListNode?): Pair<Boolean, Any> {
-            val result = solution(l1.toListNode(), l2.toListNode()).toList()
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionAi)
 
         private fun solution1(l1: ListNode?, l2: ListNode?): ListNode? {
 

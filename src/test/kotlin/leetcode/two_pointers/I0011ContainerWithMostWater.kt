@@ -1,7 +1,8 @@
 package leetcode.two_pointers
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,34 +10,16 @@ private typealias I0011 = (IntArray) -> Int
 
 class I0011ContainerWithMostWater {
 
-    data class Case(
-        val nums: List<Int>,
-        val output: Int,
-    )
-
-    val prepareCase = { n1: String, r: Int ->
-        Case(n1.toIntArray().toList(), r)
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0011> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,8,6,2,5,4,8,3,7]", 49),
-            prepareCase("[1,1]", 1),
-            prepareCase("[8,7,2,1]", 7),
+    inner class Solution : ProblemTest<I0011> {
+        override val cases = testCases<I0011>(
+            "[1,8,6,2,5,4,8,3,7]" expects 49,
+            "[1,1]" expects 1,
+            "[8,7,2,1]" expects 7,
         )
-        override val solutions: List<Pair<String, I0011>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0011): Pair<Boolean, Any> {
-            val result = solution(nums.toIntArray())
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
 
         fun solution1(height: IntArray): Int {

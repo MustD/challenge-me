@@ -1,6 +1,8 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.math.pow
 import kotlin.test.Test
@@ -9,36 +11,17 @@ private typealias I0012 = (Int) -> String
 
 class I0012integerToRoman {
 
-    data class Case(
-        val num: Int,
-        val output: String,
-    )
-
-    val prepareCase = { s: Int, r: String ->
-        Case(s, r)
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0012> {
-        override val cases: List<Case> = listOf(
-            prepareCase(3, "III"),
-            prepareCase(58, "LVIII"),
-            prepareCase(1994, "MCMXCIV"),
-            prepareCase(3749, "MMMDCCXLIX"),
+    inner class Solution : ProblemTest<I0012> {
+        override val cases = testCases<I0012>(
+            3 expects "III",
+            58 expects "LVIII",
+            1994 expects "MCMXCIV",
+            3749 expects "MMMDCCXLIX",
         )
-        override val solutions: List<Pair<String, I0012>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0012): Pair<Boolean, Any> {
-            val result = solution(num)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
 
         fun solution1(num: Int): String {

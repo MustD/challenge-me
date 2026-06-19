@@ -1,45 +1,35 @@
 package leetcode.sliding_window
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.math.max
 import kotlin.test.Test
 
 
+typealias I0003 = (String) -> Int
+
 /**
  * https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
  */
 class I0003longestSubstring {
-    data class Case(
-        val input: String,
-        val output: Int,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (String) -> Int> {
+    inner class Solution : ProblemTest<I0003> {
 
-        override val cases: List<Case> = listOf(
-            Case("abcabcbb", 3),
-            Case("bbbbb", 1),
-            Case("pwwkew", 3),
-            Case(" ", 1),
-            Case("aa", 1),
-            Case("", 0),
-            Case("dvdf", 3),
+        override val cases = testCases<I0003>(
+            "abcabcbb" expects 3,
+            "bbbbb" expects 1,
+            "pwwkew" expects 3,
+            " " expects 1,
+            "aa" expects 1,
+            "" expects 0,
+            "dvdf" expects 3,
         )
-        override val solutions: List<Pair<String, (String) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionAi.name to ::solutionAi,
-        )
-
-        override fun Case.check(solution: (String) -> Int): Pair<Boolean, Any> {
-            val result = solution(input)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionAi)
 
         private fun solution1(s: String): Int {
             if (s.length <= 1) return s.length

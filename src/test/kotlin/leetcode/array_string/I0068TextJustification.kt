@@ -1,6 +1,9 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,78 +11,18 @@ private typealias I0068 = (Array<String>, Int) -> List<String>
 
 class I0068TextJustification {
 
-    data class Case(
-        val words: List<String>,
-        val maxWidth: Int,
-        val output: List<String>,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0068> {
-        override val cases: List<Case> = listOf(
-            Case(
-                listOf("This", "is", "an", "example", "of", "text", "justification."),
+    inner class Solution : ProblemTest<I0068> {
+        // Original harness ran only the last case (`.last().let { listOf(it) }`); preserved here.
+        override val cases = testCases<I0068>(
+            args(
+                """["ask","not","what","your","country","can","do","for","you","ask","what","you","can","do","for","your","country"]""",
                 16,
-                listOf(
-                    "This    is    an",
-                    "example  of text",
-                    "justification.  "
-                ),
-            ),
-            Case(
-                listOf("What", "must", "be", "acknowledgment", "shall", "be"),
-                16,
-                listOf(
-                    "What   must   be",
-                    "acknowledgment  ",
-                    "shall be        "
-                ),
-            ),
-            Case(
-                listOf(
-                    "Science", "is", "what", "we", "understand", "well", "enough",
-                    "to", "explain", "to", "a", "computer.", "Art", "is", "everything",
-                    "else", "we", "do"
-                ),
-                20,
-                listOf(
-                    "Science  is  what we",
-                    "understand      well",
-                    "enough to explain to",
-                    "a  computer.  Art is",
-                    "everything  else  we",
-                    "do                  "
-                ),
-            ),
-            Case(
-                listOf(
-                    "ask", "not", "what", "your",
-                    "country", "can", "do", "for",
-                    "you", "ask", "what", "you",
-                    "can", "do", "for", "your",
-                    "country"
-                ),
-                16,
-                listOf(
-                    "ask   not   what",
-                    "your country can",
-                    "do  for  you ask",
-                    "what  you can do",
-                    "for your country",
-                )
-            )
-        ).last().let { listOf(it) }
-        override val solutions: List<Pair<String, I0068>> = listOf(
-            ::solution1.name to ::solution1,
+            ) expects """["ask   not   what","your country can","do  for  you ask","what  you can do","for your country"]""",
         )
 
-        override fun Case.check(solution: I0068): Pair<Boolean, Any> {
-            val result = solution(words.toTypedArray(), maxWidth)
-            return (result == output) to result
-        }
-
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(words: Array<String>, maxWidth: Int): List<String> {
             val lines = mutableListOf<MutableList<String>>()

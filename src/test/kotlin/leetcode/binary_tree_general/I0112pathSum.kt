@@ -1,41 +1,27 @@
 package leetcode.binary_tree_general
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0112 = (TreeNode?, Int) -> Boolean
+
 class I0112pathSum {
 
-    data class Case(
-        val root: TreeNode?,
-        val targetSum: Int,
-        val output: Boolean,
-    )
-
-    fun prepareCase(s: String, t: Int, out: Boolean) = Case(s.toTreeNode(), t, out)
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, (TreeNode?, Int) -> Boolean> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[5,4,8,11,null,13,4,7,2,null,null,null,1]", 22, true),
-            prepareCase("[1,2,3]", 5, false),
-            prepareCase("[]", 0, false),
+    inner class Solution : ProblemTest<I0112> {
+        override val cases = testCases<I0112>(
+            args("[5,4,8,11,null,13,4,7,2,null,null,null,1]", 22) expects true,
+            args("[1,2,3]", 5) expects false,
+            args("[]", 0) expects false,
         )
-        override val solutions: List<Pair<String, (TreeNode?, Int) -> Boolean>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: (TreeNode?, Int) -> Boolean): Pair<Boolean, Any> {
-            val result = solution(root, targetSum)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         fun solution1(root: TreeNode?, targetSum: Int): Boolean {
             fun dfs(node: TreeNode?, sum: Int): Boolean {

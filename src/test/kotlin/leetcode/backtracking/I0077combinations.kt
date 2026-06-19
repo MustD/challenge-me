@@ -1,42 +1,26 @@
 package leetcode.backtracking
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expectsAnyOrder
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0077 = (Int, Int) -> List<List<Int>>
+
 class I0077combinations {
 
-    data class Case(
-        val n: Int,
-        val k: Int,
-        val output: List<List<Int>>,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, (Int, Int) -> List<List<Int>>> {
+    inner class Solution : ProblemTest<I0077> {
 
-        fun prepareCase(n: Int, k: Int, output: String): Case {
-            return Case(n, k, output.toListOfIntLists())
-        }
-
-        override val cases: List<Case> = listOf(
-            prepareCase(4, 2, "[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]"),
-            prepareCase(1, 1, "[[1]]"),
+        override val cases = testCases<I0077>(
+            args(4, 2) expectsAnyOrder "[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]",
+            args(1, 1) expectsAnyOrder "[[1]]",
         )
-        override val solutions: List<Pair<String, (Int, Int) -> List<List<Int>>>> = listOf(
-            "solution1" to ::solution1,
-            "community" to ::community,
-            "solution2" to ::solution2,
-        )
-
-        override fun Case.check(solution: (Int, Int) -> List<List<Int>>): Pair<Boolean, Any> {
-            val result = solution(n, k)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::community, ::solution2)
 
         //too long
         fun solution1(n: Int, k: Int): List<List<Int>> {

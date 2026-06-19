@@ -6,44 +6,22 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/find-winner-on-a-tic-tac-toe-game
  */
-class I1275findWinnerOnATicTacToeGame {
-    data class Case(
-        val input: Array<IntArray>,
-        val output: String,
-    )
+typealias I1275 = (Array<IntArray>) -> String
 
-    val parseCase = { moves: String, result: String ->
-        val a = moves.split("],[").map {
-            it.replace("[", "")
-                .replace("]", "")
-                .split(",")
-                .map { i -> i.toInt() }.toIntArray()
-        }.toTypedArray()
-        Case(a, result)
-    }
+class I1275findWinnerOnATicTacToeGame {
 
     @Nested
-    inner class Solution : AproblemTest<Case, (Array<IntArray>) -> String> {
-        override val cases: List<Case> = listOf(
-            parseCase("[[0,0],[2,0],[1,1],[2,1],[2,2]]", "A"),
-            parseCase("[[0,0],[1,1],[0,1],[0,2],[1,0],[2,0]]", "B"),
-            parseCase("[[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]]", "Draw"),
-            parseCase("[[0,0],[1,1]]", "Pending"),
-            parseCase("[[1,2],[2,1],[1,0],[0,0],[0,1],[2,0],[1,1]]", "A")
+    inner class Solution : ProblemTest<I1275> {
+        override val cases = testCases<I1275>(
+            "[[0,0],[2,0],[1,1],[2,1],[2,2]]" expects "A",
+            "[[0,0],[1,1],[0,1],[0,2],[1,0],[2,0]]" expects "B",
+            "[[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]]" expects "Draw",
+            "[[0,0],[1,1]]" expects "Pending",
+            "[[1,2],[2,1],[1,0],[0,0],[0,1],[2,0],[1,1]]" expects "A",
         )
-
-        override val solutions: List<Pair<String, (Array<IntArray>) -> String>> = listOf(
-            "I" to ::solution,
-        )
-
-        override fun Case.check(solution: (Array<IntArray>) -> String): Pair<Boolean, Any> {
-            val result = solution(input)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution)
 
         fun solution(moves: Array<IntArray>): String {
             fun ifWinner(state: Int): Boolean {

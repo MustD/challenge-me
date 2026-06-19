@@ -1,9 +1,9 @@
 package leetcode.binary_tree_general
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.deepCopy
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -11,36 +11,16 @@ typealias I0226 = (TreeNode?) -> TreeNode?
 
 class I0226invertBinaryTree {
 
-    data class Case(
-        val input: TreeNode?,
-        val output: TreeNode?,
-    )
-
-    fun prepareCase(i: String, o: String) = Case(
-        i.toTreeNode(),
-        o.toTreeNode(),
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0226> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[4,2,7,1,3,6,9]", "[4,7,2,9,6,3,1]"),
-            prepareCase("[2,1,3]", "[2,3,1]"),
-            prepareCase("[]", "[]"),
+    inner class Solution : ProblemTest<I0226> {
+        override val cases = testCases<I0226>(
+            "[4,2,7,1,3,6,9]" expects "[4,7,2,9,6,3,1]",
+            "[2,1,3]" expects "[2,3,1]",
+            "[]" expects "[]",
         )
-        override val solutions: List<Pair<String, I0226>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: I0226): Pair<Boolean, Any> {
-            val result = solution(input?.deepCopy())
-            return (result.toString() == output.toString()) to result.toString()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         fun solution1(root: TreeNode?): TreeNode? {
             if (root == null) return null

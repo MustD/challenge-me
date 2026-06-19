@@ -1,9 +1,9 @@
 package leetcode.binary_tree_bfs
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -11,32 +11,16 @@ typealias I0199 = (TreeNode?) -> List<Int>
 
 class I0199BinaryTreeRightSideView {
 
-    data class Case(
-        val input: TreeNode?,
-        val output: List<Int>,
-    )
-
-    fun prepareCase(s: String, out: String) = Case(s.toTreeNode(), out.toIntArray().toList())
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0199> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,2,3,null,5,null,4]", "[1,3,4]"),
-            prepareCase("[1,2,3,4,null,null,null,5]", "[1,3,4,5]"),
-            prepareCase("[1,null,3]", "[1,3]"),
+    inner class Solution : ProblemTest<I0199> {
+        override val cases = testCases<I0199>(
+            "[1,2,3,null,5,null,4]" expects "[1,3,4]",
+            "[1,2,3,4,null,null,null,5]" expects "[1,3,4,5]",
+            "[1,null,3]" expects "[1,3]",
         )
-        override val solutions: List<Pair<String, I0199>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0199): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result.toList() == output.toList()) to result.toList()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         /**
          * time complexity is O(n)

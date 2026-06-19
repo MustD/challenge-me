@@ -1,36 +1,25 @@
 package leetcode.two_pointers
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0125 = (String) -> Boolean
+
 class I0125validPalindrome {
 
-    data class Case(
-        val input: String,
-        val output: Boolean,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, (String) -> Boolean> {
-        override val cases: List<Case> = listOf(
-            Case("A man, a plan, a canal: Panama", true),
-            Case("race a car", false),
-            Case(" ", true),
+    inner class Solution : ProblemTest<I0125> {
+        override val cases = testCases<I0125>(
+            "A man, a plan, a canal: Panama" expects true,
+            "race a car" expects false,
+            " " expects true,
         )
-        override val solutions: List<Pair<String, (String) -> Boolean>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-            ::solution3.name to ::solution3,
-        )
-
-        override fun Case.check(solution: (String) -> Boolean): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2, ::solution3)
 
         fun solution1(s: String): Boolean {
             val chars = ('a'..'z').union('0'..'9').toSet()

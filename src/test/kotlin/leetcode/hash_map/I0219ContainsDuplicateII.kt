@@ -1,7 +1,9 @@
 package leetcode.hash_map
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.math.abs
 import kotlin.test.Test
@@ -10,37 +12,18 @@ import kotlin.test.Test
 typealias I0219 = (IntArray, Int) -> Boolean
 
 class I0219ContainsDuplicateII {
-    data class Case(
-        val nums: List<Int>,
-        val k: Int,
-        val output: Boolean,
-    )
-
-    val prepareCase = { nums: String, k: Int, output: Boolean ->
-        Case(nums.toIntArray().toList(), k, output)
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0219> {
+    inner class Solution : ProblemTest<I0219> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,2,3,1]", 3, true),
-            prepareCase("[1,0,1,1]", 1, true),
-            prepareCase("[1,2,3,1,2,3]", 2, false),
+        override val cases = testCases<I0219>(
+            args("[1,2,3,1]", 3) expects true,
+            args("[1,0,1,1]", 1) expects true,
+            args("[1,2,3,1,2,3]", 2) expects false,
         )
-
-        override val solutions: List<Pair<String, I0219>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0219): Pair<Boolean, Any> {
-            val result = solution(nums.toIntArray(), k)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
         private fun solution1(nums: IntArray, k: Int): Boolean {
             val map = mutableMapOf<Int, List<Int>>().withDefault { listOf() }

@@ -1,6 +1,8 @@
 package leetcode.stack
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import java.util.*
 import kotlin.test.Test
@@ -10,34 +12,18 @@ typealias I0244 = (String) -> Int
 
 class I0244BasicCalculator {
 
-    data class Case(
-        val input: String,
-        val output: Int,
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0244> {
+    inner class Solution : ProblemTest<I0244> {
 
-        override val cases: List<Case> = listOf(
-            Case("1 + 1", 2),
-            Case(" 2-1 + 2 ", 3),
-            Case("(1+(4+5+2)-3)+(6+8)", 23),
-            Case("123 + 123", 246),
+        override val cases = testCases<I0244>(
+            "1 + 1" expects 2,
+            " 2-1 + 2 " expects 3,
+            "(1+(4+5+2)-3)+(6+8)" expects 23,
+            "123 + 123" expects 246,
         )
-
-        override val solutions: List<Pair<String, I0244>> = listOf(
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0244): Pair<Boolean, Any> {
-            val result = solution(input)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solutionEditorial)
 
         private fun solutionEditorial(s: String): Int {
             val stack = Stack<Int?>()

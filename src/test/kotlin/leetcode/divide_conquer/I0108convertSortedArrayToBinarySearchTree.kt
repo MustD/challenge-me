@@ -1,42 +1,25 @@
 package leetcode.divide_conquer
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0108 = (IntArray) -> TreeNode?
+
 class I0108convertSortedArrayToBinarySearchTree {
 
-    data class Case(
-        val input: List<Int>,
-        val output: TreeNode?,
-    )
-
-    fun prepareCase(s: String, out: String) = Case(
-        s.toIntArray().toList(),
-        out.toTreeNode()
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, (IntArray) -> TreeNode?> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[-10,-3,0,5,9]", "[0,-3,9,-10,null,5]"),
-            prepareCase("[1,3]", "[3,1]")
+    inner class Solution : ProblemTest<I0108> {
+        override val cases = testCases<I0108>(
+            "[-10,-3,0,5,9]" expects "[0,-3,9,-10,null,5]",
+            "[1,3]" expects "[3,1]",
         )
-        override val solutions: List<Pair<String, (IntArray) -> TreeNode?>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: (IntArray) -> TreeNode?): Pair<Boolean, Any> {
-            val result = solution(input.toIntArray()) ?: ""
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(nums: IntArray): TreeNode? {
             fun dfs(nums: IntArray): TreeNode? {

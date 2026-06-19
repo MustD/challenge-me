@@ -1,6 +1,9 @@
 package leetcode.hash_map
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expectsAnyOrder
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -10,37 +13,18 @@ import kotlin.test.Test
 typealias I0001 = (IntArray, Int) -> IntArray
 
 class I0001twoSum {
-    @Suppress("ArrayInDataClass")
-    data class Case(
-        val input: IntArray,
-        val target: Int,
-        val output: IntArray,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0001> {
+    inner class Solution : ProblemTest<I0001> {
 
-        override val cases: List<Case> = listOf(
-            Case(intArrayOf(2, 7, 11, 15), 9, intArrayOf(0, 1)),
-            Case(intArrayOf(3, 2, 4), 6, intArrayOf(1, 2)),
-            Case(intArrayOf(3, 3), 6, intArrayOf(0, 1))
+        override val cases = testCases<I0001>(
+            args("[2,7,11,15]", 9) expectsAnyOrder "[0,1]",
+            args("[3,2,4]", 6) expectsAnyOrder "[1,2]",
+            args("[3,3]", 6) expectsAnyOrder "[0,1]",
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-            ::solution3.name to ::solution3,
-            ::solutionAi.name to ::solutionAi
-        )
-
-        override fun Case.check(solution: I0001): Pair<Boolean, Any> {
-            val result = solution(input, target)
-            val isCorrect = result.toList().sorted() == output.toList().sorted()
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2, ::solution3, ::solutionAi)
 
         private fun solution1(nums: IntArray, target: Int): IntArray {
             val list = nums.toList()

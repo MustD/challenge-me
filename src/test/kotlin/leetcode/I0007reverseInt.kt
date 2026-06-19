@@ -3,32 +3,20 @@ package leetcode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0007 = (Int) -> Int
+
 class I0007reverseInt {
 
-    data class Case(
-        val input: Int,
-        val output: Int,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, (Int) -> Int> {
-        override val cases: List<Case> = listOf(
-            Case(123, 321),
-            Case(-123, -321),
-            Case(120, 21),
+    inner class Solution : ProblemTest<I0007> {
+        override val cases = testCases<I0007>(
+            123 expects 321,
+            -123 expects -321,
+            120 expects 21,
         )
-        override val solutions: List<Pair<String, (Int) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionAi.name to ::solutionAi,
-        )
-
-        override fun Case.check(solution: (Int) -> Int): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionAi)
 
         fun solution1(x: Int): Int {
             return runCatching {

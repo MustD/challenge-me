@@ -1,43 +1,26 @@
 package leetcode
 
 import leetcode.utils.ListNode
-import leetcode.utils.toListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
+
+typealias I2807 = (ListNode?) -> ListNode?
 
 /**
  * https://leetcode.com/problems/insert-greatest-common-divisors-in-linked-list
  */
 class I2807insertGreatestCommonDivisorsInLinkedList {
 
-    data class Case(
-        val input: ListNode?,
-        val output: ListNode?,
-    )
-
-    val parseCase = { head: String, output: String ->
-        Case(head.toListNode(), output.toListNode())
-    }
-
     @Nested
-    inner class Solution : AproblemTest<Case, (ListNode?) -> ListNode?> {
-        override val cases: List<Case> = listOf(
-            parseCase("[18,6,10,3]", "[18,6,6,2,10,1,3]"),
-            parseCase("[7]", "[7]"),
-            parseCase("[12,8]", "[12,4,8]")
+    inner class Solution : ProblemTest<I2807> {
+        override val cases = testCases<I2807>(
+            "[18,6,10,3]" expects "[18,6,6,2,10,1,3]",
+            "[7]" expects "[7]",
+            "[12,8]" expects "[12,4,8]",
         )
-        override val solutions: List<Pair<String, (ListNode?) -> ListNode?>> = listOf(
-            ::solutionDP.name to ::solutionDP,
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: (ListNode?) -> ListNode?): Pair<Boolean, Any> {
-            val result = solution(input?.deepCopy())
-            return (result == output) to result as Any
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solutionDP, ::solution1)
 
         fun solutionDP(head: ListNode?): ListNode? {
             fun ListNode.insertAfter(value: Int): ListNode {

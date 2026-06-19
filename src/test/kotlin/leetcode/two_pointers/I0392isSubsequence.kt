@@ -1,6 +1,9 @@
 package leetcode.two_pointers
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,30 +11,15 @@ typealias I0392 = (String, String) -> Boolean
 
 class I0392isSubsequence {
 
-    data class Case(
-        val s: String,
-        val t: String,
-        val output: Boolean,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0392> {
-        override val cases: List<Case> = listOf(
-            Case("abc", "ahbgdc", true),
-            Case("axc", "ahbgdc", false),
+    inner class Solution : ProblemTest<I0392> {
+        override val cases = testCases<I0392>(
+            args("abc", "ahbgdc") expects true,
+            args("axc", "ahbgdc") expects false,
         )
-        override val solutions: List<Pair<String, I0392>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: I0392): Pair<Boolean, Any> {
-            val result = solution(s, t)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         fun solution1(s: String, t: String): Boolean {
             if (s.isEmpty()) return true

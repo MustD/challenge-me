@@ -3,34 +3,21 @@ package leetcode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I2490 = (String) -> Boolean
+
 class I2490circularSentence {
 
-    data class Case(
-        val input: String,
-        val output: Boolean,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, (String) -> Boolean> {
-        override val cases: List<Case> = listOf(
-            Case("leetcode exercises sound delightful", true),
-            Case("eetcode", true),
-            Case("Leetcode is cool", false),
-            Case("ab a", false),
+    inner class Solution : ProblemTest<I2490> {
+        override val cases = testCases<I2490>(
+            "leetcode exercises sound delightful" expects true,
+            "eetcode" expects true,
+            "Leetcode is cool" expects false,
+            "ab a" expects false,
         )
-        override val solutions: List<Pair<String, (String) -> Boolean>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionAi.name to ::solutionAi,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: (String) -> Boolean): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionAi, ::solution2)
 
         fun solution1(sentence: String): Boolean {
             if (sentence.first() != sentence.last()) return false

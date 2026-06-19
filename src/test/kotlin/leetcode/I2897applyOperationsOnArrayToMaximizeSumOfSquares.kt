@@ -6,40 +6,22 @@ import kotlin.test.Test
 /**
  * https://leetcode.com/problems/apply-operations-on-array-to-maximize-sum-of-squares
  */
+typealias I2897 = (List<Int>, Int) -> Int
+
 class I2897applyOperationsOnArrayToMaximizeSumOfSquares {
-    data class Case(
-        val output: Int,
-        val k: Int,
-        val nums: List<Int>,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (List<Int>, Int) -> Int> {
-        override val cases: List<Case> = listOf(
-            Case(90, 3, listOf(4, 5, 4, 7)),
-            Case(261, 2, listOf(2, 6, 5, 8)),
-            Case(32258, 2, listOf(96, 66, 60, 58, 32, 17, 63, 21, 30, 44, 15, 8, 98, 93)),
-            Case(24051, 4, listOf(25, 52, 75, 65)),
-            Case(683004067, 163, data5),
-
-            )
-
-        override val solutions: List<Pair<String, (List<Int>, Int) -> Int>> = listOf(
-            "I" to ::solution1,
-            "II" to ::solution2,
-            "III" to ::solution3,
-            "IV" to ::solution4,
-            "imported" to ::imported,
+    inner class Solution : ProblemTest<I2897> {
+        override val cases = testCases<I2897>(
+            args(listOf(4, 5, 4, 7), 3) expects 90,
+            args(listOf(2, 6, 5, 8), 2) expects 261,
+            args(listOf(96, 66, 60, 58, 32, 17, 63, 21, 30, 44, 15, 8, 98, 93), 2) expects 32258,
+            args(listOf(25, 52, 75, 65), 4) expects 24051,
+            args(data5, 163) expects 683004067,
         )
 
-        override fun Case.check(solution: (List<Int>, Int) -> Int): Pair<Boolean, Any> {
-            val result = solution(nums, k)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
-
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2, ::solution3, ::solution4, ::imported)
 
         private fun List<Int>.print(): List<Int> {
             println("--- list $this ---")

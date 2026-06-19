@@ -1,47 +1,33 @@
 package leetcode.sliding_window
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0030 = (String, Array<String>) -> List<Int>
 
 class I0030SubstringWithConcatenationOfAllWords {
-    data class Case(
-        val s: String,
-        val words: List<String>,
-        val output: List<Int>,
-    )
-
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0030> {
+    inner class Solution : ProblemTest<I0030> {
 
-        override val cases: List<Case> = listOf(
-            Case("barfoothefoobarman", listOf("foo", "bar"), listOf(0, 9)),
-            Case("wordgoodgoodgoodbestword", listOf("word", "good", "best", "word"), listOf()),
-            Case("barfoofoobarthefoobarman", listOf("bar", "foo", "the"), listOf(6, 9, 12)),
-            Case(
+        override val cases = testCases<I0030>(
+            args("barfoothefoobarman", """["foo","bar"]""") expects "[0,9]",
+            args("wordgoodgoodgoodbestword", """["word","good","best","word"]""") expects "[]",
+            args("barfoofoobarthefoobarman", """["bar","foo","the"]""") expects "[6,9,12]",
+            args(
                 "lingmindraboofooowingdingbarrwingmonkeypoundcake",
-                listOf("fooo", "barr", "wing", "ding", "wing"),
-                listOf(13)
-            ),
-            Case("wordgoodgoodgoodbestword", listOf("word", "good", "best", "good"), listOf(8)),
-            Case("aaaaaaaaaaaaaa", listOf("aa", "aa"), listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+                """["fooo","barr","wing","ding","wing"]""",
+            ) expects "[13]",
+            args("wordgoodgoodgoodbestword", """["word","good","best","good"]""") expects "[8]",
+            args("aaaaaaaaaaaaaa", """["aa","aa"]""") expects "[0,1,2,3,4,5,6,7,8,9,10]",
         )
-
-        override val solutions: List<Pair<String, I0030>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0030): Pair<Boolean, Any> {
-            val result = solution(s, words.toTypedArray())
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(s: String, words: Array<String>): List<Int> {
             val result = mutableListOf<Int>()

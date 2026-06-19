@@ -1,6 +1,9 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,31 +11,15 @@ private typealias I0028 = (String, String) -> Int
 
 class I0028findTheIndexOfTheFirstOccurrenceInAString {
 
-    data class Case(
-        val haystack: String,
-        val needle: String,
-        val output: Int,
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0028> {
-        override val cases: List<Case> = listOf(
-            Case("sadbutsad", "sad", 0),
-            Case("leetcode", "leeto", -1),
+    inner class Solution : ProblemTest<I0028> {
+        override val cases = testCases<I0028>(
+            args("sadbutsad", "sad") expects 0,
+            args("leetcode", "leeto") expects -1,
         )
-        override val solutions: List<Pair<String, I0028>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial
-        )
-
-        override fun Case.check(solution: I0028): Pair<Boolean, Any> {
-            val result = solution(haystack, needle)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
         fun solution1(haystack: String, needle: String): Int {
             return haystack.indexOf(needle)

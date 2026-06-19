@@ -1,7 +1,9 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,37 +11,16 @@ typealias I0027 = (IntArray, Int) -> Int
 
 class I0027removeElement {
 
-    data class Case(
-        val nums: List<Int>,
-        val input: Int,
-        val output: Int,
-    )
-
-    val prepareCase = { nums: String, i: Int, o: Int ->
-        Case(nums.toIntArray().toList(), i, o)
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0027> {
+    inner class Solution : ProblemTest<I0027> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[3,2,2,3]", 3, 2),
-            prepareCase("[0,1,2,2,3,0,4,2]", 2, 5),
+        override val cases = testCases<I0027>(
+            args("[3,2,2,3]", 3) expects 2,
+            args("[0,1,2,2,3,0,4,2]", 2) expects 5,
         )
-
-        override val solutions: List<Pair<String, I0027>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionCommunity.name to ::solutionCommunity,
-        )
-
-        override fun Case.check(solution: I0027): Pair<Boolean, Any> {
-            val result = solution(nums.toIntArray(), input)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionCommunity)
 
         fun solution1(nums: IntArray, `val`: Int): Int {
             if (nums.isEmpty()) return 0

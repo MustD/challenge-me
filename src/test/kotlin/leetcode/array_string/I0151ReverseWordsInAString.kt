@@ -1,37 +1,26 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0151 = (String) -> String
 
 class I0151ReverseWordsInAString {
-    data class Case(
-        val input: String,
-        val output: String,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (String) -> String> {
+    inner class Solution : ProblemTest<I0151> {
 
-        override val cases: List<Case> = listOf(
-            Case("the sky is blue", "blue is sky the"),
-            Case("  hello world  ", "world hello"),
-            Case("a good   example", "example good a"),
+        override val cases = testCases<I0151>(
+            "the sky is blue" expects "blue is sky the",
+            "  hello world  " expects "world hello",
+            "a good   example" expects "example good a",
         )
-
-        override val solutions: List<Pair<String, (String) -> String>> = listOf(
-            "solution1" to ::solution1,
-        )
-
-        override fun Case.check(solution: (String) -> String): Pair<Boolean, Any> {
-            val result = solution(input)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(s: String): String {
             return s.split(" ").mapNotNull {

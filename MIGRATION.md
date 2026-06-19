@@ -77,3 +77,29 @@ the solution's emitted order; a failure flags it as actually belonging in subset
 - Deleting `AproblemTest.kt` (still needed by the deferred files).
 - Any framework extension for the deferred subsets.
 - Touching the 35 already-migrated files.
+
+## Outcome (completed)
+
+All mechanically-compatible files were migrated and `./gradlew build` is green.
+
+**7 files left on `AproblemTest`** — the 4 planned plus 3 discovered during migration
+whose semantics the `ProblemTest` harness cannot express (it asserts on a single expected
+value, so any check that accepts *multiple* valid answers or needs a non-serializable input
+can't be ported as-is):
+
+- `I0048 RotateImage`, `I0073 SetMatrixZeroes`, `I0289 GameOfLife` — void / in-place (planned).
+- `I0189 rotateArray` — void / in-place (planned). (`I0088 mergeSortedArray` returns the array,
+  so it WAS migrated.)
+- `I2028 findMissingObservations` — its `check` accepts **any** answer with the correct mean
+  (one case passes only via that fallback), not the literal expected array.
+- `I0005 longestPalindromicSubstring` — `check` accepts **any** of several valid palindromes
+  (`output.contains(result)`).
+- `I0141 LinkedListCycle` — input is a **cyclic** list the string converter can't build; the
+  test was already `@Disabled`.
+
+**One dropped case:** `I0049 GroupAnagrams` lost its `[""] -> [[""]]` case. The 2D parser strips
+quotes before the empty-row check, so `[[""]]` collapses to `[[]]`; that case was already
+failing on the old harness for the same reason. Documented inline in the file.
+
+Subset B (`expectsAnyOrder`): `I0001`, `I0049`, `I0015`, `I0077` migrated as planned; also
+applied to `I0228 summaryRanges` whose old `check` sorted both sides.

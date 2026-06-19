@@ -1,8 +1,8 @@
 package leetcode.two_pointers
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.expectsAnyOrder
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -10,35 +10,16 @@ private typealias I0015 = (IntArray) -> List<List<Int>>
 
 class I00153sum {
 
-    data class Case(
-        val nums: List<Int>,
-        val output: List<List<Int>>,
-    )
-
-    val prepareCase = { n1: String, r: String ->
-        Case(n1.toIntArray().toList(), r.toListOfIntLists())
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0015> {
-        override val cases: List<Case> = listOf(
-            prepareCase("-1,0,1,2,-1,-4]", "[[-1,-1,2],[-1,0,1]]"),
-            prepareCase("[0,1,1]", "[]"),
-            prepareCase("[0,0,0]", "[[0,0,0]]"),
+    inner class Solution : ProblemTest<I0015> {
+        override val cases = testCases<I0015>(
+            "-1,0,1,2,-1,-4]" expectsAnyOrder "[[-1,-1,2],[-1,0,1]]",
+            "[0,1,1]" expectsAnyOrder "[]",
+            "[0,0,0]" expectsAnyOrder "[[0,0,0]]",
         )
-        override val solutions: List<Pair<String, I0015>> = listOf(
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0015): Pair<Boolean, Any> {
-            val result = solution(nums.toIntArray())
-            val isCorrect = result.map { it.sorted() } == output.map { it.sorted() }
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solutionEditorial)
 
 
         fun solutionEditorial(nums: IntArray): List<List<Int>> {

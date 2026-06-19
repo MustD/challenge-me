@@ -1,8 +1,10 @@
 package leetcode.binary_tree_general
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -10,37 +12,16 @@ typealias I0100 = (TreeNode?, TreeNode?) -> Boolean
 
 class I0100SameTree {
 
-    data class Case(
-        val input: TreeNode?,
-        val same: TreeNode?,
-        val output: Boolean,
-    )
-
-    fun prepareCase(p: String, q: String, r: Boolean) = Case(
-        p.toTreeNode(),
-        q.toTreeNode(),
-        r
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0100> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,2,3]", "[1,2,3]", true),
-            prepareCase("[1,2]", "[1,null,2]", false),
-            prepareCase("[1,2,1]", "[1,1,2]", false),
+    inner class Solution : ProblemTest<I0100> {
+        override val cases = testCases<I0100>(
+            args("[1,2,3]", "[1,2,3]") expects true,
+            args("[1,2]", "[1,null,2]") expects false,
+            args("[1,2,1]", "[1,1,2]") expects false,
         )
-        override val solutions: List<Pair<String, I0100>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0100): Pair<Boolean, Any> {
-            val result = solution(input, same)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(p: TreeNode?, q: TreeNode?): Boolean {
             if (p == null && q == null) return true

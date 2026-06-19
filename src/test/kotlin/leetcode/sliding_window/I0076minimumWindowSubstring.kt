@@ -1,39 +1,28 @@
 package leetcode.sliding_window
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0076 = (String, String) -> String
 
 class I0076minimumWindowSubstring {
-    data class Case(
-        val s: String,
-        val t: String,
-        val output: String,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0076> {
-        override val cases: List<Case> = listOf(
-            Case("ADOBECODEBANC", "ABC", "BANC"),
-            Case("a", "a", "a"),
-            Case("a", "aa", ""),
-            Case("ab", "a", "a"),
-            Case("ab", "b", "b")
+    inner class Solution : ProblemTest<I0076> {
+        override val cases = testCases<I0076>(
+            args("ADOBECODEBANC", "ABC") expects "BANC",
+            args("a", "a") expects "a",
+            args("a", "aa") expects "",
+            args("ab", "a") expects "a",
+            args("ab", "b") expects "b",
         )
-        override val solutions: List<Pair<String, I0076>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0076): Pair<Boolean, Any> {
-            val result = solution(s, t)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(s: String, t: String): String {
             if (s.length < t.length) return ""

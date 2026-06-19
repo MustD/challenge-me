@@ -1,58 +1,26 @@
 package leetcode.dp_multi
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0120 = (List<List<Int>>) -> Int
 
 class I0120triangle {
-    data class Case(
-        val input: List<List<Int>>,
-        val output: Int,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0120> {
+    inner class Solution : ProblemTest<I0120> {
 
-        override val cases: List<Case> = listOf(
-            Case(
-                listOf(
-                    listOf(2),
-                    listOf(3, 4),
-                    listOf(6, 5, 7),
-                    listOf(4, 1, 8, 3),
-                ),
-                11
-            ),
-            Case(
-                listOf(
-                    listOf(-10),
-                ),
-                -10
-            ),
-            Case(
-                listOf(
-                    listOf(-1),
-                    listOf(2, 3),
-                    listOf(1, -1, -3)
-                ),
-                -1
-            )
+        override val cases = testCases<I0120>(
+            "[[2],[3,4],[6,5,7],[4,1,8,3]]" expects 11,
+            "[[-10]]" expects -10,
+            "[[-1],[2,3],[1,-1,-3]]" expects -1,
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0120): Pair<Boolean, Any> {
-            val result = solution(input)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solutionOnlyPositive(triangle: List<List<Int>>): Int {
             val dp = MutableList(triangle.size) { Int.MAX_VALUE }

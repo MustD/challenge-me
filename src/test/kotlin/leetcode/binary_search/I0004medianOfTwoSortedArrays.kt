@@ -1,41 +1,28 @@
 package leetcode.binary_search
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
+
+typealias I0004 = (IntArray, IntArray) -> Double
 
 /**
  * https://leetcode.com/problems/median-of-two-sorted-arrays/description/?source=submission-ac
  */
 class I0004medianOfTwoSortedArrays {
 
-    @Suppress("ArrayInDataClass")
-    data class Case(
-        val input1: IntArray,
-        val input2: IntArray,
-        val result: Double,
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, (IntArray, IntArray) -> Double> {
-        override val cases: List<Case> = listOf(
-            Case(listOf(1, 3).toIntArray(), listOf(2).toIntArray(), 2.0),
-            Case(listOf(1, 2).toIntArray(), listOf(3, 4).toIntArray(), 2.5)
+    inner class Solution : ProblemTest<I0004> {
+        override val cases = testCases<I0004>(
+            args("[1,3]", "[2]") expects 2.0,
+            args("[1,2]", "[3,4]") expects 2.5,
         )
-        override val solutions: List<Pair<String, (IntArray, IntArray) -> Double>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-            ::solutionAi.name to ::solutionAi,
-        )
-
-        override fun Case.check(solution: (IntArray, IntArray) -> Double): Pair<Boolean, Any> {
-            val result = solution(input1, input2)
-            return (result == this.result) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2, ::solutionAi)
 
         fun solution1(nums1: IntArray, nums2: IntArray): Double {
             val sorted = (nums1 + nums2).sorted()

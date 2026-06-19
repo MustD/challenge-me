@@ -1,47 +1,26 @@
 package leetcode.matrix
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0054 = (Array<IntArray>) -> List<Int>
 
 class I0054spiralMatrix {
-    data class Case(
-        val matrix: List<List<Int>>,
-        val output: List<Int>,
-    )
-
-    fun prepareCase(matrix: String, output: String): Case {
-        return Case(
-            matrix.toListOfIntLists(),
-            output.toIntArray().toList(),
-        )
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0054> {
+    inner class Solution : ProblemTest<I0054> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[[1,2,3],[4,5,6],[7,8,9]]", "[1,2,3,6,9,8,7,4,5]"),
-            prepareCase("[[1,2,3,4],[5,6,7,8],[9,10,11,12]]", "[1,2,3,4,8,12,11,10,9,5,6,7]"),
-            prepareCase("[[3],[2]]", "[3,2]")
+        override val cases = testCases<I0054>(
+            "[[1,2,3],[4,5,6],[7,8,9]]" expects "[1,2,3,6,9,8,7,4,5]",
+            "[[1,2,3,4],[5,6,7,8],[9,10,11,12]]" expects "[1,2,3,4,8,12,11,10,9,5,6,7]",
+            "[[3],[2]]" expects "[3,2]",
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0054): Pair<Boolean, Any> {
-            val result = solution(matrix.map { it.toIntArray() }.toTypedArray())
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(matrix: Array<IntArray>): List<Int> {
             val result = mutableListOf<Int>()

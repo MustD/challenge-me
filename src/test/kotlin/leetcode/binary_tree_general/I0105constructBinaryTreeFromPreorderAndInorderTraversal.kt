@@ -1,9 +1,10 @@
 package leetcode.binary_tree_general
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -11,36 +12,14 @@ typealias I0105 = (IntArray, IntArray) -> TreeNode?
 
 class I0105constructBinaryTreeFromPreorderAndInorderTraversal {
 
-    data class Case(
-        val preorder: List<Int>,
-        val inorder: List<Int>,
-        val output: TreeNode?,
-    )
-
-    fun prepareCase(p: String, q: String, r: String) = Case(
-        p.toIntArray().toList(),
-        q.toIntArray().toList(),
-        r.toTreeNode()
-    )
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0105> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[3,9,20,15,7]", "[9,3,15,20,7]", "[3,9,20,null,null,15,7]"),
+    inner class Solution : ProblemTest<I0105> {
+        override val cases = testCases<I0105>(
+            args("[3,9,20,15,7]", "[9,3,15,20,7]") expects "[3,9,20,null,null,15,7]",
         )
-        override val solutions: List<Pair<String, I0105>> = listOf(
-            ::solutionCommunity.name to ::solutionCommunity,
-            ::solutionCommunity2.name to ::solutionCommunity2,
-        )
-
-        override fun Case.check(solution: I0105): Pair<Boolean, Any> {
-            val result = solution(preorder.toIntArray(), inorder.toIntArray())
-            return (result.toString() == output.toString()) to result.toString()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solutionCommunity, ::solutionCommunity2)
 
         /**
          * Time Complexity: O(n²) in worst case due to the linear search in the inorder array

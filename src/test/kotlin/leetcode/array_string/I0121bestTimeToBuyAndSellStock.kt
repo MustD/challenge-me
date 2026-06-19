@@ -1,7 +1,8 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,37 +10,16 @@ typealias I0121 = (IntArray) -> Int
 
 class I0121bestTimeToBuyAndSellStock {
 
-    data class Case(
-        val nums: List<Int>,
-        val output: Int,
-    )
-
-    val prepareCase = { nums: String, o: Int ->
-        Case(nums.toIntArray().toList(), o)
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0121> {
+    inner class Solution : ProblemTest<I0121> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("[7,1,5,3,6,4]", 5),
-            prepareCase("[7,6,4,3,1]", 0),
+        override val cases = testCases<I0121>(
+            "[7,1,5,3,6,4]" expects 5,
+            "[7,6,4,3,1]" expects 0,
         )
-
-        override val solutions: List<Pair<String, I0121>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-            ::solutionCommunity.name to ::solutionCommunity,
-        )
-
-        override fun Case.check(solution: I0121): Pair<Boolean, Any> {
-            val result = solution(nums.toIntArray())
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial, ::solutionCommunity)
 
         /**
          * O(n²) time complexity

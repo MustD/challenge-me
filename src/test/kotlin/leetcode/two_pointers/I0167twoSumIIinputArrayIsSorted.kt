@@ -1,7 +1,9 @@
 package leetcode.two_pointers
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,41 +11,17 @@ typealias I0167 = (IntArray, Int) -> IntArray
 
 class I0167twoSumIIinputArrayIsSorted {
 
-    data class Case(
-        val numbers: List<Int>,
-        val target: Int,
-        val output: List<Int>,
-    )
-
-    fun prepareCase(numbers: String, target: Int, result: String) = Case(
-        numbers.toIntArray().toList(),
-        target,
-        result.toIntArray().toList(),
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0167> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[2,7,11,15]", 9, "[1,2]"),
-            prepareCase("[2,3,4]", 6, "[1,3]"),
-            prepareCase("[-1,0]", -1, "[1,2]"),
-            prepareCase("[-5,-3,0,2,4,6,8]", 5, "[2,7]")
+    inner class Solution : ProblemTest<I0167> {
+        override val cases = testCases<I0167>(
+            args("[2,7,11,15]", 9) expects "[1,2]",
+            args("[2,3,4]", 6) expects "[1,3]",
+            args("[-1,0]", -1) expects "[1,2]",
+            args("[-5,-3,0,2,4,6,8]", 5) expects "[2,7]",
         )
-
-        override val solutions: List<Pair<String, I0167>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-            ::solution3.name to ::solution3,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0167): Pair<Boolean, Any> {
-            val result = solution(numbers.toIntArray(), target)
-            return (result.toList() == output.toList()) to result.toList()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2, ::solution3, ::solutionEditorial)
 
         fun solution1(numbers: IntArray, target: Int): IntArray {
             for (left in 0 until numbers.lastIndex) {

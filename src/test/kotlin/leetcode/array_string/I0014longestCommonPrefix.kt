@@ -1,6 +1,8 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,29 +10,15 @@ private typealias I0014 = (Array<String>) -> String
 
 class I0014longestCommonPrefix {
 
-    data class Case(
-        val strs: List<String>,
-        val output: String,
-    )
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0014> {
-        override val cases: List<Case> = listOf(
-            Case(listOf("flower", "flow", "flight"), "fl"),
-            Case(listOf("dog", "racecar", "car"), ""),
+    inner class Solution : ProblemTest<I0014> {
+        override val cases = testCases<I0014>(
+            """["flower","flow","flight"]""" expects "fl",
+            """["dog","racecar","car"]""" expects "",
         )
-        override val solutions: List<Pair<String, I0014>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0014): Pair<Boolean, Any> {
-            val result = solution(strs.toTypedArray())
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
 
         /**

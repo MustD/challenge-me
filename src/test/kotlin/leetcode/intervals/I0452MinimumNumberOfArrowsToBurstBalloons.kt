@@ -1,7 +1,8 @@
 package leetcode.intervals
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,35 +10,18 @@ import kotlin.test.Test
 typealias I0452 = (Array<IntArray>) -> Int
 
 class I0452MinimumNumberOfArrowsToBurstBalloons {
-    data class Case(
-        val input: List<List<Int>>,
-        val output: Int,
-    )
-
-    fun prepareCase(s: String, r: Int) = Case(s.toListOfIntLists(), r)
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0452> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[[10,16],[2,8],[1,6],[7,12]]", 2),
-            prepareCase("[[1,2],[3,4],[5,6],[7,8]]", 4),
-            prepareCase("[[1,2],[2,3],[3,4],[4,5]]", 2),
-            prepareCase("[[3,9],[7,12],[3,8],[6,8],[9,10],[2,9],[0,9],[3,9],[0,6],[2,8]]", 2)
+    inner class Solution : ProblemTest<I0452> {
+        override val cases = testCases<I0452>(
+            "[[10,16],[2,8],[1,6],[7,12]]" expects 2,
+            "[[1,2],[3,4],[5,6],[7,8]]" expects 4,
+            "[[1,2],[2,3],[3,4],[4,5]]" expects 2,
+            "[[3,9],[7,12],[3,8],[6,8],[9,10],[2,9],[0,9],[3,9],[0,6],[2,8]]" expects 2,
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0452): Pair<Boolean, Any> {
-            val actual = solution(input.map { it.toIntArray() }.toTypedArray())
-            val result = actual
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
         //wrong
         fun solution1(points: Array<IntArray>): Int {

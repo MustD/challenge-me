@@ -1,39 +1,29 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
+typealias I0006 = (String, Int) -> String
+
 class I0006zigzagConversion {
-    data class Case(
-        val string: String,
-        val numRows: Int,
-        val output: String,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (String, Int) -> String> {
+    inner class Solution : ProblemTest<I0006> {
 
-        override val cases: List<Case> = listOf(
-            Case("ABCDEFGHIJKL", 3, "AEIBDFHJLCGK"),
-            Case("PAYPALISHIRING", 3, "PAHNAPLSIIGYIR"),
-            Case("PAYPALISHIRING", 4, "PINALSIGYAHRPI"),
-            Case("A", 1, "A"),
-            Case("AB", 1, "AB")
+        override val cases = testCases<I0006>(
+            args("ABCDEFGHIJKL", 3) expects "AEIBDFHJLCGK",
+            args("PAYPALISHIRING", 3) expects "PAHNAPLSIIGYIR",
+            args("PAYPALISHIRING", 4) expects "PINALSIGYAHRPI",
+            args("A", 1) expects "A",
+            args("AB", 1) expects "AB",
         )
-
-        override val solutions: List<Pair<String, (String, Int) -> String>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionAI.name to ::solutionAI,
-        )
-
-        override fun Case.check(solution: (String, Int) -> String): Pair<Boolean, Any> {
-            val result = solution(string, numRows)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionAI)
 
         fun solution1(s: String, numRows: Int): String {
             if (numRows == 1) return s

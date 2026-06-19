@@ -1,42 +1,27 @@
 package leetcode.intervals
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toListOfIntLists
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0056 = (Array<IntArray>) -> Array<IntArray>
 
 class I0056MergeIntervals {
-    data class Case(
-        val input: List<List<Int>>,
-        val output: List<List<Int>>,
-    )
-
-    fun prepareCase(s: String, r: String) = Case(s.toListOfIntLists(), r.toListOfIntLists())
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0056> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[[1,3],[2,6],[8,10],[15,18]]", "[[1,6],[8,10],[15,18]]"),
-            prepareCase("[[1,4],[4,5]]", "[[1,5]]"),
-            prepareCase("[[1,4],[0,4]]", "[[0,4]]"),
-            prepareCase("[[1,4],[0,1]]", "[[0,4]]"),
-            prepareCase("[[1,4],[0,0]]", "[[0,0],[1,4]]")
+    inner class Solution : ProblemTest<I0056> {
+        override val cases = testCases<I0056>(
+            "[[1,3],[2,6],[8,10],[15,18]]" expects "[[1,6],[8,10],[15,18]]",
+            "[[1,4],[4,5]]" expects "[[1,5]]",
+            "[[1,4],[0,4]]" expects "[[0,4]]",
+            "[[1,4],[0,1]]" expects "[[0,4]]",
+            "[[1,4],[0,0]]" expects "[[0,0],[1,4]]",
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1
-        )
-
-        override fun Case.check(solution: I0056): Pair<Boolean, Any> {
-            val actual = solution(input.map { it.toIntArray() }.toTypedArray())
-            val result = actual.map { it.toList() }.toList()
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(intervals: Array<IntArray>): Array<IntArray> {
             intervals.sortBy { it[0] }

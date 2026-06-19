@@ -1,38 +1,25 @@
 package leetcode.intervals
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expectsAnyOrder
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0228 = (IntArray) -> List<String>
 
 class I0228summaryRanges {
-    data class Case(
-        val input: IntArray,
-        val output: List<String>,
-    )
-
-    fun prepareCase(s: String, r: List<String>) = Case(s.toIntArray(), r)
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0228> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[0,1,2,4,5,7]", listOf("0->2", "4->5", "7")),
-            prepareCase("[0,2,3,4,6,8,9]", listOf("0", "2->4", "6", "8->9")),
+    inner class Solution : ProblemTest<I0228> {
+        // Old harness compared `result.sorted() == output.sorted()` (order-insensitive).
+        override val cases = testCases<I0228>(
+            "[0,1,2,4,5,7]" expectsAnyOrder """["0->2","4->5","7"]""",
+            "[0,2,3,4,6,8,9]" expectsAnyOrder """["0","2->4","6","8->9"]""",
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1
-        )
-
-        override fun Case.check(solution: I0228): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result.sorted() == output.sorted()) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(nums: IntArray): List<String> {
             if (nums.isEmpty()) return emptyList()

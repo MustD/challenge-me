@@ -1,6 +1,8 @@
 package leetcode.graph_bfs
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,64 +10,22 @@ typealias I0909 = (Array<IntArray>) -> Int
 
 //https://leetcode.com/problems/snakes-and-ladders/description/?envType=study-plan-v2&envId=top-interview-150
 class I0909snakesAndLadders {
-    @Suppress("ArrayInDataClass")
-    data class Case(
-        val board: Array<IntArray>,
-        val output: Int,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0909> {
+    inner class Solution : ProblemTest<I0909> {
 
-        override val cases: List<Case> = listOf(
-            Case(
-                arrayOf(
-                    intArrayOf(-1, -1, -1, -1, -1, -1),
-                    intArrayOf(-1, -1, -1, -1, -1, -1),
-                    intArrayOf(-1, -1, -1, -1, -1, -1),
-                    intArrayOf(-1, 35, -1, -1, 13, -1),
-                    intArrayOf(-1, -1, -1, -1, -1, -1),
-                    intArrayOf(-1, 15, -1, -1, -1, -1)
-                ),
-                4
-            ),
-            Case(
-                arrayOf(
-                    intArrayOf(-1, -1),
-                    intArrayOf(-1, 3),
-                ),
-                1
-            ),
-            Case(
-                arrayOf(
-                    intArrayOf(1, 1, -1),
-                    intArrayOf(1, 1, 1),
-                    intArrayOf(-1, 1, 1)
-                ), -1
-            ),
-            Case(
-                arrayOf(
-                    intArrayOf(-1, -1, -1),
-                    intArrayOf(-1, 9, 8),
-                    intArrayOf(-1, 8, 9)
-                ), 1
-            )
+        override val cases = testCases<I0909>(
+            """
+                [[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+                 [-1,35,-1,-1,13,-1],[-1,-1,-1,-1,-1,-1],[-1,15,-1,-1,-1,-1]]
+            """ expects 4,
+            "[[-1,-1],[-1,3]]" expects 1,
+            "[[1,1,-1],[1,1,1],[-1,1,1]]" expects -1,
+            "[[-1,-1,-1],[-1,9,8],[-1,8,9]]" expects 1,
         )
-
-        override val solutions = listOf(
-            ::solutionDFS.name to ::solutionDFS, //too long
-            ::solutionBFS.name to ::solutionBFS,
-        )
-
-        override fun Case.check(solution: I0909): Pair<Boolean, Any> {
-            val clone = board.map { it.clone() }.toTypedArray()
-            val result = solution(clone)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solutionDFS, ::solutionBFS)
 
         private fun solutionDFS(board: Array<IntArray>): Int {
             val arr = board.toList().reversed()

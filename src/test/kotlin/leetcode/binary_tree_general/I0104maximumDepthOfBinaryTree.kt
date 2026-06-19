@@ -1,38 +1,25 @@
 package leetcode.binary_tree_general
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.TreeNode
-import leetcode.utils.toTreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0104 = (TreeNode?) -> Int
+
 class I0104maximumDepthOfBinaryTree {
 
-    data class Case(
-        val input: TreeNode?,
-        val output: Int,
-    )
-
-    fun prepareCase(s: String, out: Int) = Case(s.toTreeNode(), out)
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, (TreeNode?) -> Int> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[3,9,20,null,null,15,7]", 3),
-            prepareCase("[1,null,2]", 2),
+    inner class Solution : ProblemTest<I0104> {
+        override val cases = testCases<I0104>(
+            "[3,9,20,null,null,15,7]" expects 3,
+            "[1,null,2]" expects 2,
         )
-        override val solutions: List<Pair<String, (TreeNode?) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: (TreeNode?) -> Int): Pair<Boolean, Any> {
-            val result = solution(input)
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(root: TreeNode?): Int {
             fun dfs(node: TreeNode?, lvl: Int): Int {

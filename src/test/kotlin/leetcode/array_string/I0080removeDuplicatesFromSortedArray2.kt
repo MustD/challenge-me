@@ -1,40 +1,25 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I0080 = (IntArray) -> Int
+
 class I0080removeDuplicatesFromSortedArray2 {
 
-    data class Case(
-        val input: IntArray,
-        val output: Int,
-    )
-
-    val prepareCase = { s: String, o: Int ->
-        Case(s.toIntArray(), o)
-    }
-
     @Nested
-    inner class Solution : AproblemTest<Case, (IntArray) -> Int> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,1,1,2,2,3]", 5),
-            prepareCase("[0,0,1,1,1,1,2,3,3]", 7),
-            prepareCase("[1,1,1]", 2)
+    inner class Solution : ProblemTest<I0080> {
+        override val cases = testCases<I0080>(
+            "[1,1,1,2,2,3]" expects 5,
+            "[0,0,1,1,1,1,2,3,3]" expects 7,
+            "[1,1,1]" expects 2,
         )
-        override val solutions: List<Pair<String, (IntArray) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: (IntArray) -> Int): Pair<Boolean, Any> {
-            val result = solution(input.copyOf())
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         fun solution1(nums: IntArray): Int {
             var count = 0

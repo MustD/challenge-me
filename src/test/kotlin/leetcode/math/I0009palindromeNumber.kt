@@ -1,39 +1,29 @@
 package leetcode.math
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
+
+typealias I0009 = (Int) -> Boolean
 
 /**
  * https://leetcode.com/problems/palindrome-number/
  */
 class I0009palindromeNumber {
-    data class Case(
-        val input: Int,
-        val output: Boolean,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, (Int) -> Boolean> {
-        override val cases: List<Case> = listOf(
-            Case(121, true),
-            Case(-121, false),
-            Case(1122, false),
-            Case(10, false),
+    inner class Solution : ProblemTest<I0009> {
+        override val cases = testCases<I0009>(
+            121 expects true,
+            -121 expects false,
+            1122 expects false,
+            10 expects false,
         )
-        override val solutions: List<Pair<String, (Int) -> Boolean>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionAi.name to ::solutionAi,
-        )
-
-        override fun Case.check(solution: (Int) -> Boolean): Pair<Boolean, Any> {
-            val result = solution(input)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionAi)
 
         private fun solution1(x: Int): Boolean {
             if (x < 0) return false

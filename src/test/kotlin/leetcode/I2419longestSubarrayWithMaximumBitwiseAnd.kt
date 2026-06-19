@@ -1,39 +1,23 @@
 package leetcode
 
-import leetcode.utils.ArrayUtils.toIntArray
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
+typealias I2419 = (IntArray) -> Int
+
 class I2419longestSubarrayWithMaximumBitwiseAnd {
 
-    data class Case(
-        val input: IntArray,
-        val output: Int,
-    )
-
-    val prepareCase = { s: String, o: Int ->
-        Case(s.toIntArray(), o)
-    }
-
     @Nested
-    inner class Solution : AproblemTest<Case, (IntArray) -> Int> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,2,3,3,2,2]", 2),
-            prepareCase("[1,2,3,4]", 1),
-            prepareCase("[311155,311155,311155,311155,311155,311155,311155,311155,201191,311155]", 8),
-            prepareCase("[378034,378034,378034]", 3),
+    inner class Solution : ProblemTest<I2419> {
+        override val cases = testCases<I2419>(
+            "[1,2,3,3,2,2]" expects 2,
+            "[1,2,3,4]" expects 1,
+            "[311155,311155,311155,311155,311155,311155,311155,311155,201191,311155]" expects 8,
+            "[378034,378034,378034]" expects 3,
         )
-        override val solutions: List<Pair<String, (IntArray) -> Int>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: (IntArray) -> Int): Pair<Boolean, Any> {
-            val result = solution(input.copyOf())
-            return (result == output) to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         fun solution1(nums: IntArray): Int {
             var maxVal = 0

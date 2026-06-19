@@ -1,54 +1,25 @@
 package leetcode.graph_general
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0200 = (Array<CharArray>) -> Int
 
 class I0200numberOfIslands {
-    @Suppress("ArrayInDataClass")
-    data class Case(
-        val grid: Array<CharArray>,
-        val output: Int,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0200> {
+    inner class Solution : ProblemTest<I0200> {
 
-        override val cases: List<Case> = listOf(
-            Case(
-                arrayOf(
-                    charArrayOf('1', '1', '1', '1', '0'),
-                    charArrayOf('1', '1', '0', '1', '0'),
-                    charArrayOf('1', '1', '0', '0', '0'),
-                    charArrayOf('0', '0', '0', '0', '0'),
-                ), 1
-            ),
-            Case(
-                grid = arrayOf(
-                    charArrayOf('1', '1', '0', '0', '0'),
-                    charArrayOf('1', '1', '0', '0', '0'),
-                    charArrayOf('0', '0', '1', '0', '0'),
-                    charArrayOf('0', '0', '0', '1', '1'),
-                ), 3
-            )
+        override val cases = testCases<I0200>(
+            """[["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]""" expects 1,
+            """[["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]""" expects 3,
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionCommunity.name to ::solutionCommunity,
-        )
-
-        override fun Case.check(solution: I0200): Pair<Boolean, Any> {
-            val clone = grid.map { it.clone() }.toTypedArray()
-            val result = solution(clone)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionCommunity)
 
         private fun solution1(grid: Array<CharArray>): Int {
             val visitedLand = mutableSetOf<Pair<Int, Int>>()

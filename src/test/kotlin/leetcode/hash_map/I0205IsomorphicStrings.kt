@@ -1,39 +1,28 @@
 package leetcode.hash_map
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0205 = (String, String) -> Boolean
 
 class I0205IsomorphicStrings {
-    data class Case(
-        val s: String,
-        val t: String,
-        val output: Boolean,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0205> {
+    inner class Solution : ProblemTest<I0205> {
 
-        override val cases: List<Case> = listOf(
-            Case("egg", "add", true),
-            Case("foo", "bar", false),
-            Case("paper", "title", true),
-            Case("badc", "baba", false)
+        override val cases = testCases<I0205>(
+            args("egg", "add") expects true,
+            args("foo", "bar") expects false,
+            args("paper", "title") expects true,
+            args("badc", "baba") expects false,
         )
-        override val solutions: List<Pair<String, I0205>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0205): Pair<Boolean, Any> {
-            val result = solution(s, t)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(s: String, t: String): Boolean {
             val mapping = mutableMapOf<Char, Char>()

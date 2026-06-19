@@ -1,44 +1,27 @@
 package leetcode.sliding_window
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0209 = (Int, IntArray) -> Int
 
 class I0209minimumSizeSubarraySum {
-    data class Case(
-        val target: Int,
-        val nums: List<Int>,
-        val output: Int,
-    )
-
-    val prepareCase = { t: Int, s: String, o: Int ->
-        Case(t, s.toIntArray().toList(), o)
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0209> {
+    inner class Solution : ProblemTest<I0209> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase(7, "[2,3,1,2,4,3]", 2),
-            prepareCase(4, "[1,4,4]", 1),
-            prepareCase(11, "[1,1,1,1,1,1,1,1]", 0),
+        override val cases = testCases<I0209>(
+            args(7, "[2,3,1,2,4,3]") expects 2,
+            args(4, "[1,4,4]") expects 1,
+            args(11, "[1,1,1,1,1,1,1,1]") expects 0,
         )
-        override val solutions: List<Pair<String, I0209>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: I0209): Pair<Boolean, Any> {
-            val result = solution(target, nums.toIntArray())
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         private fun solution1(target: Int, nums: IntArray): Int {
             var left = 0

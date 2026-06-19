@@ -1,43 +1,26 @@
 package leetcode.linked_list
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.ListNode
-import leetcode.utils.toListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 typealias I0021 = (ListNode?, ListNode?) -> ListNode?
 
 class I0021mergeTwoSortedLists {
-    data class Case(
-        val l1: ListNode?,
-        val l2: ListNode?,
-        val output: ListNode?,
-    )
-
-    val prepareCase = { l1: String, l2: String, out: String ->
-        Case(l1.toListNode(), l2.toListNode(), out.toListNode())
-    }
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0021> {
+    inner class Solution : ProblemTest<I0021> {
 
-        override val cases: List<Case> = listOf(
-            prepareCase("1,2,4", "1,3,4", "1,1,2,3,4,4"),
+        override val cases = testCases<I0021>(
+            args("1,2,4", "1,3,4") expects "1,1,2,3,4,4",
         )
-
-        override val solutions: List<Pair<String, I0021>> = listOf(
-            ::solution1.name to ::solution1,
-        )
-
-        override fun Case.check(solution: I0021): Pair<Boolean, Any> {
-            val result = solution(l1, l2)
-            val isCorrect = result.toString() == output.toString()
-            return isCorrect to result.toString()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1)
 
         private fun solution1(list1: ListNode?, list2: ListNode?): ListNode? {
             if (list1 == null) return list2

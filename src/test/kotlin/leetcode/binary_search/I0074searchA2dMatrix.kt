@@ -1,6 +1,9 @@
 package leetcode.binary_search
 
-import leetcode.AproblemTest
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -8,60 +11,19 @@ typealias I0074 = (Array<IntArray>, Int) -> Boolean
 
 //https://leetcode.com/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-interview-150
 class I0074searchA2dMatrix {
-    @Suppress("ArrayInDataClass")
-    data class Case(
-        val matrix: Array<List<Int>>,
-        val target: Int,
-        val output: Boolean,
-    )
 
     @Nested
-    inner class Solution : AproblemTest<Case, I0074> {
+    inner class Solution : ProblemTest<I0074> {
 
-        override val cases: List<Case> = listOf(
-            Case(
-                arrayOf(
-                    listOf(1, 3, 5, 7),
-                    listOf(10, 11, 16, 20),
-                    listOf(23, 30, 34, 60)
-                ), target = 3, output = true
-            ),
-            Case(
-                arrayOf(
-                    listOf(1, 3, 5, 7),
-                    listOf(10, 11, 16, 20),
-                    listOf(23, 30, 34, 60)
-                ), target = 13, output = false
-            ),
-            Case(
-                arrayOf(
-                    listOf(1, 1)
-                ), target = 0, output = false
-            ),
-            Case(
-                arrayOf(
-                    listOf(1),
-                    listOf(3),
-                ), target = 0, output = false
-            )
-
-
+        override val cases = testCases<I0074>(
+            args("[[1,3,5,7],[10,11,16,20],[23,30,34,60]]", 3) expects true,
+            args("[[1,3,5,7],[10,11,16,20],[23,30,34,60]]", 13) expects false,
+            args("[[1,1]]", 0) expects false,
+            args("[[1],[3]]", 0) expects false,
         )
-
-        override val solutions = listOf(
-            ::solution1.name to ::solution1,
-            ::solution2.name to ::solution2,
-        )
-
-        override fun Case.check(solution: I0074): Pair<Boolean, Any> {
-            val input = matrix.map { it.toIntArray() }.toTypedArray()
-            val result = solution(input, target)
-            val isCorrect = result == output
-            return isCorrect to result
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solution2)
 
         /**
          * - Time Complexity: O(m * log n)

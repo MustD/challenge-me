@@ -1,7 +1,8 @@
 package leetcode.array_string
 
-import leetcode.AproblemTest
-import leetcode.utils.ArrayUtils.toIntArray
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -9,35 +10,15 @@ private typealias I0238 = (IntArray) -> IntArray
 
 class I0238productOfArrayExceptSelf {
 
-    data class Case(
-        val nums: List<Int>,
-        val output: List<Int>,
-    )
-
-    val prepareCase = { n1: String, r: String ->
-        Case(n1.toIntArray().toList(), r.toIntArray().toList())
-    }
-
-
     @Nested
-    inner class Solution : AproblemTest<Case, I0238> {
-        override val cases: List<Case> = listOf(
-            prepareCase("[1,2,3,4]", "[24,12,8,6]"),
-            prepareCase("[-1,1,0,-3,3]", "[0,0,9,0,0]"),
+    inner class Solution : ProblemTest<I0238> {
+        override val cases = testCases<I0238>(
+            "[1,2,3,4]" expects "[24,12,8,6]",
+            "[-1,1,0,-3,3]" expects "[0,0,9,0,0]",
         )
-        override val solutions: List<Pair<String, I0238>> = listOf(
-            ::solution1.name to ::solution1,
-            ::solutionEditorial.name to ::solutionEditorial,
-        )
-
-        override fun Case.check(solution: I0238): Pair<Boolean, Any> {
-            val array = nums.toIntArray()
-            val result = solution(array)
-            return (result.toList() == output) to result.toList()
-        }
 
         @Test
-        fun test() = check()
+        fun test() = check(::solution1, ::solutionEditorial)
 
         /**
          * bruteforce TLE
