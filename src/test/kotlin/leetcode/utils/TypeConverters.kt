@@ -7,6 +7,7 @@ import leetcode.utils.ArrayUtils.toIntArray2D
 import leetcode.utils.ArrayUtils.toListOfIntLists
 import leetcode.utils.ArrayUtils.toListOfStringLists
 import leetcode.utils.ArrayUtils.toStringArray
+import leetcode.utils.TypeConverters.canonicalize
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -40,9 +41,15 @@ object TypeConverters {
         return handler.fromString(value)
     }
 
-    fun equal(result: Any?, expected: Any?, returnType: KType): Boolean {
+    /**
+     * @param anyOrder when true, ordering is ignored at every nesting level (recursive multiset
+     *   compare via [canonicalize]) instead of the default positional comparison. Used by
+     *   `expectsAnyOrder` for "answer may be returned in any order" problems.
+     */
+    fun equal(result: Any?, expected: Any?, returnType: KType, anyOrder: Boolean = false): Boolean {
         ktypeHandlers[returnType]?.let { handler ->
             val normalizedExpected = if (expected is String) handler.fromString(expected) else expected
+            if (anyOrder) return canonicalize(result) == canonicalize(normalizedExpected)
             return handler.equals?.invoke(result, normalizedExpected) ?: (result == normalizedExpected)
         }
         val klass = returnType.classifier as? KClass<*>
@@ -50,8 +57,31 @@ object TypeConverters {
         val normalizedExpected = if (expected is String && klass != String::class && handler != null)
             handler.fromString(expected) // may legitimately be null (e.g. "[]" -> null)
         else expected
+        if (anyOrder) return canonicalize(result) == canonicalize(normalizedExpected)
         return handler?.equals?.invoke(result, normalizedExpected)
             ?: (result == normalizedExpected)
+    }
+
+    /**
+     * Recursively normalizes a value into an order-independent canonical form so two collections
+     * that differ only in element order compare equal. Every array/list becomes a `List` whose
+     * elements are themselves canonicalized and then sorted by their string representation.
+     *
+     * Arrays and lists collapse to the same shape, so a solution returning `Array<IntArray>` still
+     * matches an expected `List<List<Int>>` parsed from a string. Scalars are returned untouched.
+     * Sorting by `toString()` only needs to be a *stable total order* — equal multisets then yield
+     * structurally-equal canonical lists under `==`.
+     */
+    private fun canonicalize(value: Any?): Any? = when (value) {
+        null -> null
+        is IntArray -> value.toList().map(::canonicalize).sortedBy { it.toString() }
+        is LongArray -> value.toList().map(::canonicalize).sortedBy { it.toString() }
+        is DoubleArray -> value.toList().map(::canonicalize).sortedBy { it.toString() }
+        is CharArray -> value.toList().map(::canonicalize).sortedBy { it.toString() }
+        is BooleanArray -> value.toList().map(::canonicalize).sortedBy { it.toString() }
+        is Array<*> -> value.map(::canonicalize).sortedBy { it.toString() }
+        is List<*> -> value.map(::canonicalize).sortedBy { it.toString() }
+        else -> value
     }
 
     @Suppress("UNCHECKED_CAST")

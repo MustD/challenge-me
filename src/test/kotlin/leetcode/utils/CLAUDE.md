@@ -51,11 +51,20 @@ A `Handler` is `(fromString, equals?)`:
 4. Add a test in `type_converters/` (one file per type) covering: normal case, empty (`"[]"`), and the
    round-trip/equality behavior. A converter without a test is incomplete.
 
-## Equality is order-sensitive
+## Equality and ordering
 
-`equal` does positional comparison (lists/arrays compared element-by-element in order). Solutions that return
-`List<List<Int>>` etc. must emit output in the **exact expected order**. There is currently no order-insensitive
-comparison — see `todo.md` item 2 if you intend to add one.
+`equal(result, expected, returnType, anyOrder = false)` defaults to **positional** comparison: lists/arrays are
+compared element-by-element in order, so solutions returning `List<List<Int>>` etc. must emit output in the exact
+expected order.
+
+Pass `anyOrder = true` (surfaced in the DSL as `expectsAnyOrder`, see the parent `CLAUDE.md`) for an
+**order-insensitive** compare. It routes both sides through `canonicalize`, which recursively turns every array/list
+into a `List` sorted by element string form — a recursive multiset. This ignores order at *every* nesting level (outer
+and inner), and unifies arrays with lists so an `Array<IntArray>` result matches a `List<List<Int>>` expected.
+
+When adding an `anyOrder` case, prefer testing against `equal(..., anyOrder = true)` directly in `type_converters/`
+(see `AnyOrderEqualityTest`) and the DSL path via `testCases`/`check` (see `AnyOrderDslTest`). Both levels matter:
+the canonicalization logic and the `AnyOrder` marker unwrap in `testCases`.
 
 ## Gotchas
 

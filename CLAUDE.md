@@ -104,8 +104,19 @@ Key mechanics to understand before editing:
 - **`check(vararg solutions)` runs every solution against every case** — this is how multiple approaches to the same
   problem are validated together. A failure reports `solution[i] case[j] failed`.
 - **Equality is type-aware.** `TypeConverters` registers custom `equals` for array/list/linked-list/tree types (e.g.
-  `IntArray` compared by `.toList()`, `ListNode`/`Node`/`TreeNode` compared by `toString()`). Order-sensitive —
-  solutions returning `List<List<Int>>` etc. must produce output matching the expected ordering.
+  `IntArray` compared by `.toList()`, `ListNode`/`Node`/`TreeNode` compared by `toString()`). Order-sensitive by
+  default — solutions returning `List<List<Int>>` etc. must produce output matching the expected ordering.
+- **Order-insensitive cases:** use `expectsAnyOrder` instead of `expects` for problems whose answer "may be returned in
+  any order" (subsets, combinations, permutations, group-anagrams). It compares as a recursive multiset — ignoring
+  order at *every* nesting level — so a correct solution emitting results in a different order still passes:
+
+  ```kotlin
+  "[1,2,3]" expectsAnyOrder "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]"
+  ```
+
+  Backed by `TypeConverters.canonicalize` (recursively sorts arrays/lists by string form). If a problem needs the
+  *inner* order preserved, use plain `expects`. (Note: the parser can't represent an empty *inner* list — `[[],[1]]`
+  — see `todo.md`.)
 
 ### Adding a new problem
 

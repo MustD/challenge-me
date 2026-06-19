@@ -28,9 +28,32 @@ fun render(value: Any?): String = when (value) {
 
 data class TestInput(val values: List<Any?>)
 
+/**
+ * Marks an expected value as order-insensitive. Wrapping is done by the `expectsAnyOrder`
+ * infix functions; [testCases] unwraps it and asks [TypeConverters.equal] for a multiset
+ * (order-independent) comparison instead of the default positional one.
+ *
+ * See `expectsAnyOrder` and todo.md item 2.
+ */
+data class AnyOrder(val expected: Any?)
+
 fun args(vararg values: Any?) = TestInput(values.toList())
 infix fun Any?.expects(expected: Any?) = TestInput(listOf(this)) to expected
 infix fun TestInput.expects(expected: Any?) = this to expected
+
+/**
+ * Like [expects], but the comparison ignores ordering at every nesting level (a recursive
+ * multiset compare). Use for problems whose answer "may be returned in any order" — subsets,
+ * combinations, permutations, group-anagrams, etc. — so a correct solution that emits results
+ * in a different order than the literal still passes.
+ *
+ *     "[1,2,3]" expectsAnyOrder "[[1,2,3],[3,2,1],[2,1,3], ...]"   // any permutation order
+ *
+ * Order-insensitivity is deep: both the outer list and each inner list are compared as
+ * multisets. If a problem requires the *inner* order to be preserved, use plain [expects].
+ */
+infix fun Any?.expectsAnyOrder(expected: Any?) = TestInput(listOf(this)) to AnyOrder(expected)
+infix fun TestInput.expectsAnyOrder(expected: Any?) = this to AnyOrder(expected)
 
 inline fun <reified F : Function<Any?>> testCases(
     vararg inputs: Pair<TestInput, Any?>,
@@ -40,15 +63,17 @@ inline fun <reified F : Function<Any?>> testCases(
     val argTypes = typeArgs.dropLast(1).map { it.type!! }
     val returnType = typeArgs.last().type!!
 
-    return inputs.map { (input, expected) ->
+    return inputs.map { (input, rawExpected) ->
         val rawArgs = input.values.toList()
+        val anyOrder = rawExpected is AnyOrder
+        val expected = if (rawExpected is AnyOrder) rawExpected.expected else rawExpected
         // Explicit type needed so Kotlin knows 'this' in the lambda is F
         // Conversion happens inside so mutable types (IntArray) are fresh each run
         val case: F.() -> String? = {
             val converted = rawArgs.mapIndexed { i, arg -> TypeConverters.convert(arg, argTypes[i]) }
             val result = TypeConverters.callFunction(this as Function<Any?>, converted)
-            if (TypeConverters.equal(result, expected, returnType)) null
-            else "expected: $expected, got: ${render(result)}"
+            if (TypeConverters.equal(result, expected, returnType, anyOrder)) null
+            else "expected${if (anyOrder) " (any order)" else ""}: $expected, got: ${render(result)}"
         }
         case
     }

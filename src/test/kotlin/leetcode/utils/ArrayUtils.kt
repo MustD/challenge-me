@@ -69,7 +69,11 @@ object ArrayUtils {
      *
      * Edge cases:
      * - If the input string is empty, the function returns an empty list.
-     * - If the input string is "[]", the function returns a list containing an empty list.
+     * - If the input string is "[]", the function returns an empty list (zero rows).
+     * - An empty *inner* list (e.g. the `[]` in "[[],[1]]") yields an empty row rather than a row
+     *   holding a single empty string. After bracket-stripping, an empty row collapses to "" between
+     *   the "],[" delimiters; splitting "" on "," would wrongly produce `[""]`, so it is special-cased
+     *   to `emptyList()`. This lets subsets-style answers that include the empty set parse correctly.
      *
      * @receiver A string representing a 2D array-like structure.
      * @return A nested list of strings representing the parsed elements from the 2D array.
@@ -78,7 +82,8 @@ object ArrayUtils {
         val cleaned = stripStructuralWhitespace()
         if (cleaned.isEmpty()) return@run emptyList<List<String>>()
         if (cleaned == "[]") return@run listOf<List<String>>()
-        cleaned.replace("\"", "").replace("[[", "").replace("]]", "").split("],[").map { it.split(",") }
+        cleaned.replace("\"", "").replace("[[", "").replace("]]", "").split("],[")
+            .map { if (it.isEmpty()) emptyList() else it.split(",") }
     }
 
     /**
