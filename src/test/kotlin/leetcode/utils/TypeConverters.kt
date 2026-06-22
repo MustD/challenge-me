@@ -133,6 +133,13 @@ object TypeConverters {
                 }
             ))
         register(
+            typeOf<Array<ListNode?>>(), Handler(
+                fromString = { it.toListNodeArray() },
+                equals = { a, b ->
+                    (a as? Array<*>)?.map { it?.toString() } == (b as? Array<*>)?.map { it?.toString() }
+                }
+            ))
+        register(
             typeOf<List<String>>(), Handler(
                 fromString = { it.toStringArray().toList() },
             )
