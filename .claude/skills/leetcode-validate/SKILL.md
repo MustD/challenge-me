@@ -7,16 +7,35 @@ description: Validate and analyze a solution the user has already written for a 
 # leetcode-validate
 
 The user has **already written a solution** and wants it validated and analyzed — not solved for them. The argument is
-the **LeetCode problem number** (e.g. `3333`). This is a learning repo (see the `explain-before-solving` memory): the
-value here is the *post-mortem* on their own code — confirming it's correct, then deepening their understanding of why
-it works, what it costs, and what else was possible.
+*normally* the **LeetCode problem number** (e.g. `3333`); if it is omitted, infer it from the repo (see step 1). This is
+a learning repo (see the `explain-before-solving` memory): the value here is the *post-mortem* on their own code —
+confirming it's correct, then deepening their understanding of why it works, what it costs, and what else was possible.
 
 This is the third skill in the trio: `/leetcode-start` scaffolds, `/leetcode-help` unblocks, `/leetcode-validate`
 reviews a finished attempt. Do **not** rewrite the user's solution — analyze the code they wrote.
 
 ## Steps
 
-### 1. Locate the task file
+### 1. Resolve the problem number, then locate the task file
+
+**If the user gave a number, use it.** If **no number** was provided, infer it from the repo — do not ask first, try
+these in order:
+
+1. **Most recently edited problem file** — the `I####*.kt` under `src/test/kotlin/` with the newest mtime:
+   ```bash
+   find src/test/kotlin -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
+   ```
+2. **Git working changes** — a modified or not-yet-committed (untracked) `I####*.kt`:
+   ```bash
+   git status --porcelain -- 'src/test/kotlin/*I[0-9][0-9][0-9][0-9]*.kt'
+   ```
+
+Extract the 4-digit number from the resolved file name (`I0918…` → `918`). **Stop with an error** if the result is not
+clear — no matching file, or the candidates point at more than one distinct problem number. Tell the user no number was
+given and none could be unambiguously determined, and ask them to pass it explicitly; do not guess past an ambiguous
+result.
+
+Then locate the file:
 
 - Zero-pad the number to 4 digits → e.g. `3333` becomes `I3333`.
 - Search `src/test/kotlin/` for a file matching `I3333*.kt`.

@@ -1,21 +1,41 @@
 ---
 context: fork
 name: leetcode-help
-description: Get unstuck on a LeetCode problem in this repo. Provides educational materials (intuition, pattern, complexity, pitfalls) and a verified reference solution, written directly into the problem's task file as comments + an extra solution function. Invoke as /leetcode-help problem-number (e.g. /leetcode-help 323) when stuck or spending too long.
+description: Get unstuck on a LeetCode problem in this repo. Provides educational materials (intuition, pattern, complexity, pitfalls) and a verified reference solution, written directly into the problem's task file as comments + an extra solution function. Invoke as /leetcode-help problem-number (e.g. /leetcode-help 123) when stuck or spending too long.
 ---
 
 # leetcode-help
 
-The user is stuck on a LeetCode problem (or has spent too long) and wants help. The argument is the **LeetCode problem
-number** (e.g. `323`). This is a learning repo — see the `explain-before-solving` memory: lead with teaching, the
-reference solution comes *with* its explanation, never bare.
+The user is stuck on a LeetCode problem (or has spent too long) and wants help. The argument is *normally* the
+**LeetCode problem number** (e.g. `123`); if it is omitted, infer it from the repo (see step 1). This is a learning
+repo — see the `explain-before-solving` memory: lead with teaching, the reference solution comes *with* its explanation,
+never bare.
 
 ## Steps
 
-### 1. Locate the task file
+### 1. Resolve the problem number, then locate the task file
 
-- Zero-pad the number to 4 digits → e.g. `323` becomes `I0323`.
-- Search `src/test/kotlin/` for a file matching `I0323*.kt`.
+**If the user gave a number, use it.** If **no number** was provided, infer it from the repo — do not ask first, try
+these in order:
+
+1. **Most recently edited problem file** — the `I####*.kt` under `src/test/kotlin/` with the newest mtime:
+   ```bash
+   find src/test/kotlin -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
+   ```
+2. **Git working changes** — a modified or not-yet-committed (untracked) `I####*.kt`:
+   ```bash
+   git status --porcelain -- 'src/test/kotlin/*I[0-9][0-9][0-9][0-9]*.kt'
+   ```
+
+Extract the 4-digit number from the resolved file name (`I0918…` → `918`). **Stop with an error** if the result is not
+clear — no matching file, or the candidates point at more than one distinct problem number. Tell the user no number was
+given and none could be unambiguously determined, and ask them to pass it explicitly; do not guess past an ambiguous
+result.
+
+Then locate the file:
+
+- Zero-pad the number to 4 digits → e.g. `123` becomes `I0123`.
+- Search `src/test/kotlin/` for a file matching `I0123*.kt`.
     - **Found** → that is the file the user is working in. This is the target.
     - **Not found** → tell the user the problem isn't scaffolded yet. Offer to create it from
       `src/test/kotlin/leetcode/_Template.kt` in the appropriate category directory (ask which category, or infer from
