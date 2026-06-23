@@ -1,0 +1,22 @@
+# mise configuration for the challenge-me repo.
+# https://mise.jdx.dev/
+
+[tools]
+# Matches the Gradle Kotlin `jvmToolchain(25)` in build.gradle.kts.
+java = "temurin-25"
+
+[tasks.test]
+description = "Run all tests"
+run = "./gradlew test"
+
+[tasks.build]
+description = "Compile and run all tests"
+run = "./gradlew build"
+
+[tasks.test-one]
+description = "Run a single problem's tests, e.g. `mise run test-one leetcode.backtracking.I0039combinationSum`"
+run = './gradlew test --tests "$@"'
+
+[tasks.clean]
+description = "Delete Gradle build outputs"
+run = "./gradlew clean"
