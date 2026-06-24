@@ -1,5 +1,6 @@
-package leetcode
+package leetcode.array_string
 
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -22,15 +23,15 @@ typealias I0605 = (IntArray, Int) -> Boolean
 class I0605canPlaceFlowers {
 
     @Nested
-    inner class Solution : ProblemTest<I0605> {
+    inner class Solution : leetcode.ProblemTest<I0605> {
 
-        override val cases = testCases<I0605>(
-            args("[1,0,0,0,1]", 1) expects true,
-            args("[1,0,0,0,1]", 2) expects false,
-            args("[0]", 1) expects true,
-            args("[0,0,0]", 2) expects true,
-            args("[1,0,0,0,0,1]", 1) expects true,
-            args("[1,0,0,0,0,1]", 2) expects false,
+        override val cases = leetcode.testCases<I0605>(
+            leetcode.args("[1,0,0,0,1]", 1) expects true,
+            leetcode.args("[1,0,0,0,1]", 2) expects false,
+            leetcode.args("[0]", 1) expects true,
+            leetcode.args("[0,0,0]", 2) expects true,
+            leetcode.args("[1,0,0,0,0,1]", 1) expects true,
+            leetcode.args("[1,0,0,0,0,1]", 2) expects false,
         )
 
         @Test

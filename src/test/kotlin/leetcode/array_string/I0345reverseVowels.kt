@@ -1,5 +1,6 @@
-package leetcode
+package leetcode.array_string
 
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -18,9 +19,9 @@ typealias I0345 = (String) -> String
 class I0345reverseVowels {
 
     @Nested
-    inner class Solution : ProblemTest<I0345> {
+    inner class Solution : leetcode.ProblemTest<I0345> {
 
-        override val cases = testCases<I0345>(
+        override val cases = leetcode.testCases<I0345>(
             "IceCreAm" expects "AceCreIm",
             "leetcode" expects "leotcede",
             "a" expects "a",       // single vowel — unchanged
