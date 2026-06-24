@@ -54,6 +54,15 @@ data class TestInput(val values: List<Any?>)
  */
 data class AnyOrder(val expected: Any?)
 
+/**
+ * Marks a set of acceptable answers: the result passes if it equals **any one** of [expected].
+ * Wrapping is done by the `expectsAnyOf` functions; [testCases] unwraps it and compares the
+ * result against each candidate (each type-converted independently) until one matches.
+ *
+ * See `expectsAnyOf`.
+ */
+data class AnyOf(val expected: List<Any?>)
+
 fun args(vararg values: Any?) = TestInput(values.toList())
 infix fun Any?.expects(expected: Any?) = TestInput(listOf(this)) to expected
 infix fun TestInput.expects(expected: Any?) = this to expected
@@ -72,6 +81,25 @@ infix fun TestInput.expects(expected: Any?) = this to expected
 infix fun Any?.expectsAnyOrder(expected: Any?) = TestInput(listOf(this)) to AnyOrder(expected)
 infix fun TestInput.expectsAnyOrder(expected: Any?) = this to AnyOrder(expected)
 
+/**
+ * Like [expects], but accepts **several valid answers** — the case passes if the result equals
+ * any one of [expected]. Use for problems that explicitly allow more than one correct output,
+ * e.g. "return the index of *any* peak" (LC 162), "find *any* valid path", etc.
+ *
+ *     "[1,2,1,3,5,6,4]".expectsAnyOf(1, 5)   // index 1 or 5 are both peaks -> either passes
+ *
+ * Unlike [expects]/[expectsAnyOrder] this is a regular (vararg) call, not `infix`, since Kotlin
+ * `infix` functions take exactly one argument. Each candidate is type-converted independently
+ * using the return type, so they can be written as LeetCode-style strings just like [expects]:
+ *
+ *     args("[1,2,3]", 0).expectsAnyOf("[1,2]", "[3]")   // any one acceptable List<Int>
+ *
+ * Each candidate is compared positionally (use the order rules of [expects]); combine with the
+ * any-order semantics of [expectsAnyOrder] is not supported.
+ */
+fun Any?.expectsAnyOf(vararg expected: Any?) = TestInput(listOf(this)) to AnyOf(expected.toList())
+fun TestInput.expectsAnyOf(vararg expected: Any?) = this to AnyOf(expected.toList())
+
 inline fun <reified F : Function<Any?>> testCases(
     vararg inputs: Pair<TestInput, Any?>,
 ): List<F.() -> String?> {
@@ -82,16 +110,26 @@ inline fun <reified F : Function<Any?>> testCases(
 
     return inputs.map { (input, rawExpected) ->
         val rawArgs = input.values.toList()
-        val anyOrder = rawExpected is AnyOrder
-        val expected = if (rawExpected is AnyOrder) rawExpected.expected else rawExpected
         // Explicit type needed so Kotlin knows 'this' in the lambda is F
         // Conversion happens inside so mutable types (IntArray) are fresh each run
         val case: F.() -> String? = {
             val converted = rawArgs.mapIndexed { i, arg -> TypeConverters.convert(arg, argTypes[i]) }
             val result = TypeConverters.callFunction(this as Function<Any?>, converted)
-            if (TypeConverters.equal(result, expected, returnType, anyOrder)) null
-            else "expected${if (anyOrder) " (any order)" else ""}: $expected, got: ${render(result)}" +
-                    " (input: ${rawArgs.joinToString(", ") { render(it) }})"
+            val inputDesc = " (input: ${rawArgs.joinToString(", ") { render(it) }})"
+            when (rawExpected) {
+                is AnyOf ->
+                    if (rawExpected.expected.any { TypeConverters.equal(result, it, returnType) }) null
+                    else "expected any of: [${rawExpected.expected.joinToString(", ")}]," +
+                            " got: ${render(result)}$inputDesc"
+
+                is AnyOrder ->
+                    if (TypeConverters.equal(result, rawExpected.expected, returnType, anyOrder = true)) null
+                    else "expected (any order): ${rawExpected.expected}, got: ${render(result)}$inputDesc"
+
+                else ->
+                    if (TypeConverters.equal(result, rawExpected, returnType)) null
+                    else "expected: $rawExpected, got: ${render(result)}$inputDesc"
+            }
         }
         case
     }

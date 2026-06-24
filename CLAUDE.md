@@ -116,6 +116,18 @@ Key mechanics to understand before editing:
 
   Backed by `TypeConverters.canonicalize` (recursively sorts arrays/lists by string form). If a problem needs the
   *inner* order preserved, use plain `expects`.
+- **Multiple valid answers:** use `expectsAnyOf(...)` for problems that explicitly accept more than one correct
+  output ("return the index of *any* peak", "find *any* valid path"). The case passes if the result equals **any one**
+  of the listed candidates. Unlike `expects`/`expectsAnyOrder` it is a regular **vararg call**, not `infix` (Kotlin
+  `infix` functions take exactly one argument), so it is written with a dot:
+
+  ```kotlin
+  "[1,2,1,3,5,6,4]".expectsAnyOf(1, 5)              // index 1 or 5 — either peak passes
+  args("[1,2,3]", 0).expectsAnyOf("[1,2]", "[3]")   // each candidate type-converted independently
+  ```
+
+  Each candidate is converted from its LeetCode string and compared positionally (same order rules as `expects`);
+  it does not combine with the any-order semantics of `expectsAnyOrder`.
 
 ### Adding a new problem
 

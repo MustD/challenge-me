@@ -65,6 +65,12 @@ When adding an `anyOrder` case, prefer testing against `equal(..., anyOrder = tr
 (see `AnyOrderEqualityTest`) and the DSL path via `testCases`/`check` (see `AnyOrderDslTest`). Both levels matter:
 the canonicalization logic and the `AnyOrder` marker unwrap in `testCases`.
 
+The `expectsAnyOf(...)` DSL (multiple valid answers) is layered **on top of** `equal`, not inside it: `testCases`
+unwraps the `AnyOf` marker and calls `equal(result, candidate, returnType)` once per candidate, passing if any
+matches. So each candidate reuses the normal per-type conversion/equality — there is no separate `equal` overload to
+extend. Test it through the `testCases`/`check` path (see `AnyOfDslTest`), which is also where the per-candidate
+conversion is exercised.
+
 ## Gotchas
 
 - **Conversion runs fresh per case**, inside the case lambda, so mutable inputs (`IntArray`) aren't shared across the
