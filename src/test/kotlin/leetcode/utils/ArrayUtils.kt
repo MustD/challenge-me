@@ -1,5 +1,6 @@
 package leetcode.utils
 
+import leetcode.utils.ArrayUtils.arraySplit
 import leetcode.utils.ArrayUtils.stripStructuralWhitespace
 
 
@@ -132,6 +133,18 @@ object ArrayUtils {
     fun String.toListOfIntLists() = array2arraySplit().map { it.map { int -> int.toInt() } }
 
     fun String.toListOfStringLists() = array2arraySplit()
+
+    /**
+     * Converts a string representation of a char array (e.g. `["a","a","b"]`) into a [CharArray].
+     *
+     * Each element is expected to be a single character (LeetCode `char[]` form). Leverages
+     * [arraySplit] for parsing, so structural whitespace and the `"[]"` empty-array edge case are
+     * handled the same way as the other array parsers.
+     *
+     * @receiver A string representing a char array, e.g. `["a","b","c"]`.
+     * @return A [CharArray] containing the parsed characters.
+     */
+    fun String.toCharArray() = arraySplit().map { it.trim()[0] }.toCharArray()
 
     fun String.toCharArray2D() = array2arraySplit().map { row -> row.map { it.trim()[0] }.toCharArray() }.toTypedArray()
 

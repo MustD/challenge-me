@@ -1,5 +1,6 @@
 package leetcode.utils
 
+import leetcode.utils.ArrayUtils.toCharArray
 import leetcode.utils.ArrayUtils.toCharArray2D
 import leetcode.utils.ArrayUtils.toDoubleArray
 import leetcode.utils.ArrayUtils.toIntArray
@@ -124,6 +125,11 @@ object TypeConverters {
             DoubleArray::class, Handler(
                 fromString = { it.toDoubleArray() },
                 equals = { a, b -> (a as? DoubleArray)?.toList() == (b as? DoubleArray)?.toList() }
+            ))
+        register(
+            CharArray::class, Handler(
+                fromString = { it.toCharArray() },
+                equals = { a, b -> (a as? CharArray)?.toList() == (b as? CharArray)?.toList() }
             ))
         register(
             typeOf<Array<String>>(), Handler(
