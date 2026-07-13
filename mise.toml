@@ -7,16 +7,16 @@ java = "temurin-25"
 
 [tasks.test]
 description = "Run all tests"
-run = "./gradlew test"
+run = "./gradlew test --console=plain"
 
 [tasks.build]
 description = "Compile and run all tests"
-run = "./gradlew build"
+run = "./gradlew build --console=plain"
 
 [tasks.test-one]
 description = "Run a single problem's tests, e.g. `mise run test-one leetcode.backtracking.I0039combinationSum`"
-run = './gradlew test --tests "$@"'
+run = './gradlew test --tests "$@" --console=plain'
 
 [tasks.clean]
 description = "Delete Gradle build outputs"
-run = "./gradlew clean"
+run = "./gradlew clean --console=plain"
