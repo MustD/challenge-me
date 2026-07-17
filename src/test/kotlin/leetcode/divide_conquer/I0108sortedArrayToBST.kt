@@ -2,6 +2,7 @@ package leetcode.divide_conquer
 
 import leetcode.expects
 import leetcode.expectsAnyOf
+import leetcode.testCases
 import leetcode.utils.TreeNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
@@ -35,7 +36,7 @@ class I0108sortedArrayToBST {
     @Nested
     inner class Solution : leetcode.ProblemTest<I0108> {
 
-        override val cases = _root_ide_package_.leetcode.testCases<I0108>(
+        override val cases = testCases<I0108>(
             // even spans → two legal middles → two legal shapes (upper, lower)
             "[-10,-3,0,5,9]".expectsAnyOf("[0,-3,9,-10,null,5]", "[0,-10,5,null,-3,null,9]"),
             "[1,3]".expectsAnyOf("[3,1]", "[1,null,3]"),
