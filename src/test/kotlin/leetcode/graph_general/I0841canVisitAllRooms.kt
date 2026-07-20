@@ -1,5 +1,6 @@
-package leetcode
+package leetcode.graph_general
 
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -20,9 +21,9 @@ typealias I0841 = (List<List<Int>>) -> Boolean
 class I0841canVisitAllRooms {
 
     @Nested
-    inner class Solution : ProblemTest<I0841> {
+    inner class Solution : leetcode.ProblemTest<I0841> {
 
-        override val cases = testCases<I0841>(
+        override val cases = leetcode.testCases<I0841>(
             "[[1],[2],[3],[]]" expects true,        // 0->1->2->3, all visited
             "[[1,3],[3,0,1],[2],[0]]" expects false, // room 2 is never unlocked
             "[[],[]]" expects false,                 // room 1 has no key reachable
