@@ -31,13 +31,13 @@ class I0373kSmallestPairs {
         // The set of k smallest-sum pairs is uniquely determined, but LeetCode accepts them in any
         // order — so cases use `expectsAnyOrder` (multiset compare). If you emit them sorted by sum
         // you'll match too; the any-order compare just means you don't have to.
-        override val cases = _root_ide_package_.leetcode.testCases<I0373>(
-            _root_ide_package_.leetcode.args("[1,7,11]", "[2,4,6]", 3) expectsAnyOrder "[[1,2],[1,4],[1,6]]",
-            _root_ide_package_.leetcode.args("[1,1,2]", "[1,2,3]", 2) expectsAnyOrder "[[1,1],[1,1]]",
-            _root_ide_package_.leetcode.args("[1,2]", "[3]", 3) expectsAnyOrder "[[1,3],[2,3]]",
-            _root_ide_package_.leetcode.args("[1,2]", "[1,2]", 3) expectsAnyOrder "[[1,1],[1,2],[2,1]]",
-            _root_ide_package_.leetcode.args("[1,1]", "[1,2]", 3) expectsAnyOrder "[[1,1],[1,1],[1,2]]",
-            _root_ide_package_.leetcode.args("[1,2,3]", "[1,2,3]", 5).expectsAnyOf(
+        override val cases = leetcode.testCases<I0373>(
+            leetcode.args("[1,7,11]", "[2,4,6]", 3) expectsAnyOrder "[[1,2],[1,4],[1,6]]",
+            leetcode.args("[1,1,2]", "[1,2,3]", 2) expectsAnyOrder "[[1,1],[1,1]]",
+            leetcode.args("[1,2]", "[3]", 3) expectsAnyOrder "[[1,3],[2,3]]",
+            leetcode.args("[1,2]", "[1,2]", 3) expectsAnyOrder "[[1,1],[1,2],[2,1]]",
+            leetcode.args("[1,1]", "[1,2]", 3) expectsAnyOrder "[[1,1],[1,1],[1,2]]",
+            leetcode.args("[1,2,3]", "[1,2,3]", 5).expectsAnyOf(
                 "[[1,1],[1,2],[2,1],[1,3],[2,2]]", "[[1,1],[1,2],[2,1],[1,3],[3,1]]"
             ),
         )
