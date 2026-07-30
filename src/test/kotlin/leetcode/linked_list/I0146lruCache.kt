@@ -1,6 +1,7 @@
-package leetcode
+package leetcode.linked_list
 
 import org.junit.jupiter.api.Nested
+import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -513,7 +514,7 @@ class I0146lruCache {
          */
         @Test
         fun matchesNaiveOracleOnRandomSequences() {
-            val random = java.util.Random(20260729)
+            val random = Random(20260729)
             val rounds = List(300) { 1 + random.nextInt(5) to random.nextLong() }
 
             val failures = implementations.mapNotNull { (name, factory) ->
@@ -529,7 +530,7 @@ class I0146lruCache {
         /** Replays one pseudo-random op sequence on [cache] and the oracle, asserting every `get`. */
         private fun replayAgainstOracle(cache: Cache, capacity: Int, seed: Long) {
             val oracle = NaiveLru(capacity)
-            val ops = java.util.Random(seed)
+            val ops = Random(seed)
             val log = StringBuilder("LRUCache($capacity)")
             repeat(60) {
                 val key = 1 + ops.nextInt(7)
