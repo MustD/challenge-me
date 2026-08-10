@@ -1,5 +1,9 @@
-package leetcode
+package leetcode.two_pointers
 
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.expectsAnyOf
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 

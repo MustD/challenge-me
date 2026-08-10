@@ -1,5 +1,8 @@
-package leetcode
+package leetcode.kadane
 
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 

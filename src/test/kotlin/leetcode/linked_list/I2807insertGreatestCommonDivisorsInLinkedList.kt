@@ -1,5 +1,8 @@
-package leetcode
+package leetcode.linked_list
 
+import leetcode.ProblemTest
+import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.ListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test

@@ -1,5 +1,9 @@
-package leetcode
+package leetcode.hash_map
 
+import leetcode.ProblemTest
+import leetcode.args
+import leetcode.expects
+import leetcode.testCases
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
