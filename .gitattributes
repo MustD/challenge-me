@@ -1,0 +1,7 @@
+#
+# Windows batch wrappers must keep CRLF line endings to stay runnable on Windows.
+#
+*.bat           text eol=crlf
+
+# The Unix wrapper must keep LF regardless of the checkout platform.
+kotlin          text eol=lf
