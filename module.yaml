@@ -1,8 +1,7 @@
 product: jvm/app
 
-# Keep src/main/kotlin and src/test/kotlin where they are instead of moving 229 files
-# into the default src/ + test/ layout. Only valid for jvm/app and jvm/lib products.
-layout: maven-like
+# Default Kotlin Toolchain layout: main sources in src/, test sources in test/.
+# (Resources, if ever needed, would go in resources/ and testResources/.)
 
 # kotlin-test and the JUnit 5 runner are configured automatically (settings.junit defaults
 # to junit-5, which pulls org.jetbrains.kotlin:kotlin-test-junit5 at settings.kotlin.version).

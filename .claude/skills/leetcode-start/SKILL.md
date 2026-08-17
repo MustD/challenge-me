@@ -19,7 +19,7 @@ algorithm. (When they get stuck, `/leetcode-help` is the skill that supplies a w
 ### 1. Check it doesn't already exist
 
 - Zero-pad the number to 4 digits → e.g. `3333` becomes `I3333`.
-- Search `src/test/kotlin/` for `I3333*.kt`. If found, stop and tell the user it's already scaffolded (give the path) —
+- Search `test/` for `I3333*.kt`. If found, stop and tell the user it's already scaffolded (give the path) —
   offer `/leetcode-help` instead. Don't overwrite.
 
 ### 2. Identify the problem accurately (WebSearch — do NOT guess)
@@ -32,7 +32,7 @@ algorithm. (When they get stuck, `/leetcode-help` is the skill that supplies a w
 
 ### 3. Create the file
 
-- Path: `src/test/kotlin/leetcode/I####<methodName>.kt` (root `leetcode/` dir — themed move happens later).
+- Path: `test/leetcode/I####<methodName>.kt` (root `leetcode/` dir — themed move happens later).
 - `package leetcode` (root files use the bare package — no category subpackage).
 - File/class name: `I####<methodName>` (e.g. `I3333countOfSubstrings`), matching the LeetCode number zero-padded to 4.
 

@@ -5,8 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Overview
 
 A personal collection of algorithm/data-structure solutions (mostly LeetCode) written in Kotlin. **The notable thing
-about this repo is that there is essentially no production code** — `src/main/kotlin/Main.kt` is just "Hello World".
-Every solution lives under `src/test/kotlin/` and is exercised by a small custom JUnit 5 test harness. A "solution" and
+about this repo is that there is essentially no production code** — `src/Main.kt` is just "Hello World".
+Every solution lives under `test/` and is exercised by a small custom JUnit 5 test harness. A "solution" and
 its "test" are the same file.
 
 ## Educational purpose — read before solving
@@ -54,9 +54,10 @@ Two flags are load-bearing when running the full suite; both are baked into the 
 
 - **`--include-classes "*"` is mandatory.** The JUnit Console Launcher applies a default class-name
   filter (`^(Test.*|.+[.$]Test.*|.*Tests?)$`), which the Gradle test task did not. Without an explicit
-  `--include-classes`, only the ~26 harness utility classes ending in `Test` are discovered and all 197
-  `I####problemName` problem classes are **silently skipped** — 116 tests instead of 319, reported as a
-  clean pass. Any explicit `--include-classes` pattern replaces that default, which is why the
+  `--include-classes`, only the 26 harness utility classes ending in `Test` are discovered; the 197
+  problem and lesson classes — named `I####problemName`, `C4*`, `K##*`, `L##*`, none of which end in
+  `Test` — are **silently skipped**. That's 116 tests instead of 319, reported as a clean pass. Any
+  explicit `--include-classes` pattern replaces that default, which is why the
   single-problem and per-category commands don't need it.
 - **A trailing `*` on a class pattern is mandatory.** The `@Test` methods live in the `@Nested inner class
   Solution`, whose filter identity is `leetcode.backtracking.I0039combinationSum/Solution` — nested classes
@@ -69,8 +70,10 @@ Run a single lesson on demand with `mise run test-one other.concurrency.K01Corou
 is CLI-only in the Kotlin Toolchain — there is no `module.yaml` equivalent.
 
 - Build: **Kotlin Toolchain 0.11.1** (`module.yaml`, `./kotlin` wrapper); no Gradle.
-- Kotlin 2.4.10, JVM toolchain 25 (`layout: maven-like` keeps sources in `src/main/kotlin` and
-  `src/test/kotlin`), JUnit 6.1.2 + kotlin-test.
+- Kotlin 2.4.10, JVM toolchain 25, JUnit 6.1.2 + kotlin-test.
+- Source layout is the Kotlin Toolchain **default**: main sources in `src/`, test sources in `test/`
+  (no `main/kotlin` / `test/kotlin` nesting — that was the Gradle/Maven convention). Package directories
+  start directly under `test/`, e.g. `test/leetcode/backtracking/`.
 - Detekt is declined in IDE settings; there is no lint step in the build.
 - The Kotlin Toolchain is Alpha software — re-read the changelog on each `./kotlin update`.
 
@@ -78,11 +81,11 @@ is CLI-only in the Kotlin Toolchain — there is no `module.yaml` equivalent.
 
 The whole repo is a thin DSL for expressing LeetCode-style test cases declaratively. Three files define the framework:
 
-- `src/test/kotlin/leetcode/ProblemTest.kt` — the `ProblemTest<F>` interface and the `testCases` / `args` / `expects`
+- `test/leetcode/ProblemTest.kt` — the `ProblemTest<F>` interface and the `testCases` / `args` / `expects`
   DSL.
-- `src/test/kotlin/leetcode/utils/TypeConverters.kt` — central registry that converts string inputs ↔ typed values and
+- `test/leetcode/utils/TypeConverters.kt` — central registry that converts string inputs ↔ typed values and
   defines per-type equality.
-- `src/test/kotlin/leetcode/utils/ArrayUtils.kt` — string-parsing helpers (`"[1,2,3]"` → `IntArray`, 2D arrays, etc.)
+- `test/leetcode/utils/ArrayUtils.kt` — string-parsing helpers (`"[1,2,3]"` → `IntArray`, 2D arrays, etc.)
   used by the converters.
 
 ### How a problem file is structured
@@ -160,9 +163,9 @@ Key mechanics to understand before editing:
 
 ### Adding a new problem
 
-1. Copy `src/test/kotlin/leetcode/_Template.kt`.
+1. Copy `test/leetcode/_Template.kt`.
 2. Set the `package` to the right category (e.g. `leetcode.sliding_window`). Categories are the directories under
-   `src/test/kotlin/leetcode/` (array_string, backtracking, binary_search, dp_1d, graph_bfs, heap, linked_list, trie,
+   `test/leetcode/` (array_string, backtracking, binary_search, dp_1d, graph_bfs, heap, linked_list, trie,
    two_pointers, etc.).
 3. Name the file/class `I####<problemName>` (LeetCode number, zero-padded to 4). `C4*` files are from "Grokking
    Algorithms" (`grokking_algorithms` package).
@@ -174,6 +177,6 @@ If a problem needs a type the harness doesn't yet handle, register it in the `in
 short: `register(KClass)` for plain classes, `register(typeOf<...>())` for generic types (erasure makes the `KClass`
 ambiguous); supply a custom `equals` for arrays and node types; add a test under `utils/type_converters/`.
 
-**See `src/test/kotlin/leetcode/utils/CLAUDE.md` for the full type-converter rules** — the two registries, the
+**See `test/leetcode/utils/CLAUDE.md` for the full type-converter rules** — the two registries, the
 `Handler` contract, per-type equality, the step-by-step recipe, and gotchas. Keep that file and this section in sync
 when the conversion layer changes.

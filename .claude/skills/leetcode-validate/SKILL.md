@@ -21,13 +21,13 @@ reviews a finished attempt. Do **not** rewrite the user's solution — analyze t
 **If the user gave a number, use it.** If **no number** was provided, infer it from the repo — do not ask first, try
 these in order:
 
-1. **Most recently edited problem file** — the `I####*.kt` under `src/test/kotlin/` with the newest mtime:
+1. **Most recently edited problem file** — the `I####*.kt` under `test/` with the newest mtime:
    ```bash
-   find src/test/kotlin -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
+   find test -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
    ```
 2. **Git working changes** — a modified or not-yet-committed (untracked) `I####*.kt`:
    ```bash
-   git status --porcelain -- 'src/test/kotlin/*I[0-9][0-9][0-9][0-9]*.kt'
+   git status --porcelain -- 'test/*I[0-9][0-9][0-9][0-9]*.kt'
    ```
 
 Extract the 4-digit number from the resolved file name (`I0918…` → `918`). **Stop with an error** if the result is not
@@ -38,7 +38,7 @@ result.
 Then locate the file:
 
 - Zero-pad the number to 4 digits → e.g. `3333` becomes `I3333`.
-- Search `src/test/kotlin/` for a file matching `I3333*.kt`.
+- Search `test/` for a file matching `I3333*.kt`.
     - **Found** → that is the target.
     - **Not found** → tell the user the problem isn't scaffolded yet; suggest `/leetcode-start <N>` to create it first.
       Don't fabricate a file.

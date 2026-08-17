@@ -10,9 +10,9 @@ java = "temurin-25"
 description = "Run all tests"
 # Two flags, both load-bearing:
 #   --include-classes "*"  overrides the JUnit Console Launcher's default class-name filter
-#                          (^(Test.*|.+[.$]Test.*|.*Tests?)$). Without it only the ~26
+#                          (^(Test.*|.+[.$]Test.*|.*Tests?)$). Without it only the 26
 #                          utility classes ending in `Test` are discovered and the 197
-#                          I####problemName classes are silently skipped (116 tests, not 319).
+#                          problem/lesson classes are silently skipped (116 tests, not 319).
 #   --exclude-classes      replaces Gradle's `exclude("other/concurrency/*")`; those lesson
 #                          files are deliberately racy/deadlocking demos.
 run = './kotlin test --include-classes "*" --exclude-classes "other.concurrency.*"'
