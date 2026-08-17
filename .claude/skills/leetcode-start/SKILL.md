@@ -19,7 +19,7 @@ algorithm. (When they get stuck, `/leetcode-help` is the skill that supplies a w
 ### 1. Check it doesn't already exist
 
 - Zero-pad the number to 4 digits → e.g. `3333` becomes `I3333`.
-- Search `src/test/kotlin/` for `I3333*.kt`. If found, stop and tell the user it's already scaffolded (give the path) —
+- Search `test/` for `I3333*.kt`. If found, stop and tell the user it's already scaffolded (give the path) —
   offer `/leetcode-help` instead. Don't overwrite.
 
 ### 2. Identify the problem accurately (WebSearch — do NOT guess)
@@ -32,7 +32,7 @@ algorithm. (When they get stuck, `/leetcode-help` is the skill that supplies a w
 
 ### 3. Create the file
 
-- Path: `src/test/kotlin/leetcode/I####<methodName>.kt` (root `leetcode/` dir — themed move happens later).
+- Path: `test/leetcode/I####<methodName>.kt` (root `leetcode/` dir — themed move happens later).
 - `package leetcode` (root files use the bare package — no category subpackage).
 - File/class name: `I####<methodName>` (e.g. `I3333countOfSubstrings`), matching the LeetCode number zero-padded to 4.
 
@@ -109,7 +109,7 @@ per CLAUDE.md, or (b) ask the user how they'd like to model it. Don't silently p
 
 - The solution is a `TODO()` stub, so tests are *meant* to fail — that's correct. Just confirm the file compiles and the
   harness wiring is valid:
-  `./gradlew compileTestKotlin`
+  `mise run build` (or `./kotlin build` — it compiles test sources too)
 - If it doesn't compile, fix the signature/imports/case syntax (not the solution logic) until it does.
 - Report: the created path, the inferred signature, how many cases you added, and any type-mapping or any-order caveats.
   Hand it back to the user to solve — do not write the algorithm.

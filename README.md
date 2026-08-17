@@ -24,20 +24,26 @@ Examples include:
 - Letter Combinations of a Phone Number
 
 ## Environment
-- Kotlin 2.1.20
-- JVM Toolchain 21
-- JUnit 5.11.4 for testing
+- Kotlin 2.4.10
+- JVM Toolchain 25
+- JUnit 6.1.2 for testing
+- Build: [Kotlin Toolchain](https://kotlin-toolchain.org/) 0.11.1 (configured in `module.yaml`)
 
 ## Build and Test
-This project uses Gradle as the build system.
-To build the project:
+This project uses the Kotlin Toolchain (`./kotlin`) as the build system, with
+[mise](https://mise.jdx.dev/) tasks as the entry point:
+
 ``` bash
-./gradlew build
+mise run build     # compile only — unlike Gradle, this does NOT run tests
+mise run test      # run all tests
+mise run test-one leetcode.backtracking.I0039combinationSum   # a single problem
+mise run test-one leetcode.backtracking                       # a whole category
+mise run clean
 ```
-To run tests:
-``` bash
-./gradlew test
-```
+
+The `mise` tasks wrap `./kotlin` and carry two required test-filter flags. If you invoke `./kotlin test`
+directly, note that `--include-classes "*"` is mandatory for a full run and that class patterns need a
+trailing `*` to reach the `@Nested inner class Solution` — see the *Commands* section of `CLAUDE.md`.
 ## Purpose
 This repository serves as:
 - A personal reference for algorithm implementations

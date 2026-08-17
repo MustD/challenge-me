@@ -21,13 +21,13 @@ reviews a finished attempt. Do **not** rewrite the user's solution — analyze t
 **If the user gave a number, use it.** If **no number** was provided, infer it from the repo — do not ask first, try
 these in order:
 
-1. **Most recently edited problem file** — the `I####*.kt` under `src/test/kotlin/` with the newest mtime:
+1. **Most recently edited problem file** — the `I####*.kt` under `test/` with the newest mtime:
    ```bash
-   find src/test/kotlin -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
+   find test -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
    ```
 2. **Git working changes** — a modified or not-yet-committed (untracked) `I####*.kt`:
    ```bash
-   git status --porcelain -- 'src/test/kotlin/*I[0-9][0-9][0-9][0-9]*.kt'
+   git status --porcelain -- 'test/*I[0-9][0-9][0-9][0-9]*.kt'
    ```
 
 Extract the 4-digit number from the resolved file name (`I0918…` → `918`). **Stop with an error** if the result is not
@@ -38,7 +38,7 @@ result.
 Then locate the file:
 
 - Zero-pad the number to 4 digits → e.g. `3333` becomes `I3333`.
-- Search `src/test/kotlin/` for a file matching `I3333*.kt`.
+- Search `test/` for a file matching `I3333*.kt`.
     - **Found** → that is the target.
     - **Not found** → tell the user the problem isn't scaffolded yet; suggest `/leetcode-start <N>` to create it first.
       Don't fabricate a file.
@@ -49,7 +49,11 @@ Then locate the file:
 - Confirm the real problem (title, statement, constraints, examples) for that LeetCode number. If unsure, use
   WebSearch/WebFetch — don't guess from the number. Cross-check against the `typealias` and `cases` already in the file.
 - Run **only this problem's test** to establish correctness before analyzing:
-  `./gradlew test --tests "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  `mise run test-one "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  Invoking the toolchain directly requires a trailing `*` — `./kotlin test --include-classes
+  "<package>.<OuterClassName>*"` — because the `@Test` methods live in the `@Nested inner class Solution`,
+  whose filter identity is `<package>.<OuterClassName>/Solution`. Without the wildcard it matches only the
+  outer class and runs 0 tests while still reporting success, which would look like a pass.
     - **Pass** → proceed to analysis; the analysis describes a verified-correct solution.
     - **Fail** → report the failing case(s) and the harness output. Do **not** fix their code silently. Point out where
       the logic likely diverges (as a teaching hint, per the repo's educational rule), and offer `/leetcode-help` if

@@ -1,8 +1,9 @@
-.gradle
+### Kotlin Toolchain ###
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+.kotlin/
+# Guard against a source package literally named `build` being swallowed by the rule above.
+!src/**/build/
+!test/**/build/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -13,8 +14,8 @@ build/
 *.iml
 *.ipr
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+!src/**/out/
+!test/**/out/
 
 ### Eclipse ###
 .apt_generated
@@ -25,8 +26,8 @@ out/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+!src/**/bin/
+!test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/

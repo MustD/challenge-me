@@ -18,13 +18,13 @@ never bare.
 **If the user gave a number, use it.** If **no number** was provided, infer it from the repo — do not ask first, try
 these in order:
 
-1. **Most recently edited problem file** — the `I####*.kt` under `src/test/kotlin/` with the newest mtime:
+1. **Most recently edited problem file** — the `I####*.kt` under `test/` with the newest mtime:
    ```bash
-   find src/test/kotlin -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
+   find test -name 'I[0-9][0-9][0-9][0-9]*.kt' -printf '%T@ %p\n' | sort -rn | head -1
    ```
 2. **Git working changes** — a modified or not-yet-committed (untracked) `I####*.kt`:
    ```bash
-   git status --porcelain -- 'src/test/kotlin/*I[0-9][0-9][0-9][0-9]*.kt'
+   git status --porcelain -- 'test/*I[0-9][0-9][0-9][0-9]*.kt'
    ```
 
 Extract the 4-digit number from the resolved file name (`I0918…` → `918`). **Stop with an error** if the result is not
@@ -35,10 +35,10 @@ result.
 Then locate the file:
 
 - Zero-pad the number to 4 digits → e.g. `123` becomes `I0123`.
-- Search `src/test/kotlin/` for a file matching `I0123*.kt`.
+- Search `test/` for a file matching `I0123*.kt`.
     - **Found** → that is the file the user is working in. This is the target.
     - **Not found** → tell the user the problem isn't scaffolded yet. Offer to create it from
-      `src/test/kotlin/leetcode/_Template.kt` in the appropriate category directory (ask which category, or infer from
+      `test/leetcode/_Template.kt` in the appropriate category directory (ask which category, or infer from
       the problem's topic). Do not proceed to write a solution into a file that doesn't exist without confirming.
 
 ### 2. Identify the problem accurately
@@ -76,7 +76,11 @@ Follow the repo's harness conventions (see CLAUDE.md):
 ### 5. Verify
 
 - Run only this problem's test:
-  `./gradlew test --tests "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  `mise run test-one "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  Invoking the toolchain directly requires a trailing `*` — `./kotlin test --include-classes
+  "<package>.<OuterClassName>*"` — because the `@Test` methods live in the `@Nested inner class Solution`,
+  whose filter identity is `<package>.<OuterClassName>/Solution`. Without the wildcard it matches only the
+  outer class and runs 0 tests while still reporting success.
 - Confirm the reference solution passes. If a test case fails, fix the reference (not the harness) and re-run until
   green. Report the result.
 
