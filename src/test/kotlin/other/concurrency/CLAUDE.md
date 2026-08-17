@@ -51,13 +51,23 @@ Concurrency tests are worthless if they're flaky. Every lesson follows one rule:
 
 ```bash
 # One lesson:
-./gradlew test --tests "other.concurrency.L01RaceConditions"
+mise run test-one other.concurrency.L01RaceConditions
 
 # Everything in this package:
-./gradlew test --tests "other.concurrency.*"
+mise run test-one other.concurrency
 ```
 
-Coroutine lessons depend on `kotlinx-coroutines-core` / `-test` (declared in `build.gradle.kts`).
+These lessons are **excluded from the default test run** (`mise run test` passes
+`--exclude-classes "other.concurrency.*"`, carried over from the Gradle build's
+`exclude("other/concurrency/*")`). They are meant to be run deliberately, one at a time, and observed —
+that's the point of a lesson. Run them explicitly with the commands above.
+
+Unlike the `leetcode.*` problems, these are plain top-level JUnit classes rather than
+`@Nested inner class Solution`, so an exact `--include-classes "other.concurrency.L01RaceConditions"`
+matches without a trailing wildcard.
+
+Coroutine lessons depend on `kotlinx-coroutines-core` / `-test` (declared in `module.yaml` under
+`test-dependencies`).
 
 ## Suggested reading order for someone learning
 

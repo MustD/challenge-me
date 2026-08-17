@@ -49,7 +49,11 @@ Then locate the file:
 - Confirm the real problem (title, statement, constraints, examples) for that LeetCode number. If unsure, use
   WebSearch/WebFetch — don't guess from the number. Cross-check against the `typealias` and `cases` already in the file.
 - Run **only this problem's test** to establish correctness before analyzing:
-  `./gradlew test --tests "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  `mise run test-one "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  Invoking the toolchain directly requires a trailing `*` — `./kotlin test --include-classes
+  "<package>.<OuterClassName>*"` — because the `@Test` methods live in the `@Nested inner class Solution`,
+  whose filter identity is `<package>.<OuterClassName>/Solution`. Without the wildcard it matches only the
+  outer class and runs 0 tests while still reporting success, which would look like a pass.
     - **Pass** → proceed to analysis; the analysis describes a verified-correct solution.
     - **Fail** → report the failing case(s) and the harness output. Do **not** fix their code silently. Point out where
       the logic likely diverges (as a teaching hint, per the repo's educational rule), and offer `/leetcode-help` if

@@ -76,7 +76,11 @@ Follow the repo's harness conventions (see CLAUDE.md):
 ### 5. Verify
 
 - Run only this problem's test:
-  `./gradlew test --tests "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  `mise run test-one "<package>.<OuterClassName>"` (outer class name = file name without `.kt`).
+  Invoking the toolchain directly requires a trailing `*` — `./kotlin test --include-classes
+  "<package>.<OuterClassName>*"` — because the `@Test` methods live in the `@Nested inner class Solution`,
+  whose filter identity is `<package>.<OuterClassName>/Solution`. Without the wildcard it matches only the
+  outer class and runs 0 tests while still reporting success.
 - Confirm the reference solution passes. If a test case fails, fix the reference (not the harness) and re-run until
   green. Report the result.
 

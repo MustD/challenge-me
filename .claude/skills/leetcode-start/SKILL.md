@@ -109,7 +109,7 @@ per CLAUDE.md, or (b) ask the user how they'd like to model it. Don't silently p
 
 - The solution is a `TODO()` stub, so tests are *meant* to fail — that's correct. Just confirm the file compiles and the
   harness wiring is valid:
-  `./gradlew compileTestKotlin`
+  `mise run build` (or `./kotlin build` — it compiles test sources too)
 - If it doesn't compile, fix the signature/imports/case syntax (not the solution logic) until it does.
 - Report: the created path, the inferred signature, how many cases you added, and any type-mapping or any-order caveats.
   Hand it back to the user to solve — do not write the algorithm.
