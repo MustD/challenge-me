@@ -2,21 +2,32 @@
 # https://mise.jdx.dev/
 
 [tools]
-# Matches the Gradle Kotlin `jvmToolchain(25)` in build.gradle.kts.
+# Matches `settings.jvm.jdk.version: 25` in module.yaml. Having JAVA_HOME already on 25
+# means the Kotlin Toolchain reuses this JDK instead of provisioning its own via Foojay.
 java = "temurin-25"
 
 [tasks.test]
 description = "Run all tests"
-run = "./gradlew test --console=plain"
+# Two flags, both load-bearing:
+#   --include-classes "*"  overrides the JUnit Console Launcher's default class-name filter
+#                          (^(Test.*|.+[.$]Test.*|.*Tests?)$). Without it only the ~26
+#                          utility classes ending in `Test` are discovered and the 197
+#                          I####problemName classes are silently skipped (116 tests, not 319).
+#   --exclude-classes      replaces Gradle's `exclude("other/concurrency/*")`; those lesson
+#                          files are deliberately racy/deadlocking demos.
+run = './kotlin test --include-classes "*" --exclude-classes "other.concurrency.*"'
 
 [tasks.build]
-description = "Compile and run all tests"
-run = "./gradlew build --console=plain"
+description = "Compile all code (does NOT run tests — use `mise run test` for that)"
+run = "./kotlin build"
 
 [tasks.test-one]
-description = "Run a single problem's tests, e.g. `mise run test-one leetcode.backtracking.I0039combinationSum`"
-run = './gradlew test --tests "$@" --console=plain'
+description = 'Run a single problem, e.g. `mise run test-one leetcode.backtracking.I0039combinationSum`'
+# The trailing `*` is load-bearing: tests live in the `@Nested inner class Solution`, whose
+# filter identity is `...I0039combinationSum/Solution` (nested classes use `/`, not `.`).
+# Wildcards match across both separators, so `$1*` reaches the nested class.
+run = './kotlin test --include-classes "{{arg(name="pattern")}}*"'
 
 [tasks.clean]
-description = "Delete Gradle build outputs"
-run = "./gradlew clean --console=plain"
+description = "Delete build output and caches"
+run = "./kotlin clean"

@@ -30,20 +30,49 @@ This changes how you should respond when asked to solve a problem:
 
 ## Commands
 
+Prefer the `mise` tasks — they carry the required test filter flags (see the two gotchas below):
+
 ```bash
-./gradlew build          # compile + run all tests
-./gradlew test           # run all tests
-
-# Run a single problem's tests (outer class name = file name without .kt):
-./gradlew test --tests "leetcode.backtracking.I0039combinationSum"
-
-# Run by wildcard (e.g. everything in a category):
-./gradlew test --tests "leetcode.backtracking.*"
+mise run build           # compile only — does NOT run tests
+mise run test            # run all tests (excludes other/concurrency)
+mise run test-one leetcode.backtracking.I0039combinationSum   # single problem
+mise run test-one leetcode.backtracking                       # whole category
+mise run clean
 ```
 
-- Kotlin 2.3.20, JVM toolchain 25, JUnit 5 + kotlin-test.
-- Gradle configuration cache is enabled (`org.gradle.configuration-cache=true`).
+The underlying Kotlin Toolchain commands:
+
+```bash
+./kotlin build           # compile only — unlike `gradlew build`, this does NOT run tests
+./kotlin test --include-classes "*" --exclude-classes "other.concurrency.*"   # all tests
+./kotlin test --include-classes "leetcode.backtracking.I0039combinationSum*"  # one problem
+./kotlin test --include-classes "leetcode.backtracking.*"                     # one category
+./kotlin run             # runs Main.kt
+```
+
+Two flags are load-bearing when running the full suite; both are baked into the mise tasks:
+
+- **`--include-classes "*"` is mandatory.** The JUnit Console Launcher applies a default class-name
+  filter (`^(Test.*|.+[.$]Test.*|.*Tests?)$`), which the Gradle test task did not. Without an explicit
+  `--include-classes`, only the ~26 harness utility classes ending in `Test` are discovered and all 197
+  `I####problemName` problem classes are **silently skipped** — 116 tests instead of 319, reported as a
+  clean pass. Any explicit `--include-classes` pattern replaces that default, which is why the
+  single-problem and per-category commands don't need it.
+- **A trailing `*` on a class pattern is mandatory.** The `@Test` methods live in the `@Nested inner class
+  Solution`, whose filter identity is `leetcode.backtracking.I0039combinationSum/Solution` — nested classes
+  use `/`, not `.`. A pattern without the wildcard matches only the outer class, which holds no tests, and
+  runs 0 tests. Wildcards match across both `.` and `/`.
+
+`--exclude-classes "other.concurrency.*"` replaces Gradle's `exclude("other/concurrency/*")`; those lesson
+files are deliberately racy/deadlocking demos, so a bare `./kotlin test --include-classes "*"` will hang.
+Run a single lesson on demand with `mise run test-one other.concurrency.K01CoroutineBasics`. Test filtering
+is CLI-only in the Kotlin Toolchain — there is no `module.yaml` equivalent.
+
+- Build: **Kotlin Toolchain 0.11.1** (`module.yaml`, `./kotlin` wrapper); no Gradle.
+- Kotlin 2.4.10, JVM toolchain 25 (`layout: maven-like` keeps sources in `src/main/kotlin` and
+  `src/test/kotlin`), JUnit 6.1.2 + kotlin-test.
 - Detekt is declined in IDE settings; there is no lint step in the build.
+- The Kotlin Toolchain is Alpha software — re-read the changelog on each `./kotlin update`.
 
 ## Architecture
 

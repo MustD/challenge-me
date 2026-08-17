@@ -1,0 +1,22 @@
+product: jvm/app
+
+# Keep src/main/kotlin and src/test/kotlin where they are instead of moving 229 files
+# into the default src/ + test/ layout. Only valid for jvm/app and jvm/lib products.
+layout: maven-like
+
+# kotlin-test and the JUnit 5 runner are configured automatically (settings.junit defaults
+# to junit-5, which pulls org.jetbrains.kotlin:kotlin-test-junit5 at settings.kotlin.version).
+test-dependencies:
+  - org.junit.jupiter:junit-jupiter:6.1.2          # explicit: the harness uses @Nested directly
+  - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
+  - org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0
+
+settings:
+  kotlin:
+    version: 2.4.10
+  jvm:
+    jdk:
+      version: 25
+    release: 25
+    test:
+      junitPlatformVersion: 6.1.2                  # keep aligned with junit-jupiter above
