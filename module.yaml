@@ -3,6 +3,11 @@ product: jvm/app
 # Default Kotlin Toolchain layout: main sources in src/, test sources in test/.
 # (Resources, if ever needed, would go in resources/ and testResources/.)
 
+# Main-source dependencies. Needed only by the transaction-isolation examples in
+# src/database/isolation (plain JDBC against the Postgres from docker-compose.yml).
+dependencies:
+  - org.postgresql:postgresql:42.7.8
+
 # kotlin-test and the JUnit 5 runner are configured automatically (settings.junit defaults
 # to junit-5, which pulls org.jetbrains.kotlin:kotlin-test-junit5 at settings.kotlin.version).
 test-dependencies:

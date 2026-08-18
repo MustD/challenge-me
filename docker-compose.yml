@@ -1,0 +1,48 @@
+# PostgreSQL used by the transaction-isolation examples in `src/database/isolation/`.
+#
+#   docker compose up -d          # start (or `mise run db-up`)
+#   docker compose logs -f        # follow the server log — MVCC/serialization errors show up here
+#   docker compose down           # stop, keep the data volume
+#   docker compose down -v        # stop and wipe the data volume (fresh cluster next time)
+#
+# The demos DROP/CREATE their own tables on every run, so a stale volume is harmless.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: challenge-me-postgres
+    # FIXED host port on purpose: the JDBC URL in `Db.kt` is hard-coded to 5433, so the demos
+    # work with zero configuration. 5433 (not the default 5432) keeps this container out of the
+    # way of a Postgres you may already have installed on the host.
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: isolation
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      # Deterministic collation/encoding for a fresh cluster — keeps demo output stable.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    # `docker compose up -d --wait` blocks until this reports healthy, so the demos never race
+    # the server's startup (Postgres briefly accepts connections during init, then restarts).
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U demo -d isolation" ]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+      start_period: 5s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Loud logging makes the demos self-explanatory in `docker compose logs`:
+    #   log_statement=all      -> every SQL statement, per backend PID
+    #   log_lock_waits         -> reports a transaction that waited >1s on a row lock
+    command:
+      - postgres
+      - -c
+      - log_statement=all
+      - -c
+      - log_lock_waits=on
+      - -c
+      - deadlock_timeout=1s
+
+volumes:
+  pgdata:

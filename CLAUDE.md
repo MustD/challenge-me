@@ -9,6 +9,11 @@ about this repo is that there is essentially no production code** — `src/Main.
 Every solution lives under `test/` and is exercised by a small custom JUnit 5 test harness. A "solution" and
 its "test" are the same file.
 
+Two exceptions live under `src/`: `src/cases/cache/LruCache.kt`, and `src/database/isolation/` — runnable PostgreSQL
+transaction-isolation demos (see `src/database/isolation/README.md`) backed by the
+`docker-compose.yml` at the repo root. They are lessons, not tests: they have their own `main` and are run with
+`mise run isolation`, not by the JUnit suite.
+
 ## Educational purpose — read before solving
 
 **This is a learning/practice repository.** The owner is working through algorithm problems to build and reinforce their
@@ -38,6 +43,10 @@ mise run test            # run all tests (excludes other/concurrency)
 mise run test-one leetcode.backtracking.I0039combinationSum   # single problem
 mise run test-one leetcode.backtracking                       # whole category
 mise run clean
+
+mise run db-up           # start Postgres for src/database/isolation (fixed host port 5433)
+mise run isolation       # run the transaction-isolation demos (needs db-up first)
+mise run db-down         # stop the container
 ```
 
 The underlying Kotlin Toolchain commands:
@@ -70,6 +79,9 @@ Run a single lesson on demand with `mise run test-one other.concurrency.K01Corou
 is CLI-only in the Kotlin Toolchain — there is no `module.yaml` equivalent.
 
 - Build: **Kotlin Toolchain 0.11.1** (`module.yaml`, `./kotlin` wrapper); no Gradle.
+- The only main-source dependency is `org.postgresql:postgresql` (JDBC driver for the isolation demos). The module now
+  has two `main` functions, so `./kotlin run` still picks the auto-detected `Main.kt`; anything else needs
+  `--main-class`, as the `isolation` mise task does.
 - Kotlin 2.4.10, JVM toolchain 25, JUnit 6.1.2 + kotlin-test.
 - Source layout is the Kotlin Toolchain **default**: main sources in `src/`, test sources in `test/`
   (no `main/kotlin` / `test/kotlin` nesting — that was the Gradle/Maven convention). Package directories

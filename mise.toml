@@ -31,3 +31,17 @@ run = './kotlin test --include-classes "{{arg(name="pattern")}}*"'
 [tasks.clean]
 description = "Delete build output and caches"
 run = "./kotlin clean"
+
+[tasks.db-up]
+description = "Start the Postgres container for the database/isolation examples (fixed host port 5433)"
+run = "docker compose up -d --wait"
+
+[tasks.db-down]
+description = "Stop the Postgres container (add -v manually to also wipe the data volume)"
+run = "docker compose down"
+
+[tasks.isolation]
+description = "Run the transaction-isolation demos in src/database/isolation (needs `mise run db-up` first)"
+# --main-class is required: the module has two main functions (Main.kt and this one), and
+# `./kotlin run` defaults to the auto-detected Main.kt.
+run = "./kotlin run --main-class org.example.database.isolation.IsolationDemosKt"
