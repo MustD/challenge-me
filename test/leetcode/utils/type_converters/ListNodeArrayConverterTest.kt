@@ -9,13 +9,15 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+@Suppress("UNCHECKED_CAST")
 class ListNodeArrayConverterTest {
 
     @Test
     fun `convert string to Array of ListNode`() {
-        @Suppress("UNCHECKED_CAST")
-        val result = TypeConverters.convert("[[1,4,5],[1,3,4],[2,6]]", typeOf<Array<ListNode?>>())
-                as Array<ListNode?>
+
+        val result = TypeConverters.convert(
+            "[[1,4,5],[1,3,4],[2,6]]", typeOf<Array<ListNode?>>()
+        ) as Array<ListNode?>
         assertEquals(3, result.size)
         assertNotNull(result[0])
         assertEquals("1, 4, 5", result[0].toString())
@@ -25,14 +27,12 @@ class ListNodeArrayConverterTest {
 
     @Test
     fun `empty outer array yields zero lists`() {
-        @Suppress("UNCHECKED_CAST")
         val result = TypeConverters.convert("[]", typeOf<Array<ListNode?>>()) as Array<ListNode?>
         assertEquals(0, result.size)
     }
 
     @Test
     fun `empty inner list yields null head`() {
-        @Suppress("UNCHECKED_CAST")
         val result = TypeConverters.convert("[[]]", typeOf<Array<ListNode?>>()) as Array<ListNode?>
         assertEquals(1, result.size)
         assertEquals(null, result[0])

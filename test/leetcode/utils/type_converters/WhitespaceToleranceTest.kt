@@ -11,6 +11,7 @@ import kotlin.test.assertTrue
  * between tokens, so multiline `"""..."""` literals parse identically to single-line ones.
  * Whitespace *inside* quoted elements must still be preserved.
  */
+@Suppress("UNCHECKED_CAST")
 class WhitespaceToleranceTest {
 
     @Test

@@ -168,6 +168,7 @@ object TypeConverters {
             typeOf<Array<IntArray>>(), Handler(
                 fromString = { it.toIntArray2D() },
                 equals = { a, b ->
+                    @Suppress("UNCHECKED_CAST")
                     (a as? Array<IntArray>)?.map { it.toList() } == (b as? Array<IntArray>)?.map { it.toList() }
                 }
             ))
@@ -175,6 +176,7 @@ object TypeConverters {
             typeOf<Array<CharArray>>(), Handler(
                 fromString = { it.toCharArray2D() },
                 equals = { a, b ->
+                    @Suppress("UNCHECKED_CAST")
                     (a as? Array<CharArray>)?.map { it.toList() } == (b as? Array<CharArray>)?.map { it.toList() }
                 }
             ))

@@ -116,6 +116,7 @@ class L06ProducerConsumer {
      * so only one thread mutates it at a time. Threads that can't proceed release the monitor and
      * sleep via `wait()`; whoever changes the state calls `notifyAll()` to wake them.
      */
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     private class BoundedBuffer(private val capacity: Int) {
         private val items = ArrayDeque<Int>()
 
