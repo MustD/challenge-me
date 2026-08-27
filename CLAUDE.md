@@ -44,6 +44,9 @@ mise run test-one leetcode.backtracking.I0039combinationSum   # single problem
 mise run test-one leetcode.backtracking                       # whole category
 mise run clean
 
+mise run dev-update   # update the Kotlin Toolchain + rewrite the outdated versions in module.yaml
+mise run dev-update -- --dry-run   # only list what would change; write nothing
+
 mise run db-up           # start Postgres for src/database/isolation (fixed host port 5433)
 mise run isolation       # run the transaction-isolation demos (needs db-up first)
 mise run db-down         # stop the container
@@ -78,14 +81,21 @@ files are deliberately racy/deadlocking demos, so a bare `./kotlin test --includ
 Run a single lesson on demand with `mise run test-one other.concurrency.K01CoroutineBasics`. Test filtering
 is CLI-only in the Kotlin Toolchain — there is no `module.yaml` equivalent.
 
-- Build: **Kotlin Toolchain 0.11.1** (`module.yaml`, `./kotlin` wrapper); no Gradle.
+- Build: **Kotlin Toolchain 0.12.0** (`module.yaml`, `./kotlin` wrapper); no Gradle.
 - The only main-source dependency is `org.postgresql:postgresql` (JDBC driver for the isolation demos). The module now
   has two `main` functions, so `./kotlin run` still picks the auto-detected `Main.kt`; anything else needs
   `--main-class`, as the `isolation` mise task does.
-- Kotlin 2.4.10, JVM toolchain 25, JUnit 6.1.2 + kotlin-test.
+- Kotlin 2.4.10, JVM toolchain 25, JUnit 6.1.3 + kotlin-test.
 - Source layout is the Kotlin Toolchain **default**: main sources in `src/`, test sources in `test/`
   (no `main/kotlin` / `test/kotlin` nesting — that was the Gradle/Maven convention). Package directories
   start directly under `test/`, e.g. `test/leetcode/backtracking/`.
+- `[tools].kotlin` in mise.toml is the **standalone** Kotlin compiler, used for one thing only: running
+  `scripts/dev-update.main.kts` (`mise run dev-update`). The module itself is built by the Kotlin Toolchain, which
+  provisions its own compiler — the two are unrelated, but keep the pinned versions matched (the script does that
+  itself: when it bumps `settings.kotlin.version` in module.yaml it rewrites `[tools].kotlin` in mise.toml to match).
+  Note the Toolchain cannot run a `.kts` from inside a project: `./kotlin run <script>.main.kts` silently ignores the
+  path and runs `Main.kt`. The script pulls kotlinx-coroutines via `@file:DependsOn`, resolved by the `.main.kts`
+  script host on first run; the mise task sets `JAVA_OPTS` to quiet that resolver's INFO logging.
 - Detekt is declined in IDE settings; there is no lint step in the build.
 - The Kotlin Toolchain is Alpha software — re-read the changelog on each `./kotlin update`.
 

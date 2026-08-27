@@ -5,6 +5,11 @@
 # Matches `settings.jvm.jdk.version: 25` in module.yaml. Having JAVA_HOME already on 25
 # means the Kotlin Toolchain reuses this JDK instead of provisioning its own via Foojay.
 java = "temurin-25"
+# Standalone Kotlin compiler — ONLY used to run scripts/dev-update.main.kts (`mise run dev-update`).
+# The module itself is built by the Kotlin Toolchain (`./kotlin`), which provisions its own compiler;
+# keep this version matched to `settings.kotlin.version` in module.yaml so the script and the module
+# are compiled by the same Kotlin release.
+kotlin = { version = "2.4.10", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 
 [tasks.test]
 description = "Run all tests"
@@ -46,3 +51,20 @@ description = "Run the transaction-isolation demos in src/database/isolation (ne
 # --main-class is required: the module has two main functions (Main.kt and this one), and
 # `./kotlin run` defaults to the auto-detected Main.kt.
 run = "./kotlin run --main-class org.example.database.isolation.IsolationDemosKt"
+
+[tasks.dev-update]
+description = "Update the Kotlin Toolchain and every pinned dependency version; --dry-run to only list them"
+# The Kotlin Toolchain has no dependency-update command of its own, so scripts/dev-update.main.kts
+# resolves the coordinates in module.yaml against Maven Central's maven-metadata.xml.
+#
+# The script is run by the standalone Kotlin compiler from [tools].kotlin, NOT by the Kotlin
+# Toolchain: the Toolchain cannot run a .kts from inside a project (`./kotlin run <script>`
+# silently ignores the path and runs the module's Main.kt instead).
+#
+# JAVA_OPTS quiets the .main.kts script host's Maven resolver, which otherwise logs an INFO line
+# per cached artifact while it resolves the script's @file:DependsOn (kotlinx-coroutines-core).
+#
+# Updates everything by default; extra args are passed through to the script:
+#   mise run dev-update -- --dry-run   list the available updates, write nothing
+env.JAVA_OPTS = "-Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
+run = "kotlin scripts/dev-update.main.kts"

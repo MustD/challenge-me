@@ -26,8 +26,8 @@ Examples include:
 ## Environment
 - Kotlin 2.4.10
 - JVM Toolchain 25
-- JUnit 6.1.2 for testing
-- Build: [Kotlin Toolchain](https://kotlin-toolchain.org/) 0.11.1 (configured in `module.yaml`)
+- JUnit 6.1.3 for testing
+- Build: [Kotlin Toolchain](https://kotlin-toolchain.org/) 0.12.0 (configured in `module.yaml`)
 
 ## Build and Test
 This project uses the Kotlin Toolchain (`./kotlin`) as the build system, with
