@@ -1,5 +1,5 @@
 package org.example
 
 fun main() {
-    println("Hello World! changed")
+    println("Hello user Vasya, today is 27.08")
 }
