@@ -58,7 +58,7 @@ class AnyOfDslTest {
     private typealias Pair2 = (Int) -> IntArray
 
     /** Echoes a fixed array regardless of input, to assert against string-form candidates. */
-    private fun fixed(@Suppress("UNUSED_PARAMETER") n: Int): IntArray = intArrayOf(3, 4)
+    private fun fixed(n: Int): IntArray = intArrayOf(3, 4)
 
     @Test
     fun `each candidate is type-converted from its LeetCode string`() {

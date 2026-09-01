@@ -49,7 +49,7 @@ class I0033search {
          *
          * Pattern: modified binary search, "one half is always sorted". A rotated sorted array
          * of distinct values is two ascending runs glued together; splitting at `mid`, at least
-         * one of [lo..mid] / [mid..hi] is fully sorted, so you can range-test the target against
+         * one of [ lo..mid ] / [ mid..hi ] is fully sorted, so you can range-test the target against
          * that sorted half and discard half the array each step.
          *
          * What you wrote, walked through:
@@ -137,7 +137,7 @@ class I0033search {
          * Pattern: modified binary search ("one half is always sorted").
          *
          * Key insight — a rotated sorted array of distinct values is two sorted runs glued
-         * together. When you split at `mid`, AT LEAST ONE of the halves [lo..mid] or [mid..hi]
+         * together. When you split at `mid`, AT LEAST ONE of the halves [ lo..mid ] or [ mid..hi ]
          * is fully sorted (the pivot can only sit in one of them). So each step:
          *   1. If nums[mid] == target, done.
          *   2. Figure out which half is sorted by comparing nums[lo] and nums[mid].

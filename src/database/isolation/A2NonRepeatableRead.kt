@@ -1,4 +1,4 @@
-package org.example.database.isolation
+package database.isolation
 
 /**
  * ANOMALY 2 — NON-REPEATABLE READ (standard name: P2, also "fuzzy read").

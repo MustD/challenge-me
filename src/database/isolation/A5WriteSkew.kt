@@ -1,4 +1,4 @@
-package org.example.database.isolation
+package database.isolation
 
 /**
  * ANOMALY 5 — WRITE SKEW (standard name: A5B).

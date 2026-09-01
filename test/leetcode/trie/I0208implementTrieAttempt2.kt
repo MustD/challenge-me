@@ -39,7 +39,6 @@ import kotlin.test.assertTrue
  * by hand, or add your own `@Test` driver that replays a call sequence.
  *
  */
-@Suppress("unused")
 class I0208implementTrieAttempt2 {
 
 

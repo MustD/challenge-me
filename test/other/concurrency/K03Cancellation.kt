@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.*
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * LESSON K03 — Cooperative cancellation & timeouts (coroutines).
@@ -56,12 +57,12 @@ class K03Cancellation {
 
         val job = launch {
             repeat(1_000) {
-                delay(10)                      // suspension point == cancellation checkpoint
+                delay(10.milliseconds)                      // suspension point == cancellation checkpoint
                 iterations.incrementAndGet()   // only counts iterations that fully ran
             }
         }
 
-        delay(35)                              // let ~3 iterations happen...
+        delay(35.milliseconds)                              // let ~3 iterations happen...
         job.cancelAndJoin()                    // ...then request stop and wait for the unwind.
 
         // It was cancelled long before the 1000th iteration. The exact count depends on timing,
@@ -114,7 +115,7 @@ class K03Cancellation {
             }
         }
 
-        delay(20)                              // let it spin for a bit...
+        delay(20.milliseconds)                              // let it spin for a bit...
         job.cancelAndJoin()                    // ...then cancel; ensureActive() sees it next iteration.
 
         // Unlike 2a, the cooperative loop bails out far short of `max`.
@@ -131,23 +132,23 @@ class K03Cancellation {
     @Test
     fun `withTimeoutOrNull returns null past the budget, value within it`() = runBlocking {
         // Work that FITS the budget returns its real value.
-        val fits: String? = withTimeoutOrNull(100) {
-            delay(10)
+        val fits: String? = withTimeoutOrNull(100.milliseconds) {
+            delay(10.milliseconds)
             "finished"
         }
         assertEquals("finished", fits)
 
         // Work that EXCEEDS the budget is cancelled and yields null instead of a value.
-        val exceeds: String? = withTimeoutOrNull(20) {
-            delay(200)                         // will be cancelled at 20ms, long before this returns
+        val exceeds: String? = withTimeoutOrNull(20.milliseconds) {
+            delay(200.milliseconds)                         // will be cancelled at 20ms, long before this returns
             "finished"
         }
         assertNull(exceeds)
 
         // The non-null variant throws instead of returning a sentinel.
         assertFailsWith<TimeoutCancellationException> {
-            withTimeout(20) {
-                delay(200)
+            withTimeout(20.milliseconds) {
+                delay(200.milliseconds)
             }
         }
         Unit
@@ -166,18 +167,18 @@ class K03Cancellation {
 
         val job = launch {
             try {
-                delay(1_000)                   // will be cancelled well before this elapses
+                delay(1_000.milliseconds)                   // will be cancelled well before this elapses
             } finally {
                 // Without NonCancellable, this `delay` would throw and skip the cleanup below,
                 // because we are unwinding an already-cancelled coroutine.
                 withContext(NonCancellable) {
-                    delay(5)                   // simulate an async resource release (flush/close)
+                    delay(5.milliseconds)                   // simulate an async resource release (flush/close)
                     cleanedUp.set(true)        // record that cleanup actually ran to completion
                 }
             }
         }
 
-        delay(20)                              // let it reach the delay(1000) suspension point...
+        delay(20.milliseconds)                              // let it reach the delay(1000) suspension point...
         job.cancelAndJoin()                    // ...cancel, and wait for the finally block to finish.
 
         assertTrue(cleanedUp.get(), "finally must run on cancellation, even for suspend cleanup")

@@ -71,7 +71,7 @@ class K04CoroutineMutex {
                 repeat(incrementsPerCoroutine) { work() }
             }
         }
-        jobs.forEach { it.join() }        // wait for every coroutine before reading the result.
+        jobs.joinAll()        // wait for every coroutine before reading the result.
     }
 
     @Test

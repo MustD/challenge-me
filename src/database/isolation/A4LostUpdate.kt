@@ -1,4 +1,4 @@
-package org.example.database.isolation
+package database.isolation
 
 /**
  * ANOMALY 4 — LOST UPDATE (standard name: P4).

@@ -1,4 +1,4 @@
-package org.example.database.isolation
+package database.isolation
 
 /**
  * ANOMALY 3 — PHANTOM READ (standard name: P3).

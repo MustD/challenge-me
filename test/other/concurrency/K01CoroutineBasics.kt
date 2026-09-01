@@ -6,6 +6,7 @@ import kotlin.system.measureTimeMillis
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * LESSON K01 — Coroutine basics: `launch`, `async`/`await`, and structured concurrency.
@@ -67,7 +68,7 @@ class K01CoroutineBasics {
         var result = 0
 
         val job = launch {              // schedule a child coroutine in runBlocking's scope
-            delay(10)                   // suspend WITHOUT blocking the thread for ~10 ms
+            delay(10.milliseconds)                   // suspend WITHOUT blocking the thread for ~10 ms
             result = 42                 // then update shared state
         }
 
@@ -95,8 +96,8 @@ class K01CoroutineBasics {
         lateinit var combined: Pair<Int, Int>
 
         val elapsed = measureTimeMillis {
-            val a = async { delay(50); 20 }   // starts immediately, computes 20 after ~50 ms
-            val b = async { delay(50); 22 }   // starts immediately too — overlaps with `a`
+            val a = async { delay(50.milliseconds); 20 }   // starts immediately, computes 20 after ~50 ms
+            val b = async { delay(50.milliseconds); 22 }   // starts immediately too — overlaps with `a`
 
             // Suspend here until each result is ready. Order of await() doesn't change the timing:
             // both coroutines were already running concurrently the moment async{} returned.
@@ -132,7 +133,7 @@ class K01CoroutineBasics {
         coroutineScope {                     // this scope will not return until all n children finish
             repeat(n) {
                 launch {
-                    delay(1)                 // suspend to force real interleaving across the pool
+                    delay(1.milliseconds)                 // suspend to force real interleaving across the pool
                     count.incrementAndGet()  // atomic: safe regardless of which thread resumes us
                 }
             }

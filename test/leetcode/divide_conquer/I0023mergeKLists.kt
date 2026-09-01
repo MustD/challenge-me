@@ -1,3 +1,38 @@
+@file:Suppress(
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference", "KDocUnresolvedReference",
+    "KDocUnresolvedReference", "KDocUnresolvedReference"
+)
+
 package leetcode.divide_conquer
 
 import leetcode.ProblemTest

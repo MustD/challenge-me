@@ -1,4 +1,4 @@
-package org.example.cases.cache
+package cases.cache
 
 interface Cache<K : Any, V : Any> {
     fun add(key: K, value: V)

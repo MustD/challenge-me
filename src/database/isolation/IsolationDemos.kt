@@ -1,7 +1,8 @@
-package org.example.database.isolation
+package database.isolation
 
 import java.sql.DriverManager
 import java.sql.SQLException
+import kotlin.system.exitProcess
 
 /**
  * Entry point — runs every isolation demo in this package against the Postgres started by
@@ -57,12 +58,12 @@ private fun requireDatabase() {
                 st.executeQuery("SHOW default_transaction_isolation")
                     .use { rs -> if (rs.next()) rs.getString(1) else "?" }
             }
-            println("Connected to PostgreSQL $version at $JDBC_URL (default_transaction_isolation = $default)")
+            println("Connected to PostgreSQL $version at ${JDBC_URL} (default_transaction_isolation = $default)")
         }
     } catch (e: SQLException) {
         System.err.println(
             """
-            Cannot connect to $JDBC_URL — ${e.message?.lineSequence()?.first()}
+            Cannot connect to ${JDBC_URL} — ${e.message?.lineSequence()?.first()}
 
             Start the database first:
                 docker compose up -d --wait        (or: mise run db-up)
@@ -70,6 +71,6 @@ private fun requireDatabase() {
             Override the target with ISOLATION_JDBC_URL / ISOLATION_DB_USER / ISOLATION_DB_PASSWORD.
             """.trimIndent(),
         )
-        kotlin.system.exitProcess(1)
+        exitProcess(1)
     }
 }

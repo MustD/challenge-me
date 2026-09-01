@@ -1,4 +1,4 @@
-package org.example.database.isolation
+package database.isolation
 
 /**
  * ANOMALY 1 — DIRTY READ (standard name: P1).

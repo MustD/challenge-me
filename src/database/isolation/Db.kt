@@ -1,4 +1,4 @@
-package org.example.database.isolation
+package database.isolation
 
 import java.sql.Connection
 import java.sql.DriverManager

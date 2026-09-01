@@ -1,7 +1,5 @@
 package cases.cache
 
-import org.example.cases.cache.Cache
-import org.example.cases.cache.LruCache
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.test.expect

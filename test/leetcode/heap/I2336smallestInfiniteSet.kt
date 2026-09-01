@@ -207,7 +207,6 @@ class I2336smallestInfiniteSet {
         )
 
         /** Adapts [SmallestInfiniteSet] to [InfiniteSet] without modifying it. */
-        @Suppress("unused")
         private fun SmallestInfiniteSet.asInfiniteSet(): InfiniteSet = object : InfiniteSet {
             override fun popSmallest(): Int = this@asInfiniteSet.popSmallest()
             override fun addBack(num: Int) = this@asInfiniteSet.addBack(num)

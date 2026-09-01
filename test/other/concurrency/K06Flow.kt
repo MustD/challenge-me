@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * LESSON K06 — Flow: cold asynchronous streams.
@@ -174,7 +175,7 @@ class K06Flow {
     fun `flow emits asynchronously over time and toList preserves order`() = runBlocking {
         val ticks = flow {
             for (n in 1..4) {
-                delay(5)                     // suspend ~5ms between values — non-blocking wait
+                delay(5.milliseconds)                     // suspend ~5ms between values — non-blocking wait
                 emit(n * 100)                // 100, 200, 300, 400 spaced out in time
             }
         }
