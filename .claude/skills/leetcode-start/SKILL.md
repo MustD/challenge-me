@@ -47,10 +47,10 @@ import kotlin.test.Test
 /**
  * <N>. <Official Title>  (https://leetcode.com/problems/<slug>/)
  *
- * <One-paragraph restatement of the problem in plain terms.>
+ * <The problem statement as published on LeetCode, verbatim or near-verbatim.>
  *
  * Constraints:
- * - <key constraints that affect the approach / edge cases>
+ * - <every constraint listed on the problem page, verbatim>
  */
 typealias I#### = (<ArgTypes>) -> <ReturnType>
 
@@ -73,6 +73,17 @@ class I####<methodName> {
     }
 }
 ```
+
+**The doc comment carries ONLY what the LeetCode page itself states** — title, URL, statement, constraints, and the
+follow-up if the page has one. Nothing else:
+
+- No hints, intuition, approach or pattern names, complexity targets, or "note that..." observations.
+- No edge cases, pitfalls, or warnings the page does not spell out.
+- No restatement that simplifies or interprets — reproduce the statement's wording and keep its definitions.
+- No commentary about the harness, the tests, or how to structure the solution.
+
+If you catch yourself explaining *how* to solve it, or pointing at something the statement leaves implicit, delete that
+line. That material belongs to `/leetcode-help`.
 
 Note: root-package files reference `ProblemTest`, `testCases`, `args`, `expects` from package `leetcode` directly — no
 `import leetcode.*` needed (same package). If you place the file in a category subdir instead, add
@@ -99,11 +110,11 @@ per CLAUDE.md, or (b) ask the user how they'd like to model it. Don't silently p
 - Multi-arg: `args(<a>, <b>, ...) expects <output>` → e.g. `args("[1,2]", 7) expects "[[2,2,3]]"`.
 - Inputs and expected values are LeetCode-style **strings** for any non-scalar type; plain Kotlin literals (`7`, `true`)
   pass through untouched.
-- Add **every** worked example from the problem page, plus any obvious edge case the constraints imply (empty input,
-  single element) — but only ones you're certain of the answer for. These are the user's correctness oracle, so they
-  must be right.
-- **Ordering matters**: harness equality for `List<List<...>>` etc. is order-sensitive. If the problem says "return in
-  any order," note that in a comment near the cases so the user knows their output ordering may need sorting to match.
+- Add **every** worked example from the problem page, and nothing else — no invented edge cases. The examples are the
+  user's correctness oracle, so they must match the page exactly.
+- **Ordering**: harness equality for `List<List<...>>` etc. is order-sensitive. If the problem statement itself says the
+  answer may be returned in any order, use `expectsAnyOrder`; if it says any valid answer is accepted, use
+  `expectsAnyOf(...)`. Do not add commentary beyond what the statement says.
 
 ### 6. Verify the scaffold compiles (but expect tests to fail)
 
@@ -117,7 +128,9 @@ per CLAUDE.md, or (b) ask the user how they'd like to model it. Don't silently p
 ## Notes
 
 - Leave `TODO("implement")` as the body (or a trivial signature-satisfying stub) — never a real solution.
-- Keep the description faithful to the official statement; don't editorialize the approach (that's `/leetcode-help`'s
-  job).
+- Keep the description faithful to the official statement — statement and constraints only. Any hint, tip, complexity
+  target, or edge-case warning is out of scope here; that is `/leetcode-help`'s job.
+- Nothing outside the doc comment editorializes either: no `// hint:` comments near the cases, no notes in the stub body
+  beyond `TODO("implement")`.
 - If WebSearch is unavailable or the problem can't be confirmed, ask the user to paste the statement rather than
   guessing.
