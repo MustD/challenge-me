@@ -7,30 +7,15 @@ import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 /**
- * Игра со спичками
+ * Playing with matches
  * https://coderun.yandex.ru/selections/algorithm-training-september-2025/problems/playing-with-matches
  *
- * На столе лежит кучка из N спичек. Двое играют по очереди. За один ход разрешается взять
- * одну, две или три спички — так, чтобы оставшееся в кучке количество спичек **не было простым**
- * (можно оставить 1 или 4, нельзя оставить 2 или 3). Выигрывает тот, кто забирает последнюю спичку.
+ * There is a pile of N matches on the table. Two players move in turn. A move takes one, two or
+ * three matches — but only if the amount **left in the pile is not prime** (leaving 1 or 4 is fine,
+ * leaving 2 or 3 is not). The player who takes the last match wins.
  *
- * Ввод:  одно число N (1 <= N <= 10 000).
- * Вывод: 1 — если при правильной игре побеждает первый игрок, иначе 2.
- *
- * Approach (win/lose DP, backward induction on positions):
- *   win[n] == "игрок, который ходит при n спичках, побеждает при правильной игре".
- *   win[0] = false — ходить нечем, значит последнюю спичку забрал соперник.
- *   win[n] = exists k in {1,2,3}: n - k >= 0 && !isPrime(n - k) && !win[n - k]
- *   Ответ: 1 если win[N], иначе 2.
- *
- * Pitfalls:
- *   - 0 и 1 не простые — оставить их всегда можно; решето начинает отмечать с 2.
- *   - Ограничение "не простое" касается только *оставляемого* количества, само N может быть простым.
- *   - Бывают позиции, где все три хода запрещены (например, из 4 нельзя оставить ни 3, ни 2) —
- *     позиция без ходов проигрышная.
- *   - Простые позиции недостижимы ходом, но могут быть стартовыми: считать win[] надо для всех n.
- *
- * Сложность: O(N log log N) на решето + O(N) на DP, память O(N).
+ * Input:  a single number N (1 <= N <= 10 000).
+ * Output: 1 — if the first player wins with optimal play, otherwise 2.
  */
 typealias TMatches = (Int) -> Int
 
@@ -55,11 +40,52 @@ class PlayingWithMatches {
         )
 
         @Test
-        fun test() = check(::whoWins)
+        fun test() = check(::whoWins, ::whoWinsPattern)
 
+        /**
+         * Approach (win/lose DP, backward induction on positions):
+         *   win[n] == "the player to move with n matches on the table wins with optimal play".
+         *   win[0] = false — nothing to take, so the opponent grabbed the last match.
+         *   win[n] = exists k in {1,2,3}: n - k >= 0 && !isPrime(n - k) && !win[n - k]
+         *   Answer: 1 if win[N], otherwise 2.
+         *
+         * Pitfalls:
+         *   - 0 and 1 are not prime — they may always be left; the sieve starts marking at 2.
+         *   - The "not prime" restriction applies only to the amount *left*; N itself may be prime.
+         *   - Some positions have all three moves forbidden (from 4 one may leave neither 3 nor 2) —
+         *     a position with no legal move is losing.
+         *   - Prime positions are unreachable by a move but can be the start: fill win[] for every n.
+         *
+         * Complexity: O(N log log N) for the sieve + O(N) for the DP, O(N) memory.
+         */
         fun whoWins(n: Int): Int {
-            TODO("build the sieve, fill win[0..n], return 1 if win[n] else 2")
+            val isPrime = BooleanArray(n + 1) { it >= 2 }
+            var p = 2
+            while (p.toLong() * p <= n) {
+                if (isPrime[p]) {
+                    var m = p * p
+                    while (m <= n) {
+                        isPrime[m] = false
+                        m += p
+                    }
+                }
+                p++
+            }
+
+            val win = BooleanArray(n + 1)
+            for (i in 1..n) {
+                win[i] = (1..3).any { k -> i - k >= 0 && !isPrime[i - k] && !win[i - k] }
+            }
+            return if (win[n]) 1 else 2
         }
 
+        /**
+         * The DP above makes the pattern visible: the losing positions are exactly 0, 4, 8, 12, …
+         * From a multiple of 4 every legal move leaves 1, 2 or 3 (mod 4) — a winning position for
+         * the opponent (leaving a prime is forbidden, which only removes options, never adds one).
+         * From any other n one can always step back onto a multiple of 4, and that target is never
+         * prime (4k is composite for k >= 1, and 0 is allowed). Hence O(1) time and memory.
+         */
+        fun whoWinsPattern(n: Int): Int = if (n % 4 == 0) 2 else 1
     }
 }
