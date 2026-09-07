@@ -1,5 +1,6 @@
-package leetcode
+package leetcode.graph_general
 
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -23,23 +24,23 @@ typealias I0207 = (Int, Array<IntArray>) -> Boolean
 class I0207canFinish {
 
     @Nested
-    inner class Solution : ProblemTest<I0207> {
+    inner class Solution : leetcode.ProblemTest<I0207> {
 
-        override val cases = testCases<I0207>(
-            args(2, "[[1,0]]") expects true,
-            args(2, "[[1,0],[0,1]]") expects false,
-            args(1, "[]") expects true,
-            args(5, "[[1,4],[2,4],[3,1],[3,2]]") expects true,
-            args(4, "[[1,0],[2,1],[3,2],[1,3]]") expects false,
-            args(3, "[[0,1],[0,2]]") expects true,
+        override val cases = leetcode.testCases<I0207>(
+            leetcode.args(2, "[[1,0]]") expects true,
+            leetcode.args(2, "[[1,0],[0,1]]") expects false,
+            leetcode.args(1, "[]") expects true,
+            leetcode.args(5, "[[1,4],[2,4],[3,1],[3,2]]") expects true,
+            leetcode.args(4, "[[1,0],[2,1],[3,2],[1,3]]") expects false,
+            leetcode.args(3, "[[0,1],[0,2]]") expects true,
             // acyclic, but two starting edges reach node 2 from different paths (diamond)
-            args(5, "[[0,1],[1,2],[3,4],[4,2]]") expects true,
+            leetcode.args(5, "[[0,1],[1,2],[3,4],[4,2]]") expects true,
             // plain chain 3 -> 2 -> 1 -> 0, walked twice from different starting edges
-            args(4, "[[0,1],[1,2],[2,3]]") expects true,
-            args(4, "[[0,0]]") expects false,
+            leetcode.args(4, "[[0,1],[1,2],[2,3]]") expects true,
+            leetcode.args(4, "[[0,0]]") expects false,
             // DAG: chain 0 -> 1 -> 2 -> 3 plus the shortcut 1 -> 3; node 3 is re-reached
             // by a longer path *within one traversal*, which the diamond case above misses
-            args(4, "[[0,1],[1,2],[2,3],[1,3]]") expects true,
+            leetcode.args(4, "[[0,1],[1,2],[2,3],[1,3]]") expects true,
         )
 
         @Test
