@@ -9,7 +9,7 @@ java = "temurin-25"
 # The module itself is built by the Kotlin Toolchain (`./kotlin`), which provisions its own compiler;
 # keep this version matched to `settings.kotlin.version` in module.yaml so the script and the module
 # are compiled by the same Kotlin release.
-kotlin = { version = "2.4.10", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
+kotlin = { version = "2.4.20", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 
 [tasks.test]
 description = "Run all tests"
