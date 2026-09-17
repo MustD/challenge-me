@@ -1,0 +1,31 @@
+# `mise run dev-update` / `mise run dev-update-build` — the repo's version-bump tool.
+#
+# A Kotlin/Native module, not a JVM one: this is a dev CLI that should start instantly and
+# not need a JVM, and it is a separate module from the repo root so its dependencies never
+# reach the test module. `product: linux/app` builds a self-contained binary per Linux
+# architecture; the x64 one lands in build/tasks/_update-script_linkLinuxX64Debug/.
+#
+# Ported from the former scripts/dev-update.main.kts. What changed in the move to native:
+#   - java.net       -> `curl` (Kotlin/Native has no HTTP client, in stdlib or otherwise)
+#   - ProcessBuilder -> posix `system` / `popen`
+#   - java.nio.file  -> kotlinx-io (`Path`, `SystemFileSystem`)
+# Coroutines are unchanged: kotlinx-coroutines-core is multiplatform and `Dispatchers.IO`
+# exists on native, so the Maven Central lookups still all travel at once.
+product: linux/app
+
+dependencies:
+  - org.jetbrains.kotlinx:kotlinx-io-core:0.9.1          # file IO; the stdlib has none on native
+  - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 # parallel Maven Central lookups
+
+settings:
+  kotlin:
+    version: 2.4.20
+    # getenv/popen/system and the C-pointer plumbing around them all live behind this opt-in.
+    optIns: [ kotlinx.cinterop.ExperimentalForeignApi ]
+    # Kotlin/Native's posix klib declares `linkerOpts=-lresolv -lm -lpthread -lutil -lcrypt -lrt`,
+    # so every linux binary gets a DT_NEEDED on libcrypt.so.1 even though nothing calls crypt().
+    # That library was part of glibc up to 2.38 and is a separate package now (libxcrypt-compat on
+    # Arch/Manjaro), so the binary would refuse to start on a host that has not installed it.
+    # --as-needed drops the libraries no symbol is actually resolved from; verify with
+    # `readelf -d scripts/update-script.kexe | grep NEEDED`.
+    freeCompilerArgs: [ '-linker-option', '--as-needed' ]

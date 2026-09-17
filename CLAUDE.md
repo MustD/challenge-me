@@ -44,8 +44,9 @@ mise run test-one leetcode.backtracking.I0039combinationSum   # single problem
 mise run test-one leetcode.backtracking                       # whole category
 mise run clean
 
-mise run dev-update   # update the Kotlin Toolchain + rewrite the outdated versions in module.yaml
+mise run dev-update   # update the Kotlin Toolchain + rewrite the outdated versions in every module.yaml
 mise run dev-update -- --dry-run   # only list what would change; write nothing
+mise run dev-update-build   # rebuild just the dev-update binary (scripts/update-script)
 
 mise run db-up           # start Postgres for src/database/isolation (fixed host port 5433)
 mise run isolation       # run the transaction-isolation demos (needs db-up first)
@@ -56,14 +57,19 @@ The underlying Kotlin Toolchain commands:
 
 ```bash
 ./kotlin build           # compile only — unlike `gradlew build`, this does NOT run tests
-./kotlin test --include-classes "*" --exclude-classes "other.concurrency.*"   # all tests
-./kotlin test --include-classes "leetcode.backtracking.I0039combinationSum*"  # one problem
-./kotlin test --include-classes "leetcode.backtracking.*"                     # one category
+./kotlin test --include-module challenge-me --include-classes "*" --exclude-classes "other.concurrency.*"
+./kotlin test --include-module challenge-me --include-classes "leetcode.backtracking.I0039combinationSum*"
+./kotlin test --include-module challenge-me --include-classes "leetcode.backtracking.*"
 ./kotlin run             # runs Main.kt
 ```
 
-Two flags are load-bearing when running the full suite; both are baked into the mise tasks:
+Three flags are load-bearing; all are baked into the mise tasks:
 
+- **`--include-module challenge-me` is mandatory** now that the project has two modules (`challenge-me` and
+  `update-script`): the Toolchain refuses any test filter that is not scoped to
+  a module, with *"When using test filters, it is required to use --include-module or
+  --exclude-module"*. Scoping to the problems module also avoids the "module with no matching tests
+  is an error" rule that `update-script` would trip.
 - **`--include-classes "*"` is mandatory.** The JUnit Console Launcher applies a default class-name
   filter (`^(Test.*|.+[.$]Test.*|.*Tests?)$`), which the Gradle test task did not. Without an explicit
   `--include-classes`, only the 26 harness utility classes ending in `Test` are discovered; the 197
@@ -89,15 +95,38 @@ is CLI-only in the Kotlin Toolchain — there is no `module.yaml` equivalent.
 - Source layout is the Kotlin Toolchain **default**: main sources in `src/`, test sources in `test/`
   (no `main/kotlin` / `test/kotlin` nesting — that was the Gradle/Maven convention). Package directories
   start directly under `test/`, e.g. `test/leetcode/backtracking/`.
-- `[tools].kotlin` in mise.toml is the **standalone** Kotlin compiler, used for one thing only: running
-  `scripts/dev-update.main.kts` (`mise run dev-update`). The module itself is built by the Kotlin Toolchain, which
-  provisions its own compiler — the two are unrelated, but keep the pinned versions matched (the script does that
-  itself: when it bumps `settings.kotlin.version` in module.yaml it rewrites `[tools].kotlin` in mise.toml to match).
-  Note the Toolchain cannot run a `.kts` from inside a project: `./kotlin run <script>.main.kts` silently ignores the
-  path and runs `Main.kt`. The script pulls kotlinx-coroutines via `@file:DependsOn`, resolved by the `.main.kts`
-  script host on first run; the mise task sets `JAVA_OPTS` to quiet that resolver's INFO logging.
+- The repo is a **multi-module** project: `project.yaml` lists the modules, the root `module.yaml` is the
+  problems/lessons module, and `scripts/update-script/` is the `dev-update` tool (see below).
+- `[tools].kotlin` in mise.toml is the **standalone** Kotlin compiler. Nothing in the build uses it any more — it
+  used to run the old `scripts/dev-update.main.kts` — but it is kept for ad-hoc `.kts` scripting and is still bumped
+  automatically alongside `settings.kotlin.version` (when `dev-update` bumps the root module's Kotlin version it
+  rewrites `[tools].kotlin` in mise.toml to match). Note the Toolchain cannot run a `.kts` from inside a project:
+  `./kotlin run <script>.main.kts` silently ignores the path and runs `Main.kt` — which is why `dev-update` is a
+  compiled module rather than a script.
 - Detekt is declined in IDE settings; there is no lint step in the build.
 - The Kotlin Toolchain is Alpha software — re-read the changelog on each `./kotlin update`.
+
+### `scripts/update-script` — the `dev-update` tool
+
+A **Kotlin/Native** module (`product: linux/app`), not a JVM one: a dev CLI that starts instantly, needs no JVM,
+and keeps its dependencies out of the test module. `mise run dev-update-build` links
+`build/tasks/_update-script_linkLinuxX64Debug/update-script.kexe` and copies it to the stable path
+`scripts/update-script.kexe`; `mise run dev-update` depends on that task and runs that copy, passing through any
+`--` args. On an arm64 host, point the copy step at `_update-script_linkLinuxArm64Debug` instead.
+
+Ported from the former `scripts/dev-update.main.kts`. Off the JVM there is no `java.net`, no `ProcessBuilder` and
+no `java.nio.file`, so: HTTP is a `curl` subprocess, processes go through posix `system`/`popen` (with a `cd`
+prefix, since libc has no per-process working directory), and files through **kotlinx-io**. `Dispatchers.IO` is
+`internal` on native, so the parallel Maven Central lookups run on `Dispatchers.Default`. One source file per
+pass: `main.kt` (CLI + driver), `shell.kt` (terminal/process/fs/HTTP), `toolchain.kt`, `dependencies.kt`,
+`tools.kt`.
+
+The dependency pass covers **every** module.yaml listed in `project.yaml`, the tool's own included.
+
+`settings.kotlin.freeCompilerArgs: [-linker-option, --as-needed]` in its module.yaml is load-bearing: the
+Kotlin/Native posix klib links `-lcrypt` (among others), so without it the binary carries a DT_NEEDED on
+`libcrypt.so.1` that no symbol needs, and refuses to start on any host without the (now separate) libxcrypt
+package — on Arch/Manjaro, `error while loading shared libraries: libcrypt.so.1`.
 
 ## Architecture
 

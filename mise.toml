@@ -5,10 +5,10 @@
 # Matches `settings.jvm.jdk.version: 25` in module.yaml. Having JAVA_HOME already on 25
 # means the Kotlin Toolchain reuses this JDK instead of provisioning its own via Foojay.
 java = "temurin-25"
-# Standalone Kotlin compiler — ONLY used to run scripts/dev-update.main.kts (`mise run dev-update`).
-# The module itself is built by the Kotlin Toolchain (`./kotlin`), which provisions its own compiler;
-# keep this version matched to `settings.kotlin.version` in module.yaml so the script and the module
-# are compiled by the same Kotlin release.
+# Standalone Kotlin compiler — not needed by any task any more (dev-update used to be a .kts run
+# by it; it is now the compiled `update-script` module). Kept for ad-hoc `kotlin foo.main.kts`
+# scripting, and still bumped automatically with `settings.kotlin.version` in module.yaml so an
+# ad-hoc script is compiled by the same Kotlin release as the project.
 kotlin = { version = "2.4.20", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 
 [tasks.test]
@@ -20,7 +20,10 @@ description = "Run all tests"
 #                          problem/lesson classes are silently skipped (116 tests, not 319).
 #   --exclude-classes      replaces Gradle's `exclude("other/concurrency/*")`; those lesson
 #                          files are deliberately racy/deadlocking demos.
-run = './kotlin test --include-classes "*" --exclude-classes "other.concurrency.*"'
+#   --include-module       required as soon as the project has more than one module: the Toolchain
+#                          refuses a test filter that is not scoped to a module (and errors on a
+#                          module with no matching tests, which `update-script` has none of).
+run = './kotlin test --include-module challenge-me --include-classes "*" --exclude-classes "other.concurrency.*"'
 
 [tasks.build]
 description = "Compile all code (does NOT run tests — use `mise run test` for that)"
@@ -32,7 +35,7 @@ description = 'Run a single problem, e.g. `mise run test-one leetcode.backtracki
 # filter identity is `...I0039combinationSum/Solution` (nested classes use `/`, not `.`).
 # Wildcards match across both separators, so `${usage_pattern}*` reaches the nested class.
 usage = 'arg "<pattern>" help="Class-name prefix: a problem, a category, or any package prefix"'
-run = './kotlin test --include-classes "${usage_pattern}*"'
+run = './kotlin test --include-module challenge-me --include-classes "${usage_pattern}*"'
 
 [tasks.clean]
 description = "Delete build output and caches"
@@ -52,19 +55,23 @@ description = "Run the transaction-isolation demos in src/database/isolation (ne
 # `./kotlin run` defaults to the auto-detected Main.kt.
 run = "./kotlin run --main-class org.example.database.isolation.IsolationDemosKt"
 
+[tasks.dev-update-build]
+description = "Build the dev-update binary (scripts/update-script) — Kotlin/Native, one binary per arch"
+# Links build/tasks/_update-script_linkLinuxX64Debug/update-script.kexe (and the Arm64 twin), then
+# copies the x64 one next to its sources as scripts/update-script.kexe — a stable path that does
+# not move when the Toolchain renames its task directories, and survives `mise run clean`.
+run = [
+  "./kotlin build -m update-script",
+  "cp build/tasks/_update-script_linkLinuxX64Debug/update-script.kexe scripts/update-script.kexe",
+]
+
 [tasks.dev-update]
 description = "Update the Kotlin Toolchain and every pinned dependency version; --dry-run to only list them"
-# The Kotlin Toolchain has no dependency-update command of its own, so scripts/dev-update.main.kts
-# resolves the coordinates in module.yaml against Maven Central's maven-metadata.xml.
+# The Kotlin Toolchain has no dependency-update command of its own, so scripts/update-script
+# resolves the coordinates in every module.yaml against Maven Central's maven-metadata.xml.
 #
-# The script is run by the standalone Kotlin compiler from [tools].kotlin, NOT by the Kotlin
-# Toolchain: the Toolchain cannot run a .kts from inside a project (`./kotlin run <script>`
-# silently ignores the path and runs the module's Main.kt instead).
-#
-# JAVA_OPTS quiets the .main.kts script host's Maven resolver, which otherwise logs an INFO line
-# per cached artifact while it resolves the script's @file:DependsOn (kotlinx-coroutines-core).
-#
-# Updates everything by default; extra args are passed through to the script:
+# `depends` rebuilds the binary first; the Toolchain no-ops when nothing in the module changed,
+# so the usual run costs one up-to-date check. Extra args are passed through to the binary:
 #   mise run dev-update -- --dry-run   list the available updates, write nothing
-env.JAVA_OPTS = "-Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
-run = "kotlin scripts/dev-update.main.kts"
+depends = ["dev-update-build"]
+run = "./scripts/update-script.kexe"
