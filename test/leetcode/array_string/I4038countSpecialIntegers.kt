@@ -1,5 +1,6 @@
-package leetcode
+package leetcode.array_string
 
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -21,9 +22,9 @@ typealias I4038 = (IntArray) -> Int
 class I4038countSpecialIntegers {
 
     @Nested
-    inner class Solution : ProblemTest<I4038> {
+    inner class Solution : leetcode.ProblemTest<I4038> {
 
-        override val cases = testCases<I4038>(
+        override val cases = leetcode.testCases<I4038>(
             "[1,2,2,1]" expects 1,
             "[3,3,1,2,2,1]" expects 2,
             "[1]" expects 1,                    // single element: one block of length 1 (n = 1 boundary)

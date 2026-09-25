@@ -1,5 +1,6 @@
-package leetcode
+package leetcode.array_string
 
+import leetcode.expects
 import org.junit.jupiter.api.Nested
 import kotlin.math.abs
 import kotlin.test.Test
@@ -30,20 +31,20 @@ typealias I4024 = (Array<IntArray>, IntArray) -> Int
 class I4024nearestDrone {
 
     @Nested
-    inner class Solution : ProblemTest<I4024> {
+    inner class Solution : leetcode.ProblemTest<I4024> {
 
-        override val cases = testCases<I4024>(
-            args("[[0,0,8],[2,2,9]]", "[3,4]") expects 1,
-            args("[[2,1,5],[4,4,5],[6,6,8]]", "[5,5]") expects 1,
-            args("[[4,4,5]]", "[8,6]") expects -1,
-            args("[[0,0,5]]", "[3,2]") expects 0,                        // distance == range is reachable
-            args("[[1,0,5],[0,1,5]]", "[0,0]") expects 0,                // tie -> smallest index
-            args("[[5,5,1],[1,0,5],[0,1,5]]", "[0,0]") expects 1,        // tie after an unreachable drone
-            args("[[3,0,2],[5,0,10]]", "[0,0]") expects 1,               // nearest drone is out of range
-            args("[[3,3,1],[0,0,1]]", "[0,0]") expects 1,                // drone sits on the target (distance 0)
-            args("[[10,10,1],[-10,-10,1]]", "[0,0]") expects -1,         // several drones, none reachable
-            args("[[-25,-25,100]]", "[25,25]") expects 0,                // extreme coords, max distance == max range
-            args("[[-25,-25,100],[25,25,100]]", "[25,-25]") expects 0,   // tie at opposite corners
+        override val cases = leetcode.testCases<I4024>(
+            leetcode.args("[[0,0,8],[2,2,9]]", "[3,4]") expects 1,
+            leetcode.args("[[2,1,5],[4,4,5],[6,6,8]]", "[5,5]") expects 1,
+            leetcode.args("[[4,4,5]]", "[8,6]") expects -1,
+            leetcode.args("[[0,0,5]]", "[3,2]") expects 0,          // distance == range is reachable
+            leetcode.args("[[1,0,5],[0,1,5]]", "[0,0]") expects 0,  // tie -> smallest index
+            leetcode.args("[[5,5,1],[1,0,5],[0,1,5]]", "[0,0]") expects 1,// tie after an unreachable drone
+            leetcode.args("[[3,0,2],[5,0,10]]", "[0,0]") expects 1,       // nearest drone is out of range
+            leetcode.args("[[3,3,1],[0,0,1]]", "[0,0]") expects 1,        // drone sits on the target (distance 0)
+            leetcode.args("[[10,10,1],[-10,-10,1]]", "[0,0]") expects -1, // several drones, none reachable
+            leetcode.args("[[-25,-25,100]]", "[25,25]") expects 0,        // extreme coords, max distance == max range
+            leetcode.args("[[-25,-25,100],[25,25,100]]", "[25,-25]") expects 0,   // tie at opposite corners
         )
 
         @Test
