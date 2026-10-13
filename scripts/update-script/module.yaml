@@ -19,7 +19,7 @@ dependencies:
 
 settings:
   kotlin:
-    version: 2.4.20
+    version: 2.4.21
     # getenv/popen/system and the C-pointer plumbing around them all live behind this opt-in.
     optIns: [ kotlinx.cinterop.ExperimentalForeignApi ]
     # Kotlin/Native's posix klib declares `linkerOpts=-lresolv -lm -lpthread -lutil -lcrypt -lrt`,

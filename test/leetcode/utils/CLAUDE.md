@@ -9,7 +9,8 @@ this file is the detail for editing the converters.
   per-type equality. This is the single source of truth for "which types the harness understands".
 - `ArrayUtils.kt` — low-level string parsers (`"[1,2,3]"` → `IntArray`, `"[[1,2],[3,4]]"` → 2D, etc.). The converters
   delegate here; they don't parse strings themselves.
-- Data-structure types and their parsers: `ListNode.kt`, `TreeNode.kt`, `Node.kt`, `QuadNode.kt`. Each exposes a
+- Data-structure types and their parsers: `ListNode.kt`, `TreeNode.kt`, `Node.kt`, `NaryNode.kt`, `QuadNode.kt`. Each
+  exposes a
   `String.toX()` parser and a `toString()` used for equality.
 - `type_converters/` — one test file per registered type. **Every converter must have a matching test here.**
 
@@ -44,7 +45,8 @@ A `Handler` is `(fromString, equals?)`:
 3. Provide an `equals` whenever default `==` is wrong:
     - **Arrays** (`IntArray`, `DoubleArray`, `Array<IntArray>`, `Array<CharArray>`, `Array<String>`): compare by
       `.toList()` / `.map { it.toList() }`. Array `==` is reference equality — without this every case fails.
-    - **Node types** (`ListNode`, `TreeNode`, `Node`, `QuadNode`): compare by `a?.toString() == b?.toString()`. Their
+   - **Node types** (`ListNode`, `TreeNode`, `Node`, `NaryNode`, `QuadNode`): compare by
+     `a?.toString() == b?.toString()`. Their
       `toString()` is the canonical serialization, so keep `toString()` and the parser as exact inverses.
     - Plain scalars and `List<…>` of scalars: `==` is correct, omit `equals`.
 4. Add a test in `type_converters/` (one file per type) covering: normal case, empty (`"[]"`), and the

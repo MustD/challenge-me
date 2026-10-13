@@ -9,7 +9,7 @@ java = "temurin-25"
 # by it; it is now the compiled `update-script` module). Kept for ad-hoc `kotlin foo.main.kts`
 # scripting, and still bumped automatically with `settings.kotlin.version` in module.yaml so an
 # ad-hoc script is compiled by the same Kotlin release as the project.
-kotlin = { version = "2.4.20", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
+kotlin = { version = "2.4.21", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 
 [tasks.test]
 description = "Run all tests"
