@@ -100,7 +100,11 @@ object TypeConverters {
         register(Boolean::class, Handler({ it.trim().toBoolean() }))
         register(Double::class, Handler({ it.trim().toDouble() }))
         register(String::class, Handler({ it }))
-        register(TreeNode::class, Handler({ it.toTreeNode() }))
+        register(
+            TreeNode::class, Handler(
+                fromString = { it.toTreeNode() },
+                equals = { a, b -> a?.toString() == b?.toString() }
+            ))
         register(
             Node::class, Handler(
                 fromString = { it.toNode() },
