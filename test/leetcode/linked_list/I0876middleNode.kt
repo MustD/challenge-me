@@ -34,78 +34,76 @@ class I0876middleNode {
         )
 
         @Test
-        fun test() = check(::middleNode)
+        fun test() = check(
+            ::middleNode,
+            ::referenceSolution
+        )
 
-        /**
-         * Analysis — middleNode (verified: all 5 cases pass)
-         *
-         * Pattern: **Fast & slow pointers (tortoise and hare)** — the "runner" technique.
-         * `fast` advances two nodes per step, `slow` one. When `fast` runs off the end,
-         * `slow` sits at the midpoint. This is the same two-speed idea reused for
-         * cycle detection (Floyd), finding the k-th-from-end node, and palindrome checks.
-         *
-         * Why the even-length rule falls out for free: the loop condition is
-         * `while (fast?.next != null)`.
-         *  - Odd length (e.g. 5): fast lands exactly on the last node, `fast.next == null`
-         *    stops the loop, slow is on the single true middle (node 3).
-         *  - Even length (e.g. 4): fast overshoots to `null` (last iteration does
-         *    `fast = fast.next?.next`), slow has taken one extra step and rests on the
-         *    *second* middle (node 3 of [1,2,3,4]) — exactly what the problem asks.
-         *  A single-line change of the guard to `while (fast != null && fast.next != null)`
-         *  would instead return the *first* middle on even input, so the condition here is
-         *  load-bearing, not cosmetic.
-         *
-         * Time:  **O(n)**. `fast` traverses the list once at 2x, so the loop runs ~n/2
-         *        iterations — linear in the number of nodes.
-         * Space: **O(1)** auxiliary. Two pointers, no recursion, no allocation. The
-         *        returned node is a reference into the existing list (output space, not
-         *        counted). Iterative, so no call-stack growth.
-         *
-         * Correctness / edge cases:
-         *  - Single node: `fast?.next` is null immediately, loop body never runs, returns head. Correct.
-         *  - The `if (head == null) return head` guard is defensive — the constraints
-         *    promise a non-empty list [1,100], so it never fires here, but it keeps the
-         *    function total. The `?.` safe-calls already handle null internally, so this
-         *    guard is belt-and-suspenders rather than strictly required.
-         *
-         * Alternative approaches:
-         *  1. **Two-pass count**: walk once to get length n, walk again n/2 steps.
-         *     Same O(n)/O(1) asymptotics but ~1.5n node visits vs. this one-pass ~1.5n
-         *     (fast does n, slow does n/2) — a wash, but two-pass needs the full list
-         *     up front. Fast/slow is the idiomatic single-pass answer.
-         *  2. **Array/list buffer**: push all nodes into a list, index the middle.
-         *     O(n) time but O(n) space — strictly worse; only worth it if you also need
-         *     random access to other nodes.
-         *  This solution is already optimal: you must touch every node to know where the
-         *  end (and thus the middle) is, so no better than O(n) time is possible, and O(1)
-         *  space is the floor for a pointer-returning traversal.
-         *
-         * Parallelism: **not applicable / not worth it.** A singly linked list is inherently
-         *  sequential — you can't jump to node k without following k pointers, so the traversal
-         *  can't be partitioned across threads without first materializing an index (which is
-         *  itself the O(n) sequential walk). For n <= 100 any threading overhead dwarfs the work.
-         *  Contrast with an array-backed "find middle": that's trivially O(1) with random access,
-         *  which is precisely why real systems favor contiguous storage.
-         *
-         * Real-world: the runner technique shows up wherever you must find a positional
-         *  landmark in a forward-only stream you'd rather not buffer or measure twice —
-         *  e.g. splitting a linked structure for a merge-sort midpoint, or "last-N" windows
-         *  over a stream. In practice, though, production code rarely hand-rolls linked lists
-         *  (cache-unfriendly pointer chasing); you'd reach for an array/deque with O(1)
-         *  indexing, and the "middle" problem evaporates. The interview value is the pointer
-         *  discipline, not the data structure.
-         */
         fun middleNode(head: ListNode?): ListNode? {
-            if (head == null) return head
             var slow = head
             var fast = head
             while (fast?.next != null) {
                 slow = slow?.next
                 fast = fast.next?.next
             }
-
             return slow
         }
 
+        /**
+         * Reference solution — 876. Middle of the Linked List
+         *
+         * Restatement: walk a singly linked list (1..100 nodes) and return the node in the
+         * middle. For even length there are two middles; return the second one.
+         *
+         * Pattern: **fast & slow pointers (tortoise and hare / "runner")**. Two references
+         * start at the head; one moves 2 nodes per step, the other 1. The fast one reaches
+         * the end after ~n/2 steps, and at that moment the slow one has covered half the
+         * list. It fits because a singly linked list has no length and no random access —
+         * the speed ratio 2:1 converts "find the end" into "find the half" in a single pass.
+         *
+         * ### Intuition
+         * If one runner is twice as fast as the other, when the fast runner finishes the
+         * track the slow one is exactly halfway. You never need to know n.
+         *
+         * ### Core concepts
+         * - **Two-speed traversal**: pointers advancing at different rates keep a fixed
+         *   *ratio* of distance; here 2:1 pins slow to position ⌊n/2⌋. Same idea drives
+         *   Floyd cycle detection and splitting a list for merge sort.
+         * - **Loop guard chooses the middle**: `fast != null && fast.next != null` lands slow
+         *   on the *second* middle for even n; `fast.next != null && fast.next.next != null`
+         *   lands it on the *first*. Which guard you pick is the whole even-length rule.
+         * - **Null-safe stepping**: `fast.next.next` may be null — the guard must ensure
+         *   `fast.next` exists before the double hop.
+         *
+         * ### Approach
+         * 1. `slow = head`, `fast = head`.
+         * 2. While `fast` and `fast.next` are both non-null: `slow = slow.next`,
+         *    `fast = fast.next.next`.
+         * 3. Return `slow`.
+         *
+         * Trace [1,2,3,4]: (s=1,f=1) -> (s=2,f=3) -> (s=3,f=null) stop -> node 3 (second middle).
+         * Trace [1,2,3]:   (s=1,f=1) -> (s=2,f=3), f.next null stop -> node 2.
+         *
+         * ### Complexity
+         * - Time **O(n)**: fast visits each node at most once, ~n/2 iterations.
+         * - Space **O(1)**: two references; the result is a node of the input list.
+         *
+         * ### Common pitfalls
+         * - Using the "first middle" guard and returning node 2 for [1,2,3,4].
+         * - Dereferencing `fast.next.next` without checking `fast.next` — NPE on even length.
+         * - Returning `slow.val` or copying nodes: the expected output is the existing
+         *   sublist starting at the middle node.
+         * - Two-pass (count, then walk n/2) is also O(n)/O(1) and correct — just remember
+         *   the index is `n / 2` (0-based) to get the second middle.
+         */
+        fun referenceSolution(head: ListNode?): ListNode? {
+            var slow = head
+            var fast = head
+            while (fast?.next != null) {
+                slow = slow!!.next
+                fast = fast.next!!.next
+            }
+            return slow
+        }
     }
 }
