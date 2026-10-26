@@ -44,3 +44,6 @@ bin/
 
 ### compiled scirpts
 /scripts/update-script.kexe
+
+### lt-stat attempt log (local only, no backup)
+/.stats/

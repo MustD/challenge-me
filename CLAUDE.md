@@ -28,7 +28,7 @@ This changes how you should respond when asked to solve a problem:
 - **Teach the pattern, not just this instance.** Name the general technique (e.g. "this is a classic backtracking
   template", "two-pointer on a sorted array") so it transfers to the next problem.
 - **Prefer nudges when the user is stuck.** If they're mid-attempt, favor hints and Socratic prompts over handing over
-  the full answer. The `/leetcode-help` skill exists for exactly this — it writes intuition, pattern, complexity, and
+  the full answer. The `/lt-ref` skill exists for exactly this — it writes intuition, pattern, complexity, and
   pitfalls into the problem file alongside a verified reference solution.
 - **Call out pitfalls and edge cases** (off-by-one, empty input, integer overflow, ordering requirements) as teaching
   points rather than silently handling them.
@@ -221,6 +221,24 @@ Key mechanics to understand before editing:
 3. Name the file/class `I####<problemName>` (LeetCode number, zero-padded to 4). `C4*` files are from "Grokking
    Algorithms" (`grokking_algorithms` package).
 4. Define the `typealias`, fill in `cases`, and implement one or more solution functions wired into `check(...)`.
+
+Usually this is done by the `lt-*` skills (`.claude/skills/lt-*`), which cover a task end to end:
+
+```
+Solo:         /lt-init N → /lt-stat start N → solve → [/lt-ref N] → /lt-check N → /lt-stat stop N → /lt-close N
+Interviewing: /lt-init N → /lt-ref N → stays open → later: /lt-stat start N → solve → … → /lt-close N
+```
+
+- An **open task** is an untracked file in the root `test/leetcode/` with `package leetcode`; a **closed task** lives
+  in `test/leetcode/<category>/`. Only root files are targets; only `/lt-close` touches closed copies (it deletes them).
+- `/lt-init` scaffolds (statement + official examples + `TODO()` stub), `/lt-ref` adds a taught `referenceSolution`,
+  `/lt-check` adds edge cases and an `(lt-check)` analysis KDoc, `/lt-close` files the task into a category.
+  `/lt-ref` and `/lt-check` accept no `N` when exactly one root task exists.
+- `/lt-stat start|stop` is opt-in timing: a `// lt-stat { … }` comment above the attempt's function while it runs,
+  then one JSON line per attempt in `.stats/leetcode.jsonl` (gitignored, no backup).
+- None of the skills stage or commit, and none reveal difficulty, tags or category before `/lt-stat stop`.
+- Older solved files carry `(leetcode-help)` / `(leetcode-validate)` headings from the skills' former names; leave
+  them as they are.
 
 ### Supporting a new input/output type
 
