@@ -3,6 +3,7 @@ package leetcode.linked_list
 import leetcode.ProblemTest
 import leetcode.args
 import leetcode.expects
+import leetcode.testCases
 import leetcode.utils.ListNode
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
@@ -29,7 +30,7 @@ class I0021mergeTwoLists {
     @Nested
     inner class Solution : ProblemTest<I0021> {
 
-        override val cases = _root_ide_package_.leetcode.testCases<I0021>(
+        override val cases = testCases<I0021>(
             args("[1,2,4]", "[1,3,4]") expects "[1,1,2,3,4,4]",
             args("[]", "[]") expects "[]",
             args("[]", "[0]") expects "[0]",
