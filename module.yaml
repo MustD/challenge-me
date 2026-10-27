@@ -7,6 +7,7 @@ product: jvm/app
 # src/database/isolation (plain JDBC against the Postgres from docker-compose.yml).
 dependencies:
   - org.postgresql:postgresql:42.7.14
+  - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
 
 # kotlin-test and the JUnit 5 runner are configured automatically (settings.junit defaults
 # to junit-5, which pulls org.jetbrains.kotlin:kotlin-test-junit5 at settings.kotlin.version).
