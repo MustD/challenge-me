@@ -5,11 +5,6 @@
 # Matches `settings.jvm.jdk.version: 25` in module.yaml. Having JAVA_HOME already on 25
 # means the Kotlin Toolchain reuses this JDK instead of provisioning its own via Foojay.
 java = "temurin-25"
-# Standalone Kotlin compiler — not needed by any task any more (dev-update used to be a .kts run
-# by it; it is now the compiled `update-script` module). Kept for ad-hoc `kotlin foo.main.kts`
-# scripting, and still bumped automatically with `settings.kotlin.version` in module.yaml so an
-# ad-hoc script is compiled by the same Kotlin release as the project.
-kotlin = { version = "2.4.21", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 
 [tasks.test]
 description = "Run all tests"
