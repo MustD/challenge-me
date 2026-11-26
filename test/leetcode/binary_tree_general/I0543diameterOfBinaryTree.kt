@@ -10,21 +10,12 @@ import kotlin.test.Test
 /**
  * 543. Diameter of Binary Tree  (https://leetcode.com/problems/diameter-of-binary-tree/)
  *
- * Given the root of a binary tree, return the length of the diameter of the tree.
+ * Given the `root` of a binary tree, return the length of the diameter of the tree.
  *
- * The diameter of a binary tree is the length of the longest path between any two nodes in a tree.
- * This path may or may not pass through the root.
+ * The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or
+ * may not pass through the `root`.
  *
  * The length of a path between two nodes is represented by the number of edges between them.
- *
- * Example 1:
- * Input: root = [1,2,3,4,5]
- * Output: 3
- * Explanation: 3 is the length of the path [4,2,1,3] or [5,2,1,3].
- *
- * Example 2:
- * Input: root = [1,2]
- * Output: 1
  *
  * Constraints:
  * - The number of nodes in the tree is in the range [1, 10^4].
@@ -40,100 +31,107 @@ class I0543diameterOfBinaryTree {
         override val cases = testCases<I0543>(
             "[1,2,3,4,5]" expects 3,
             "[1,2]" expects 1,
-            "[1]" expects 0,
-            // Longest path does NOT pass through the root: it lives in the left subtree (8-6-4-2-5-7-9 = 6 edges).
-            "[1,2,null,4,5,6,null,null,7,8,null,null,9]" expects 6,
-            // Degenerate "linked list" tree: diameter = n - 1.
-            "[1,2,null,3,null,4,null,5]" expects 4,
+            "[1]" expects 0,                                             // single node, n = 1
+            "[1,2,null,3,4,5,null,null,6]" expects 4,                    // best path avoids the root
+            "[1,2,null,3,null,4,null,5]" expects 4,                      // left-skewed chain
+            "[1,null,2,null,3,null,4]" expects 3,                        // right-skewed chain
+            "[-100,-100,-100]" expects 2,                                // negative / duplicate values
+            "[4,-7,-3,null,null,-9,-3,9,-7,-4,null,6,null,-6,-6,null,null,0,6,5,null,9,null,null,-1,-4,null,null,null,-2]" expects 8, // deep lopsided subtree
         )
 
         @Test
-        fun test() = check(::diameterOfBinaryTree, ::referenceSolution)
-
-        fun diameterOfBinaryTree(root: TreeNode?): Int {
-            var best = 0
-            fun dfs(node: TreeNode? = root): Int {
-                if (node == null) return 0
-
-                val l = dfs(node.left)
-                val r = dfs(node.right)
-                best = maxOf(l + r, best)
-                return maxOf(l, r) + 1
-
-            }
-
-            dfs()
-            return best
-        }
+        fun test() = check(
+            ::diameterOfBinaryTree,
+            ::diameterOfBinaryTreeQueue
+        )
 
         /**
-         * ## Reference solution — post-order DFS returning height, tracking the best "bend" globally
+         * ## Analysis (lt-check) — verified: 2 official + 6 added cases
          *
-         * **Restatement.** Among all pairs of nodes, find the longest path between them, counting *edges*
-         * (not nodes). The path may bend at any node, not necessarily at the root.
+         * **Time: O(n).** `dfs` is a post-order traversal that visits each node exactly once and does O(1) work per
+         * visit (two `maxOf`s and an addition). The `null` children add at most n + 1 extra O(1) calls.
          *
-         * **Pattern: "tree DP" / post-order DFS with a global answer.** Each recursive call returns one value
-         * to its parent (here: the subtree height), while a *different* value (the best path that bends at this
-         * node) is folded into a shared max. It fits because any path in a tree has exactly one highest node
-         * (its "apex"), and the longest path through a given apex is fully determined by information the
-         * children already computed. Same template as 124 (Max Path Sum), 687 (Longest Univalue Path),
-         * 110 (Balanced Binary Tree).
+         * **Space: O(h) auxiliary**, h = tree height: one stack frame per level of recursion, plus the single captured
+         * `max`. Balanced tree → O(log n); skewed chain (allowed by the constraints) → O(n) = 10^4 frames. That depth
+         * is fine on the JVM's default stack here, but it is the one real limit of the recursive form.
          *
-         * ### Intuition
-         * Every path has a single topmost node where it turns from going up to going down. If we fix that apex,
-         * the longest path through it is `height(left) + height(right)` edges — go as deep as possible on both
-         * sides. So the diameter is `max over all nodes of (leftHeight + rightHeight)`, and heights come out of
-         * one post-order pass for free.
+         * Optimal: O(n) time / O(h) space — reached. Every node must be inspected (an unseen leaf could extend the
+         * longest path), so nothing beats O(n) time.
          *
-         * ### Core concepts
-         * - **Height (in edges / in nodes)** — the length of the longest downward path from a node to a leaf.
-         *   Here it is convenient to measure height in *nodes* (`null` → 0, leaf → 1): then
-         *   `leftHeight + rightHeight` is exactly the number of *edges* of the path bending at this node.
-         * - **Apex of a path** — the unique highest node on a tree path. Enumerating apexes enumerates all
-         *   candidate longest paths without double counting.
-         * - **Post-order traversal** — process children before the parent, so the parent can combine results
-         *   that are already known. Every "aggregate from subtrees" tree problem is post-order.
-         * - **Return one thing, record another** — the value returned upward (a single branch, the height) is
-         *   *not* the answer; the answer (a two-branch path) can't be extended by the parent, so it is recorded
-         *   in an outer variable instead of returned.
+         * **Correctness.** `dfs(node)` returns the *height in nodes* of the subtree (0 for `null`). For a node, `l` and
+         * `r` are then exactly the number of *edges* from that node down to the deepest leaf on each side **plus the
+         * edge into that child** — so `l + r` is the edge-length of the longest path whose topmost node ("apex") is
+         * `node`. Every path in a tree has exactly one apex, so taking the max of `l + r` over all nodes covers every
+         * path, including ones that never touch the root (the `[1,2,null,3,4,5,null,null,6]` case). The nodes-vs-edges
+         * conversion is the classic off-by-one here; returning node counts and summing them without `+ 1` gets it
+         * right for free. A single node gives `0 + 0 = 0`, and `max` starting at 0 covers n = 1.
          *
-         * ### Approach
-         * 1. `height(node)`: if `node == null` return 0.
-         * 2. Recursively get `l = height(node.left)`, `r = height(node.right)`.
-         * 3. Update `best = max(best, l + r)` — the path bending at `node`.
-         * 4. Return `1 + max(l, r)` — the parent can extend only one branch.
-         * 5. Call `height(root)` and return `best`.
+         * **Pattern: "tree DP with a global answer"** (a.k.a. post-order return-one-thing / record-another). The
+         * recursion *returns* what the parent can extend (a single downward branch: `1 + max(l, r)`) while it
+         * *records* what can't be extended (the bent path `l + r`). Same template: 124 Binary Tree Maximum Path Sum
+         * (weights instead of counts, clamp negatives at 0), 687 Longest Univalue Path, 2246 Longest Path With
+         * Different Adjacent Characters (n-ary: keep the top two child heights), 1522 Diameter of N-Ary Tree.
          *
-         * ### Complexity
-         * - **Time O(n)** — each node is visited exactly once and does O(1) work.
-         * - **Space O(h)** — recursion stack, `h` = tree height: O(log n) balanced, O(n) for a skewed tree.
+         * **Alternatives.**
+         * - *Naive height-per-node*: for each node call a separate `height(left) + height(right)` — O(n²) on a skewed
+         *   tree because heights are recomputed. Your version fuses height and answer into one pass.
+         * - *Double BFS/DFS on the tree as an undirected graph*: BFS from any node to the farthest node `u`, then BFS
+         *   from `u`; the farthest distance is the diameter. Also O(n), but needs parent links / an adjacency list
+         *   (O(n) extra space) since `TreeNode` has no parent pointer. It is the go-to for general (unrooted) trees.
+         * - *Iterative post-order* with an explicit stack and a `HashMap<TreeNode, Int>` of heights — same O(n) time,
+         *   removes the call-stack-overflow risk on very deep trees at the cost of O(n) map space and more code.
          *
-         * ### Common pitfalls
-         * - **Assuming the path goes through the root.** `height(root.left) + height(root.right)` fails when the
-         *   deepest bend is inside a subtree (see the test case where the root has only a left child).
-         * - **Edges vs. nodes off-by-one.** The answer counts edges; a single node has diameter 0. Pick one height
-         *   convention and check it on `[1]` and `[1,2]`.
-         * - **Returning `l + r` upward.** The parent can only continue along one branch; returning both sides
-         *   produces "paths" that fork, which aren't paths.
-         * - **Recomputing height per node** (calling a separate `height()` from every node) gives O(n²) on a
-         *   skewed tree. Compute height and the answer in the same pass.
-         * - **Deep recursion.** With up to 10^4 nodes in a skewed tree the recursion is 10^4 deep — fine on the
-         *   JVM default stack here, but an iterative post-order is the fix if limits grow.
+         * **Parallelism.** The two recursive calls are independent, so fork/join on the left and right subtrees is
+         * possible (each returns height and its local best diameter instead of writing a shared `max`). For n ≤ 10^4
+         * the task-spawn overhead dwarfs ~10^4 trivial operations; and on a skewed tree the critical path is the whole
+         * chain (span = O(n)), so the speedup ceiling is ~1×. Only for huge, balanced trees does it pay off (span
+         * O(log n)), and then you'd cut off spawning below some subtree size.
+         *
+         * **Real world.** Tree/graph diameter shows up as the "worst-case hop count" of a network spanning tree or a
+         * DOM/component hierarchy, the critical-path length in a dependency tree, and phylogenetic tree analysis. The
+         * same post-order "return one value, record another" shape is how compilers compute expression-tree register
+         * needs (Sethi–Ullman) and how file-system tools aggregate directory sizes. At production scale trees can be
+         * millions deep, which is why iterative traversals are preferred there.
          */
-        fun referenceSolution(root: TreeNode?): Int {
-            var best = 0
-
-            fun height(node: TreeNode?): Int {
+        fun diameterOfBinaryTree(root: TreeNode?): Int {
+            var max = 0
+            fun dfs(node: TreeNode? = root): Int {
                 if (node == null) return 0
-                val l = height(node.left)
-                val r = height(node.right)
-                best = maxOf(best, l + r)
+                val l = dfs(node.left)
+                val r = dfs(node.right)
+                max = maxOf(max, l + r)
                 return 1 + maxOf(l, r)
             }
-
-            height(root)
-            return best
+            dfs()
+            return max
         }
+
+
+        fun diameterOfBinaryTreeQueue(root: TreeNode?): Int {
+            if (root == null) return 0
+
+            // Phase 1: walk down. Parents end up before their children in `order`.
+            val order = ArrayList<TreeNode>()
+            val stack = ArrayDeque<TreeNode>().apply { addLast(root) }
+            while (stack.isNotEmpty()) {
+                val node = stack.removeLast()
+                order += node
+                node.right?.let { stack.addLast(it) }
+                node.left?.let { stack.addLast(it) }
+            }
+
+            // Phase 2: bubble up. Reversed, so children are processed before their parent.
+            val down = java.util.IdentityHashMap<TreeNode, Int>()  // node -> what dfs(node) would return
+            var max = 0
+            for (node in order.asReversed()) {
+                val l: Int = if (node.left == null) 0 else down.getOrDefault(node.left, 0)
+                val r: Int = if (node.right == null) 0 else down.getOrDefault(node.right, 0)
+                max = maxOf(max, l + r)
+                down[node] = 1 + maxOf(l, r)
+            }
+            return max
+        }
+
 
     }
 }
