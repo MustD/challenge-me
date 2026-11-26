@@ -14,7 +14,7 @@
 product: linux/app
 
 dependencies:
-  - org.jetbrains.kotlinx:kotlinx-io-core:0.9.1          # file IO; the stdlib has none on native
+  - org.jetbrains.kotlinx:kotlinx-io-core:0.9.3          # file IO; the stdlib has none on native
   - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 # parallel Maven Central lookups
 
 settings:

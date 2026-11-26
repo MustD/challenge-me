@@ -6,7 +6,7 @@ product: jvm/app
 # Main-source dependencies. Needed only by the transaction-isolation examples in
 # src/database/isolation (plain JDBC against the Postgres from docker-compose.yml).
 dependencies:
-  - org.postgresql:postgresql:42.7.14
+  - org.postgresql:postgresql:42.7.15
   - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
 
 # kotlin-test and the JUnit 5 runner are configured automatically (settings.junit defaults
